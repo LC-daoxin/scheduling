@@ -45,6 +45,21 @@
 				"navigationBarTitleText": "科室信息"
 			}
         }
+        ,{
+            "path" : "pages/departments/base-info/base-info",
+            "style" : {
+				"navigationBarTitleText": "基础资料"
+			}
+        }
+        ,{
+            "path" : "pages/departments/hospitalList/hospitalList",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "所在医院",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
