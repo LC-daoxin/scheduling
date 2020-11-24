@@ -10,6 +10,7 @@
 				</template>
 			</uni-list-item>
 		</uni-list>
+		<button class="bottomBtn" @click="createDepartment">创建科室</button>
 	</view>
 </template>
 
@@ -68,6 +69,15 @@
 					    }
 					});
 				}
+			},
+			// 创建科室
+			createDepartment () {
+				uni.navigateTo({
+				    url: '/pages/departments/department-create/department-create',
+					success: function(res) {
+						console.log(res)
+					}
+				});
 			}
 		}
 	}
@@ -83,6 +93,17 @@ page {
 				font-size: 36rpx;
 				color: $base-color;
 			}
+		}
+		.bottomBtn {
+			padding-bottom: constant(safe-area-inset-bottom);/* 兼容 iOS < 11.2 */
+			padding-bottom: env(safe-area-inset-bottom); /* 兼容 iOS >= 11.2 */
+			background-color: #fff;
+			border-radius: 0;
+			color: $text-color;
+			font-weight: 500;
+			width: 100%;
+			position: fixed;
+			bottom: 0;
 		}
 	}
 }

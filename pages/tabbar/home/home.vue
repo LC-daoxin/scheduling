@@ -2,7 +2,7 @@
 	<view>
 		<!-- #ifdef MP-WEIXIN -->
 		<!-- 状态栏 +  -->
-		<home-navbar :nav="setNav"></home-navbar>
+		<home-navbar :nav="setNav" :show="hasInfo" @hasInfo="changeHasInfo"></home-navbar>
 		<!-- #endif -->
 		<!-- 公告 -->
 		<notice :colors="colors" :noticeList="noticeList"></notice>
@@ -16,7 +16,6 @@
 		 />
 		 <personal-stats></personal-stats>
 		 <activity></activity>
-		 <!-- <u-tabbar v-model="current" height="56px" :list="list" inactive-color="#7A7E83" active-color="#5098ff" :mid-button="true"></u-tabbar> -->
 	</view>
 </template>
 
@@ -32,6 +31,7 @@
 				setNav:{
 					'departmentsName': '心血管内科'
 				},
+				hasInfo: false,
 				datelist: [
 					{date: '2020-09-27', read: true, info: '', type: 'workday', data: {}},
 					{date: '2020-10-01', read: true, info: '', type: 'holiday', data: {}},
@@ -69,6 +69,23 @@
 				this.setNav.departmentsName = option.departmentsName;
 			}
 		},
+		onShow () {
+			let that = this
+			uni.getUserInfo({
+				success(res) {
+					console.log(res)
+					if (res.errMsg === "getUserInfo:ok") {
+						that.hasInfo = true
+					}
+				},
+				fail(res) {
+					console.log(res)
+					if (res) {
+						that.hasInfo = false
+					}
+				}
+			})
+		},
 		mounted () {
 			this.list = this.$store.state.vuex_tabbar
 		},
@@ -77,7 +94,10 @@
 				console.log(e);
 			},
 			swiperChange () {
-				
+			},
+			changeHasInfo (show) {
+				console.log(show)
+				this.hasInfo = show
 			}
 		}
 	}

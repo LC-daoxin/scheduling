@@ -1,7 +1,8 @@
 <template>
 	<view>
 		<view :style="{'height':statusBarHeight}"></view>
-		<view class="header" :style="{'height':titleBarHeight}">
+		<button v-if="!show" class="loginBtn" open-type="getUserInfo" @getuserinfo="getUserInfo">请登录<text class="iconfont icon-xiangyou"></text></button>
+		<view v-else class="header" :style="{'height':titleBarHeight}">
 			<u-button class="switchBtn" shape="circle" :custom-style="switchBtn" size="mini" @click="toList()">切换</u-button>
 			<view class="departments" @click="toInfo()">
 				{{ nav.departmentsName }}
@@ -13,7 +14,7 @@
 
 <script>
 	export default {
-		props:["nav"],
+		props:["nav", "show"],
 		data() {
 			return {
 				statusBarHeight: 0, // 状态栏高度
@@ -51,12 +52,34 @@
 						console.log(res)
 					}
 				});
+			},
+			getUserInfo () {
+				let that =this
+				uni.getUserInfo({
+					success(res) {
+						console.log(res)
+						that.$emit('hasInfo', true)
+					},
+					fail(res) {
+						console.log(res)
+					}
+				})
 			}
 		}
 	}
 </script>
 
 <style lang="scss">
+	.loginBtn {
+		display: flex;
+		align-items: center;
+		background-color: $bg-color;
+		border: none;
+		text-align: left;
+		&::after {
+			border: none;
+		}
+	}
 	.header {
 		display: flex;
 		align-items: center;

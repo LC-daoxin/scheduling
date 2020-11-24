@@ -1,9 +1,13 @@
 <template>
 	<view>
-		<uni-search-bar :radius="100" placeholder="若无医院信息,请输入所在医院信息查找" @confirm="search" @input="input" @cancel="cancel"></uni-search-bar>
-		<uni-list>
-		    <uni-list-item  v-for="(item,index) in list" :key="index" :title="item.name"></uni-list-item>
-		</uni-list>
+		<view class="list" :style="'height:'+height+'px'">
+			<scroll-view class="list-content" scroll-y>
+				<uni-search-bar :radius="100" placeholder="若无医院信息,请输入所在医院信息查找" @confirm="search" @input="input" @cancel="cancel"></uni-search-bar>
+				<uni-list>
+				    <uni-list-item  v-for="(item,index) in list" :key="index" :title="item.name"></uni-list-item>
+				</uni-list>
+			</scroll-view>
+		</view>
 		<button class="bottomBtn" @click="addHospital">没有我所在的医院，手动填写</button>
 	</view>
 </template>
@@ -64,9 +68,17 @@
 					id: 1017,
 					name: '民航总医院'
 				}],
-				
+				height: 0,
 				searchStatus: false // 搜索状态
 			};
+		},
+		mounted () {
+			const query = uni.createSelectorQuery().in(this);
+			query.select('.bottomBtn').boundingClientRect(data => {
+			  console.log("得到布局位置信息", data);
+			  console.log("节点离页面顶部的距离为" + data.top);
+			  this.height =  data.top
+			}).exec();
 		},
 		methods: {
 			search (e) {
@@ -83,7 +95,12 @@
 			},
 			// 添加医院
 			addHospital () {
-				
+				uni.navigateTo({
+				    url: '/pages/departments/base-info/base-info',
+					success: function(res) {
+						console.log(res)
+					}
+				});
 			}
 		}
 	}
@@ -91,14 +108,20 @@
 
 <style lang="scss">
 	page {
-		background-color: $bg-color;
-		$text-color: #666;
+		.list {
+			overflow: hidden;
+			.list-content {
+				height: 100%;
+				overflow-y: hidden;
+			}
+		}
 		.bottomBtn {
 			padding-bottom: constant(safe-area-inset-bottom);/* 兼容 iOS < 11.2 */
 			padding-bottom: env(safe-area-inset-bottom); /* 兼容 iOS >= 11.2 */
 			background-color: $base-color;
 			border-radius: 0;
 			color: #fff;
+			font-weight: 500;
 			width: 100%;
 			position: fixed;
 			bottom: 0;

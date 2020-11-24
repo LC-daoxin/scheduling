@@ -44,7 +44,6 @@
 				</u-cell-group>
 			</view>
 		</view>
-		<!-- <u-tabbar v-model="current" height="56px" :list="list" inactive-color="#7A7E83" active-color="#5098ff" :mid-button="true"></u-tabbar> -->
 	</view>
 </template>
 
