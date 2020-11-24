@@ -5,7 +5,7 @@
       <view class="tab-header">
         <view v-for="(tab, tabIndex) of tabsContent"
               :key="tabIndex"
-              :class="`tab-header_item ${isActiveTab(tabIndex)}`"
+              :class="'tab-header_item ' + isActiveTab(tabIndex)"
               @click="switchTab(tabIndex)">
           <text>{{ tab.Type }}</text>
         </view>
