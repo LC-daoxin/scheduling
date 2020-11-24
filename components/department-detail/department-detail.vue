@@ -1,8 +1,8 @@
 <template>
 	<view class="detatl">
 		<view class="detatl-content">
-			<view class="info">
-				<view class="info-title" @click="getDetail()">
+			<view class="info" @click="getDetail()">
+				<view class="info-title">
 					<text class="title">{{ info.departmentsName }}</text>
 					<view class="text-right">
 						<text>详情</text>
@@ -13,8 +13,8 @@
 					创建者：<text class="name">{{ userList[0].name }}</text> 编号：<text>{{ userList[0].id }}</text>
 				</view>
 			</view>
-			<view class="user">
-				<view class="user-title" @click="getDetail()">
+			<view class="user" @click="getDetail()">
+				<view class="user-title">
 					<text class="title">科室人员</text>
 					<view class="text-right">
 						<text>共{{ userList.length }}人</text>
@@ -38,25 +38,25 @@
 		data() {
 			return {
 				userList: [{
-					id: 1001,
+					id: 201001,
 					name: '赵易'
 				},{
-					id: 1002,
+					id: 201002,
 					name: '钱尔'
 				},{
-					id: 1003,
+					id: 201003,
 					name: '孙时'
 				},{
-					id: 1004,
+					id: 201004,
 					name: '李思'
 				},{
-					id: 1005,
+					id: 201005,
 					name: '周梧'
 				},{
-					id: 1006,
+					id: 201006,
 					name: '吴柳'
 				},{
-					id: 1007,
+					id: 201007,
 					name: '王奇'
 				}],
 				newList: [], // 处理后的用户列表 5位
@@ -74,6 +74,12 @@
 		methods: {
 			// 获取科室详情
 			getDetail () {
+				uni.navigateTo({
+				    url: '/pages/departments/base-info/base-info',
+					success: function(res) {
+						console.log(res)
+					}
+				});
 			},
 			// 获取科室人员
 			getUser () {
