@@ -1,0 +1,21 @@
+.u-cell-box {
+	position: relative;
+	border-radius: 0.5em;
+
+	::v-deep .u-cell-item-box {
+		border-radius: 0.8em;
+	}
+
+	.u-cell+.u-cell {
+		border-top: 1px solid #eee;
+	}
+}
+
+::v-deep .u-border-bottom:after,
+.u-border-left:after,
+.u-border-right:after,
+.u-border-top-bottom:after,
+.u-border-top:after,
+.u-border:after {
+	border: none;
+}
