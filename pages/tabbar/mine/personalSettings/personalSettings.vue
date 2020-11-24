@@ -11,20 +11,15 @@
       <u-cell-item title="医院" :value="info.hospital" @click="open('医院', 'hospital')"></u-cell-item>
       <u-cell-item title="科室" :value="info.departments" @click="open('科室', 'departments')"></u-cell-item>
     </u-cell-group>
-    <uni-popup ref="popup" type="bottom">
-      <view class="edit-info">
-        <view class="edit-info_title">{{ editInfoTitle }}</view>
-        <input type="text" v-model="inputValue"/>
-        <button type="primary" @click="save">保存</button>
-      </view>
-    </uni-popup>
+		<popup :title="editInfoTitle" ref="popup">
+			<input type="text" v-model="inputValue"/>
+			<button class="button--agree" @click="save">保存</button>
+		</popup>
   </view>
 </template>
 
 <script>
-import uniPopup from '@/components/uni-popup/uni-popup.vue';
-import uniPopupMessage from '@/components/uni-popup/uni-popup-message.vue';
-import uniPopupDialog from '@/components/uni-popup/uni-popup-dialog.vue';
+import popup from '@/components/popup/popup.vue'
 
 export default {
   data() {
@@ -54,9 +49,7 @@ export default {
     }
   },
   components: {
-    uniPopup,
-    uniPopupMessage,
-    uniPopupDialog
+		popup
   }
 };
 </script>
@@ -77,29 +70,6 @@ export default {
 
   .personal-info {
     margin-bottom: 1em;
-  }
-
-  .edit-info {
-    padding: 1em;
-    font-size: 1.1em;
-    font-weight: bold;
-    background-color: #fff;
-    border-radius: 0.8em 0.8em 0 0;
-
-    .edit-info_title {
-      margin-bottom: 0.5em;
-    }
-
-    ::v-deep button {
-      font-size: inherit;
-    }
-
-    input {
-      margin: 1em 0;
-      padding: 0.4em;
-      border: 1px solid #eee;
-      border-radius: 0.4em;
-    }
   }
 }
 </style>

@@ -58,10 +58,15 @@
 		}, {
 			"path": "pages/tabbar/workbench/ExaminationAndApproval/ExaminationAndApproval",
 			"style": {
-				"navigationBarTitleText": "审批"
+				"navigationBarTitleText": "审批",
+				"navigationBarBackgroundColor": "#fff"
 			}
 		}
-	],
+	    ,{
+            "path" : "components/popup/popup",
+            "style" : {}
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",

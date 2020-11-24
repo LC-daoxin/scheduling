@@ -35,6 +35,8 @@
     display: flex;
     height: calc(100vh - 12em);
     overflow: hidden auto;
+		padding: 1em;
+		box-sizing: border-box;
 
     .tab-inner_item {
       width: 100vw;
