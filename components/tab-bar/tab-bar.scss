@@ -1,0 +1,43 @@
+.tab-bar {
+  .tab-header {
+    display: flex;
+    border-bottom: 1px solid #e6e6e6;
+
+    .tab-header_item {
+      flex: 1;
+      font-size: 0.8rem;
+      color: rgb(48, 49, 51);
+      padding: 0.5em 0 0.6em 0;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .tab-header_item_active {
+      position: relative;
+      color: rgb(41, 121, 255);
+      font-weight: bold;
+    }
+
+    .tab-header_item_active:after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: 0.1em;
+      width: 1.5em;
+      height: 0.2em;
+      border-radius: 2em;
+      background-color: rgb(41, 121, 255);
+      transform: translateX(-50%);
+    }
+  }
+
+  .tab-inner {
+    display: flex;
+    height: calc(100vh - 12em);
+    overflow: hidden auto;
+
+    .tab-inner_item {
+      width: 100vw;
+    }
+  }
+}

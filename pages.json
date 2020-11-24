@@ -4,48 +4,59 @@
 	},
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
-            "path" : "pages/tabbar/home/home",
-            "style" : {
-				"navigationStyle":"custom",
+			"path": "pages/tabbar/home/home",
+			"style": {
+				"navigationStyle": "custom",
 				"navigationBarTitleText": "首页"
 			}
-        }
-        ,{
-            "path" : "pages/tabbar/workbench/workbench",
-            "style" : {
-            	"navigationBarTitleText": "工作台"
-            }
-        }
-		,{
-		    "path" : "pages/tabbar/notice/notice",
-		    "style" : {
-		    	"navigationBarTitleText": "通知"
-		    }
+		}, {
+			"path": "pages/tabbar/workbench/workbench",
+			"style": {
+				"navigationBarTitleText": "工作台"
+			}
+		}, {
+			"path": "pages/tabbar/notice/notice",
+			"style": {
+				"navigationBarTitleText": "通知"
+			}
+		}, {
+			"path": "pages/tabbar/mine/mine",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "我的"
+			}
+		}, {
+			"path": "pages/tabbar/notice/noticeDetail/noticeDetail",
+			"style": {
+				"navigationBarTitleText": "通知详情"
+			}
+		}, {
+			"path": "pages/tabbar/mine/personalSettings/personalSettings",
+			"style": {
+				"navigationBarTitleText": "个人设置"
+			}
+		}, {
+			"path": "pages/tabbar/mine/feedBack/feedBack",
+			"style": {
+				"navigationBarTitleText": "反馈意见"
+			}
 		}
-        ,{
-            "path" : "pages/tabbar/mine/mine",
-            "style" : {
-				"navigationStyle":"custom",
-            	"navigationBarTitleText": "我的"
-            }
-        }
-        // ,{
-        //     "path" : "pages/tabbar/scan/scan",
-        //     "style" : {}
-        // }
-        ,{
-            "path" : "pages/departments/departments-list/departments-list",
-            "style" : {
-            	"navigationBarTitleText": "我的科室"
-            }
-        }
-        ,{
-            "path" : "pages/departments/department-info/department-info",
-            "style" : {
+		// ,{
+		//     "path" : "pages/tabbar/scan/scan",
+		//     "style" : {}
+		// }
+		, {
+			"path": "pages/departments/departments-list/departments-list",
+			"style": {
+				"navigationBarTitleText": "我的科室"
+			}
+		}, {
+			"path": "pages/departments/department-info/department-info",
+			"style": {
 				"navigationBarTitleText": "科室信息"
 			}
-        }
-    ],
+		}
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
@@ -53,37 +64,37 @@
 		"backgroundColor": "#F8F8F8"
 	},
 	"tabBar": {
-	    "color": "#7A7E83",
-	    "selectedColor": "#5098ff",
-	    "borderStyle": "black",
-	    "backgroundColor": "#ffffff",
-	    "list": [{
-	        "pagePath": "pages/tabbar/home/home",
-	        "iconPath": "static/image/home.png",
-	        "selectedIconPath": "static/image/home_fill.png",
-	        "text": "首页"
-	    }, {
-	        "pagePath": "pages/tabbar/workbench/workbench",
-	        "iconPath": "static/image/form.png",
-	        "selectedIconPath": "static/image/form_fill.png",
-	        "text": "工作台"
-	    }, {
-	        "pagePath": "pages/tabbar/notice/notice",
-	        "iconPath": "static/image/notice.png",
-	        "selectedIconPath": "static/image/notice_fill.png",
-	        "text": "通知"
-	    }, {
-	        "pagePath": "pages/tabbar/mine/mine",
-	        "iconPath": "static/image/my.png",
-	        "selectedIconPath": "static/image/my_fill.png",
-	        "text": "我的"
-	    }
-		// {
-		//     "pagePath": "pages/tabbar/scan/scan",
-		//     "iconPath": "static/image/scan.png",
-		//     "selectedIconPath": "static/image/scan.png",
-		//     "text": "扫码"
-		// }
+		"color": "#7A7E83",
+		"selectedColor": "#5098ff",
+		"borderStyle": "black",
+		"backgroundColor": "#ffffff",
+		"list": [{
+				"pagePath": "pages/tabbar/home/home",
+				"iconPath": "static/image/home.png",
+				"selectedIconPath": "static/image/home_fill.png",
+				"text": "首页"
+			}, {
+				"pagePath": "pages/tabbar/workbench/workbench",
+				"iconPath": "static/image/form.png",
+				"selectedIconPath": "static/image/form_fill.png",
+				"text": "工作台"
+			}, {
+				"pagePath": "pages/tabbar/notice/notice",
+				"iconPath": "static/image/notice.png",
+				"selectedIconPath": "static/image/notice_fill.png",
+				"text": "通知"
+			}, {
+				"pagePath": "pages/tabbar/mine/mine",
+				"iconPath": "static/image/my.png",
+				"selectedIconPath": "static/image/my_fill.png",
+				"text": "我的"
+			}
+			// {
+			//     "pagePath": "pages/tabbar/scan/scan",
+			//     "iconPath": "static/image/scan.png",
+			//     "selectedIconPath": "static/image/scan.png",
+			//     "text": "扫码"
+			// }
 		]
 	}
 }
