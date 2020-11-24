@@ -91,12 +91,10 @@
 		},
 		methods: {
 			change(e) {
-				console.log(e);
 			},
 			swiperChange () {
 			},
 			changeHasInfo (show) {
-				console.log(show)
 				this.hasInfo = show
 			}
 		}

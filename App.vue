@@ -2,18 +2,18 @@
 	export default {
 		onLaunch: function() {
 			console.log('App Launch')
-			uni.authorize({
-			    scope: 'scope.userInfo',
-			    success(res) {
-					console.log(res)
-					uni.getUserInfo({
-						provider: 'weixin',
-						success: function (infoRes) {
-							console.log('用户昵称为：' + infoRes.userInfo.nickName);
-						}
-					});
-			    }
-			})
+			// uni.authorize({
+			//     scope: 'scope.userInfo',
+			//     success(res) {
+			// 		console.log(res)
+			// 		uni.getUserInfo({
+			// 			provider: 'weixin',
+			// 			success: function (infoRes) {
+			// 				console.log('用户昵称为：' + infoRes.userInfo.nickName);
+			// 			}
+			// 		});
+			//     }
+			// })
 		},
 		onShow: function() {
 			console.log('App Show')

@@ -47,7 +47,7 @@ export default {
   padding: 1em 1em 0;
 }
 
-.feed-back .uni-btn-v uni-button+uni-button {
+.feed-back .uni-btn-v button + button {
   margin-top: 0.5em;
 }
 

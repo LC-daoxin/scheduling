@@ -13,7 +13,7 @@
     </u-cell-group>
 		<popup :title="editInfoTitle" ref="popup">
 			<input type="text" v-model="inputValue"/>
-			<button class="button--agree" @click="save">保存</button>
+			<button class="button button--primary" @click="save">保存</button>
 		</popup>
   </view>
 </template>

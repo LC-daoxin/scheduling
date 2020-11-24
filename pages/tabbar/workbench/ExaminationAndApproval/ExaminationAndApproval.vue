@@ -27,8 +27,11 @@
 			</view>
 		</view>
 		<popup :title="popupTitle" ref="popup">
-			<button class="button--agree" @click="save">同意</button>
-			<button class="button--refuse" @click="save">拒绝</button>
+			<view class="request-detail">{{ requestDetail }}</view>
+			<view class="button-group">
+				<button class="button button--primary" @click="save">同意</button>
+				<button class="button button--danger" @click="save">拒绝</button>
+			</view>
 		</popup>
 	</view>
 </template>
@@ -46,6 +49,7 @@ export default {
 		return {
 			currentTabIndex: 0,
 			popupTitle: '',
+			requestDetail: '我把衣服放进微波炉里烘干，结果衣服着火了。我需要请假一天，在家救火。',
 			filterType: '全部类型',
 			filterDate: '全部日期',
 			typeList: ['全部类型', '调班申请', '请假申请'],
@@ -63,7 +67,7 @@ export default {
 		},
 		verify(request) {
 			this.popupTitle = request.title;
-			this.$refs.popup.open()
+			this.$refs.popup.open();
 		}
 	},
 	components: {
@@ -96,8 +100,9 @@ export default {
 
 .filter {
 	display: flex;
+	background-color: rgb(248, 248, 248);
 
-	.lb-picker {
+	lb-picker {
 		flex: 1;
 		text-align: center;
 	}
@@ -116,5 +121,13 @@ export default {
 		border-left: 0.3em solid transparent;
 		border-right: 0.3em solid transparent;
 	}
+}
+
+.request-detail {
+	color: #666;
+	margin: 0.7em 0;
+	line-height: 1.3;
+	letter-spacing: 0.05em;
+	text-indent: 1rem;
 }
 </style>

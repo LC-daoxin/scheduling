@@ -83,7 +83,7 @@
 	}
 	
 	.request-status {
-		font-size: 0.5em;
+		font-size: 0.7em;
 		padding: 0.4em;
 		border-radius: 0.4em;
 		color: #fff;

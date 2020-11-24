@@ -1,5 +1,5 @@
 <template>
-	<uni-popup ref="popup" type="bottom">
+	<uni-popup ref="popup" :type="position">
 	  <view class="popup-inner">
 			<view class="popup-inner_title">{{ title }}</view>
 	    <slot></slot>
@@ -10,7 +10,11 @@
 <script>
 	export default {
 		props: {
-			title: String
+			title: String,
+			position: {
+				type: String,
+				default: 'center'
+			}
 		},
 		methods: {
 			open() {
@@ -25,20 +29,16 @@
 
 <style lang="scss" scoped>
 	.popup-inner {
-		padding-bottom: constant(safe-area-inset-bottom);/* 兼容 iOS < 11.2 */
-		padding-bottom: env(safe-area-inset-bottom); /* 兼容 iOS >= 11.2 */
+		width: 80vw;
     padding: 1em;
     font-size: 1.1em;
-    font-weight: bold;
     background-color: #fff;
-    border-radius: 0.8em 0.8em 0 0;
+    border-radius: 0.8em;
 
     .popup-inner_title {
+			color: #333;
+			font-weight: bold;
       margin-bottom: 0.5em;
-    }
-
-    ::v-deep button {
-      font-size: inherit;
     }
 		
 		::v-deep button + button {
