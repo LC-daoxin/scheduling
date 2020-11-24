@@ -124,12 +124,6 @@
 				"selectedIconPath": "static/image/my_fill.png",
 				"text": "我的"
 			}
-			// {
-			//     "pagePath": "pages/tabbar/scan/scan",
-			//     "iconPath": "static/image/scan.png",
-			//     "selectedIconPath": "static/image/scan.png",
-			//     "text": "扫码"
-			// }
 		]
 	}
 }

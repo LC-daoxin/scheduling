@@ -3,7 +3,6 @@
 		<department-detail :info="info"></department-detail>
 		<member-management></member-management>
 		<workbench title='成员申请'></workbench>
-		<!-- <u-tabbar v-model="current" height="56px" :list="list" inactive-color="#7A7E83" active-color="#5098ff" :mid-button="true"></u-tabbar> -->
 	</view>
 </template>
 
