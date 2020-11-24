@@ -1,7 +1,7 @@
 <template>
 	<view class="detatl">
 		<view class="detatl-content">
-			<view class="info" @click="getDetail()">
+			<view class="info" @click="getDetail">
 				<view class="info-title">
 					<text class="title">{{ info.departmentsName }}</text>
 					<view class="text-right">
@@ -13,7 +13,7 @@
 					创建者：<text class="name">{{ userList[0].name }}</text> 编号：<text>{{ userList[0].id }}</text>
 				</view>
 			</view>
-			<view class="user" @click="getDetail()">
+			<view class="user" @click="getUser">
 				<view class="user-title">
 					<text class="title">科室人员</text>
 					<view class="text-right">
@@ -91,8 +91,6 @@
 
 <style lang="scss">
 page {
-	background-color: $bg-color;
-	$text-color: #666;
 	.detatl {
 		padding: 5px;
 		&-content {
