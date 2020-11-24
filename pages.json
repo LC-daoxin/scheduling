@@ -55,6 +55,11 @@
 			"style": {
 				"navigationBarTitleText": "科室信息"
 			}
+		}, {
+			"path": "pages/tabbar/workbench/ExaminationAndApproval/ExaminationAndApproval",
+			"style": {
+				"navigationBarTitleText": "审批"
+			}
 		}
 	],
 	"globalStyle": {
