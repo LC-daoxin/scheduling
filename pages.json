@@ -85,7 +85,12 @@
                 "navigationBarTitleText": "所在医院",
                 "enablePullDownRefresh": false
             }
-        }
+        }, {
+			"path": "pages/tabbar/workbench/ExaminationAndApproval/ExaminationAndApproval",
+			"style": {
+				"navigationBarTitleText": "审批"
+			}
+		}
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
