@@ -16,15 +16,15 @@
 				title: '',
 				list: [
 					{
-						image: 'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-scheduling/457dc0b0-296f-11eb-899d-733ae62bed2f.jpg',
+						image: 'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-scheduling/737195d0-2eee-11eb-8ff1-d5dcf8779628.png',
 						title: ''
 					},
 					{
-						image: 'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-scheduling/462fd2a0-296f-11eb-8a36-ebb87efcf8c0.jpg',
+						image: 'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-scheduling/75900900-2eee-11eb-bd01-97bc1429a9ff.png',
 						title: ''
 					},
 					{
-						image: 'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-scheduling/457dc0b0-296f-11eb-899d-733ae62bed2f.jpg',
+						image: 'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-scheduling/74e06810-2eee-11eb-8ff1-d5dcf8779628.png',
 						title: ''
 					}
 				]

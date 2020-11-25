@@ -40,16 +40,6 @@
 			"style": {
 				"navigationBarTitleText": "反馈意见"
 			}
-		}
-		// ,{
-		//     "path" : "pages/tabbar/scan/scan",
-		//     "style" : {}
-		// }
-		, {
-			"path": "pages/departments/departments-list/departments-list",
-			"style": {
-				"navigationBarTitleText": "我的科室"
-			}
 		}, {
 			"path": "pages/departments/department-info/department-info",
 			"style": {
@@ -86,8 +76,23 @@
 			"style": {
 				"navigationBarTitleText": "审批"
 			}
-		}
-	],
+		},{
+            "path" : "pages/departments/department-personnel/department-personnel",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "科室人员",
+                "enablePullDownRefresh": false
+            }
+            
+        },{
+            "path" : "pages/departments/department-list/department-list",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "我的科室",
+                "enablePullDownRefresh": false
+            }
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",

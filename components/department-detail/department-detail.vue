@@ -26,6 +26,7 @@
 						<text class="avatar" v-for="(item,index) in newList" :key="index">{{ item.name.slice(0, 1) }}</text>
 						<text class="avatar">{{ '+' + (userList.length - 5) }}</text>
 					</view>
+					<button open-type="share" :data-title="shareInfo.title" :data-imgurl="shareInfo.imgurl" :data-path="shareInfo.path" class="inviteBtn" size="mini" plain="true">邀请人员</button>
 				</view>
 			</view>
 		</view>
@@ -60,7 +61,12 @@
 					name: '王奇'
 				}],
 				newList: [], // 处理后的用户列表 5位
-				showIcon: false
+				showIcon: false,
+				shareInfo: {
+					title: `超级排班邀请您加入'内科一组'，赶快点击加入吧！`,
+					imgurl: 'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-scheduling/7341daa0-2eeb-11eb-880a-0db19f4f74bb.png',
+					path: '/pages/tabbar/home/home?user=123'
+				}
 			};
 		},
 		mounted () {
@@ -83,7 +89,12 @@
 			},
 			// 获取科室人员
 			getUser () {
-				
+				uni.navigateTo({
+				    url: '/pages/departments/department-personnel/department-personnel',
+					success: function(res) {
+						console.log(res)
+					}
+				});
 			}
 		}
 	}
@@ -147,7 +158,9 @@ page {
 					
 				}
 				.user-content {
-					display: block;
+					display: flex;
+					justify-content: space-between;
+					align-items: center;
 					padding: 20rpx 0 0;
 					color: $text-color;
 					.avatar-list {
@@ -169,6 +182,13 @@ page {
 							user-select: none;
 							border-radius: 50%;
 						}
+					}
+					.inviteBtn {
+						border: 1px solid $base-color;
+						color: $base-color;
+						border-radius: 30rpx;
+						margin: 0;
+						padding: 0 14rpx;
 					}
 				}
 			}

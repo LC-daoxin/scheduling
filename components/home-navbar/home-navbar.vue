@@ -38,7 +38,7 @@
 			// 跳转到 切换科室列表页面
 			toList () {
 				uni.navigateTo({
-				    url: '/pages/departments/departments-list/departments-list?id=1',
+				    url: '/pages/departments/department-list/department-list?id=1',
 					success: function(res) {
 						console.log(res)
 					}

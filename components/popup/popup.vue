@@ -2,7 +2,7 @@
 	<uni-popup ref="popup" :type="position">
 	  <view class="popup-inner">
 			<view class="popup-inner_title">{{ title }}</view>
-	    <slot></slot>
+			<slot></slot>
 	  </view>
 	</uni-popup>
 </template>
@@ -30,26 +30,26 @@
 <style lang="scss" scoped>
 	.popup-inner {
 		width: 80vw;
-    padding: 1em;
-    font-size: 1.1em;
-    background-color: #fff;
-    border-radius: 0.8em;
+		padding: 1em;
+		font-size: 1.1em;
+		background-color: #fff;
+		border-radius: 0.8em;
 
-    .popup-inner_title {
+		.popup-inner_title {
 			color: #333;
 			font-weight: bold;
-      margin-bottom: 0.5em;
-    }
-		
+			margin-bottom: 0.5em;
+		}
+			
 		::v-deep button + button {
 			margin-top: 0.4em;
 		}
 
-    ::v-deep input {
-      margin: 1em 0;
-      padding: 0.4em;
-      border: 1px solid #eee;
-      border-radius: 0.4em;
-    }
-  }
+		::v-deep input {
+			margin: 1em 0;
+			padding: 0.4em;
+			border: 1px solid #eee;
+			border-radius: 0.4em;
+		}
+	}
 </style>

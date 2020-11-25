@@ -17,6 +17,15 @@
 			uni.setNavigationBarTitle({
 			    title: `${option.departmentsName}`
 			});
+		},
+		onShareAppMessage(data) {
+			console.log(data)
+		    let dataset = data.target.dataset  
+		    return {  
+		        title: dataset.title,  
+		        imageUrl: dataset.imgurl,  
+		        path: dataset.path  
+		    }  
 		}
 	}
 </script>

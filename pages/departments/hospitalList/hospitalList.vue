@@ -95,12 +95,12 @@
 			},
 			// 添加医院
 			addHospital () {
-				uni.navigateTo({
-				    url: '/pages/departments/base-info/base-info',
-					success: function(res) {
-						console.log(res)
-					}
-				});
+				// uni.navigateTo({
+				//     url: '/pages/departments/base-info/base-info',
+				// 	success: function(res) {
+				// 		console.log(res)
+				// 	}
+				// });
 			}
 		}
 	}
