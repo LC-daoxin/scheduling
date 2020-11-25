@@ -20,10 +20,10 @@
 		</view>
 		<view class="tab-inner">
 			<view class="tab-inner_item" v-show="currentTabIndex === 0">
-				<request-item v-for="(request, requestIndex) of requestList" :key="requestIndex" :data="request" @click.native="verify(request)"></request-item>
+				<request-item v-for="(request, requestIndex) of requestList" :key="requestIndex" :dataArr="request" @click.native="verify(request)"></request-item>
 			</view>
 			<view class="tab-inner_item" v-show="currentTabIndex === 1">
-				<request-item v-for="(verified, verifiedIndex) of verifiedList" :key="verifiedIndex" :data="verified"></request-item>
+				<request-item v-for="(verified, verifiedIndex) of verifiedList" :key="verifiedIndex" :dataArr="verified"></request-item>
 			</view>
 		</view>
 		<popup :title="popupTitle" ref="popup">
@@ -45,7 +45,7 @@ import requestList from './requestList.js';
 import verifiedList from './verifiedList.js';
 
 export default {
-	data() {
+	data () {
 		return {
 			currentTabIndex: 0,
 			popupTitle: '',

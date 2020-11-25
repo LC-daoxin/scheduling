@@ -51,7 +51,6 @@
 				"navigationBarTitleText": "创建科室",
 				"enablePullDownRefresh": false
 			}
-
 		}, {
 			"path": "pages/departments/department-select/department-select",
 			"style": {
@@ -64,7 +63,6 @@
 				"navigationBarTitleText": "基本资料",
 				"enablePullDownRefresh": false
 			}
-
 		}, {
 			"path": "pages/departments/hospitalList/hospitalList",
 			"style": {
@@ -83,12 +81,18 @@
                 "navigationBarTitleText": "科室人员",
                 "enablePullDownRefresh": false
             }
-            
         },{
             "path" : "pages/departments/department-list/department-list",
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "我的科室",
+                "enablePullDownRefresh": false
+            }
+        },{
+            "path" : "pages/personnel/personnel-info/personnel-info",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "人员信息",
                 "enablePullDownRefresh": false
             }
         }

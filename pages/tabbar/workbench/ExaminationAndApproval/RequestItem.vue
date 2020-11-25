@@ -1,21 +1,21 @@
 <template>
 	<view class="request-item">
 		<div class="request-item-header">
-				<view class="title">{{ data.title }}</view>
+				<view class="title">{{ dataArr.title }}</view>
 				<view :class="'request-status ' + setStatus">{{ checkStatus }}</view>
-				<view class="time">{{ data.requestTime }}</view>
+				<view class="time">{{ dataArr.requestTime }}</view>
 		</div>
-		<view class="request-item-content">请假类型：{{ data.requestType }}</view>
-		<view class="request-item-content">开始日期：{{ data.startTime }}</view>
-		<view class="request-item-content">结束日期：{{ data.endTime }}</view>
-		<view class="request-item-content">请假时长：{{ data.lengthOfTime }}天</view>
+		<view class="request-item-content">请假类型：{{ dataArr.requestType }}</view>
+		<view class="request-item-content">开始日期：{{ dataArr.startTime }}</view>
+		<view class="request-item-content">结束日期：{{ dataArr.endTime }}</view>
+		<view class="request-item-content">请假时长：{{ dataArr.lengthOfTime }}天</view>
 	</view>
 </template>
 
 <script>
 	export default {
 		props: {
-			data: {
+			dataArr: {
 				type: Object,
 				default: () => {
 					return {
@@ -33,7 +33,7 @@
 		},
 		computed: {
 			checkStatus() {
-				switch(this.data.status) {
+				switch(this.dataArr.status) {
 					case 0:
 						return '待审批';
 					case 1:
@@ -45,7 +45,7 @@
 				}
 			},
 			setStatus() {
-				switch(this.data.status) {
+				switch(this.dataArr.status) {
 					case 1:
 						return 'request-status_pass';
 					case 2:
