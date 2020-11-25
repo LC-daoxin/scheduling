@@ -17,6 +17,7 @@
 			<view v-if="description" class="u-alert-desc" :style="[descStyle]">
 				{{description}}
 			</view>
+			<slot></slot>
 		</view>
 		<view class="u-icon-wrap">
 			<u-icon @click="close" v-if="closeAble && !closeText" hoverClass="u-type-error-hover-color" name="close" color="#c0c4cc"
@@ -169,7 +170,7 @@
 		@include vue-flex;
 		align-items: center;
 		padding: 16rpx 30rpx;
-		border-radius: 8rpx;
+		// border-radius: 8rpx;
 		position: relative;
 		transition: all 0.3s linear;
 		border: 1px solid #fff;
@@ -207,7 +208,7 @@
 		}
 		
 		&--border--warning-disabled {
-			border-color: $u-type-warning-disabled;
+			border-color: $u-type-warning-light;
 		}
 		
 		&--border--info-disabled {
