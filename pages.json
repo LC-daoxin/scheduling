@@ -95,6 +95,13 @@
                 "navigationBarTitleText": "人员信息",
                 "enablePullDownRefresh": false
             }
+        },{
+            "path" : "pages/scheduling/scheduling",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "排班",
+                "enablePullDownRefresh": false
+            }
         }
     ],
 	"globalStyle": {

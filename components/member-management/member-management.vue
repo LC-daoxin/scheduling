@@ -8,7 +8,7 @@
 			<view class="management-content">
 				<u-row gutter="20">
 					<u-col span="6" class="box_1">
-						<view class="management-box">
+						<view class="management-box" @click="goScheduling">
 							<text class="iconfont icon-paiban"></text>
 							<text class="box-text">排班表</text>
 						</view>
@@ -56,6 +56,11 @@ export default {
 		examinationAndApproval() {
 			uni.navigateTo({
 				url: '/pages/tabbar/workbench/ExaminationAndApproval/ExaminationAndApproval'
+			});
+		},
+		goScheduling () {
+			uni.navigateTo({
+				url: '/pages/scheduling/scheduling'
 			});
 		}
 	}

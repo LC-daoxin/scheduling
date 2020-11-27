@@ -1,6 +1,6 @@
 <template>
 	<view class="box">
-		<view class="box-content">
+		<view class="box-content" @click="goInfo">
 			<view class="info">
 				<view class="name">{{ info.name }}</view>
 				<view class="info-content">
@@ -33,6 +33,14 @@
 			};
 		},
 		methods: {
+			goInfo () {
+				uni.navigateTo({
+				    url: '/pages/personnel/personnel-info/personnel-info',
+					success: function(res) {
+						console.log(res)
+					}
+				});
+			}
 		}
 	};
 </script>
@@ -60,7 +68,7 @@
 					font-weight: 400;
 				}
 				.info-content {
-					color: #7b7c7c;
+					color: $half-text-color;
 					.phone-number {
 						margin-bottom: 10rpx;
 					}

@@ -13,6 +13,17 @@
 				</view>
 			</u-alert-tips>
 			<mine-card></mine-card>
+			<uni-list class="userlist">
+			    <uni-list-item v-for="(item,index) in userList" :key="index" :clickable="true" @click="goInfo(item)">
+					<template slot="header">
+						<text class="name">{{ item.name }}</text>
+						<text class="professionalTitle">{{ item.professionalTitle }}</text>
+					</template>
+					<template class="footer" slot="footer">
+						<view v-if="item.permission !== '用户'" class="permission">{{ item.permission }}</view>
+					</template>
+				</uni-list-item>
+			</uni-list>
 			<button class="bottomBtn"  open-type="share" :data-title="shareInfo.title" :data-imgurl="shareInfo.imgurl" :data-path="shareInfo.path">邀请成员</button>
         </view>
 		<view v-show="currentTabIndex === 1" class="tab-inner_item">
@@ -26,9 +37,68 @@
 <script>
 	import mineCard from './mine-card.vue'
 	export default {
+		components: {
+			mineCard
+		},
 		data() {
 			return {
-				list: [],
+				userList: [{
+					name: '赵易',
+					id: 201001,
+					phoneNumber: '15201367242',
+					professionalTitle: '主任护师',
+					tier: 'N4',
+					seniority: 8,
+					permission: '创建者'
+				},{
+					name: '钱尔',
+					id: 201002,
+					phoneNumber: '15201367242',
+					professionalTitle: '副主任护师',
+					tier: 'N4',
+					seniority: 8,
+					permission: '管理员'
+				},{
+					name: '孙时',
+					id: 201003,
+					phoneNumber: '15201367242',
+					professionalTitle: '副主任护师',
+					tier: 'N4',
+					seniority: 8,
+					permission: '管理员'
+				},{
+					name: '李思',
+					id: 201004,
+					phoneNumber: '15201367242',
+					professionalTitle: '护士',
+					tier: 'N4',
+					seniority: 8,
+					permission: '用户'
+				},{
+					name: '周梧',
+					id: 201005,
+					phoneNumber: '15201367242',
+					professionalTitle: '护士',
+					tier: 'N4',
+					seniority: 8,
+					permission: '用户'
+				},{
+					name: '吴柳',
+					id: 201006,
+					phoneNumber: '15201367242',
+					professionalTitle: '护士',
+					tier: 'N4',
+					seniority: 8,
+					permission: '用户'
+				},{
+					name: '王奇',
+					id: 201007,
+					phoneNumber: '15201367242',
+					professionalTitle: '护士',
+					tier: 'N4',
+					seniority: 8,
+					permission: '用户'
+				}],
 				currentTabIndex: 0,
 				notice: '如统计数据有误，请先维护人员信息',
 				shareInfo: {
@@ -47,27 +117,31 @@
 		        path: dataset.path  
 		    }  
 		},
-		mounted() {
-			this.list = this.$store.state.vuex_tabbar;
-		},
 		methods: {
 			isCurrentTab(index) {
 				return this.currentTabIndex === index ? 'tab-header_item_active' : '';
 			},
 			switchTab(index) {
 				this.currentTabIndex = index;
+			},
+			goInfo () {
+				uni.navigateTo({
+				    url: '/pages/personnel/personnel-info/personnel-info',
+					success: function(res) {
+						console.log(res)
+					}
+				});
 			}
-		},
-		components: {
-			mineCard
 		}
 	};
 </script>
 
 <style lang="scss">
-	@import "../../../components/tab-bar/tab-bar.scss";
+	@import "@/components/tab-bar/tab-bar.scss";
 	.tab-inner {
 		padding: 0 !important;
+		height: 100% !important;
+		overflow-y: auto !important;
 	}
 	.desc {
 		font-size: 26rpx;
@@ -94,5 +168,29 @@
 		width: 100%;
 		position: fixed;
 		bottom: 0;
+	}
+	.userlist {
+		margin-top: 30rpx;
+		display: block;
+		.name {
+			font-size: 32rpx;
+			display: block;
+		}
+		.professionalTitle {
+			font-size: 28rpx;
+			color: $half-text-color;
+		}
+		.footer {
+			display: flex;
+			align-items: center;
+			.permission {
+				padding: 6rpx 12rpx;
+				color: #fff;
+				background-color: #6faaff;
+				-webkit-border-radius: 10rpx;
+				border-radius: 30rpx;
+				font-size: 26rpx;
+			}
+		}
 	}
 </style>
