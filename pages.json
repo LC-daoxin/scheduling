@@ -9,101 +9,155 @@
 				"navigationStyle": "custom",
 				"navigationBarTitleText": "首页"
 			}
-		}, {
+		},
+		{
 			"path": "pages/tabbar/workbench/workbench",
 			"style": {
 				"navigationBarTitleText": "工作台"
 			}
-		}, {
+		},
+		{
 			"path": "pages/tabbar/notice/notice",
 			"style": {
 				"navigationBarTitleText": "通知"
 			}
-		}, {
+		},
+		{
 			"path": "pages/tabbar/mine/mine",
 			"style": {
 				"navigationStyle": "custom",
 				"navigationBarTitleText": "我的"
 			}
-		}, {
+		},
+		{
 			"path": "pages/tabbar/notice/noticeDetail/noticeDetail",
 			"style": {
 				"navigationBarTitleText": "通知详情"
 			}
-		}, {
+		},
+		{
 			"path": "pages/tabbar/mine/personalSettings/personalSettings",
 			"style": {
 				"navigationBarTitleText": "个人设置"
 			}
-		}, {
+		},
+		{
 			"path": "pages/tabbar/mine/feedBack/feedBack",
 			"style": {
 				"navigationBarTitleText": "反馈意见"
 			}
-		}, {
+		},
+		{
 			"path": "pages/departments/department-info/department-info",
 			"style": {
 				"navigationBarTitleText": "科室信息"
 			}
-		}, {
+		},
+		{
 			"path": "pages/departments/department-create/department-create",
 			"style": {
 				"navigationBarTitleText": "创建科室",
 				"enablePullDownRefresh": false
 			}
-		}, {
+		},
+		{
 			"path": "pages/departments/department-select/department-select",
 			"style": {
 				"navigationBarTitleText": "所在科室",
 				"enablePullDownRefresh": false
 			}
-		}, {
+		},
+		{
 			"path": "pages/departments/base-info/base-info",
 			"style": {
 				"navigationBarTitleText": "基本资料",
 				"enablePullDownRefresh": false
 			}
-		}, {
+		},
+		{
 			"path": "pages/departments/hospitalList/hospitalList",
 			"style": {
 				"navigationBarTitleText": "所在医院",
 				"enablePullDownRefresh": false
 			}
-		}, {
+		},
+		{
 			"path": "pages/tabbar/workbench/ExaminationAndApproval/ExaminationAndApproval",
 			"style": {
 				"navigationBarTitleText": "审批"
 			}
-		},{
-            "path" : "pages/departments/department-personnel/department-personnel",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "科室人员",
-                "enablePullDownRefresh": false
-            }
-        },{
-            "path" : "pages/departments/department-list/department-list",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "我的科室",
-                "enablePullDownRefresh": false
-            }
-        },{
-            "path" : "pages/personnel/personnel-info/personnel-info",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "人员信息",
-                "enablePullDownRefresh": false
-            }
-        },{
-            "path" : "pages/scheduling/scheduling",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "排班",
-                "enablePullDownRefresh": false
-            }
-        }
-    ],
+		},
+		{
+			"path": "pages/departments/department-personnel/department-personnel",
+			"style": {
+				"navigationBarTitleText": "科室人员",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/departments/department-list/department-list",
+			"style": {
+				"navigationBarTitleText": "我的科室",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/personnel/personnel-info/personnel-info",
+			"style": {
+				"navigationBarTitleText": "人员信息",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/scheduling/scheduling",
+			"style": {
+				"navigationBarTitleText": "排班",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/tabbar/workbench/Overtime/Overtime",
+			"style": {
+				"navigationBarTitleText": "加班申请",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/tabbar/workbench/Overtime/OvertimeRequest",
+			"style": {
+				"navigationBarTitleText": "加班申请",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/tabbar/workbench/ShiftChange/ShiftChange",
+			"style": {
+				"navigationBarTitleText": "改班申请",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/tabbar/workbench/ShiftChange/ShiftChangeRequest",
+			"style": {
+				"navigationBarTitleText": "改班申请",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/tabbar/workbench/AskForLeave/AskForLeave",
+			"style": {
+				"navigationBarTitleText": "请假申请",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/tabbar/workbench/AskForLeave/AskForLeaveRequest",
+			"style": {
+				"navigationBarTitleText": "请假申请",
+				"enablePullDownRefresh": false
+			}
+		}
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
@@ -115,26 +169,31 @@
 		"selectedColor": "#5098ff",
 		"borderStyle": "black",
 		"backgroundColor": "#ffffff",
-		"list": [{
-			"pagePath": "pages/tabbar/home/home",
-			"iconPath": "static/image/home.png",
-			"selectedIconPath": "static/image/home_fill.png",
-			"text": "首页"
-		}, {
-			"pagePath": "pages/tabbar/workbench/workbench",
-			"iconPath": "static/image/form.png",
-			"selectedIconPath": "static/image/form_fill.png",
-			"text": "工作台"
-		}, {
-			"pagePath": "pages/tabbar/notice/notice",
-			"iconPath": "static/image/notice.png",
-			"selectedIconPath": "static/image/notice_fill.png",
-			"text": "通知"
-		}, {
-			"pagePath": "pages/tabbar/mine/mine",
-			"iconPath": "static/image/my.png",
-			"selectedIconPath": "static/image/my_fill.png",
-			"text": "我的"
-		}]
+		"list": [
+			{
+				"pagePath": "pages/tabbar/home/home",
+				"iconPath": "static/image/home.png",
+				"selectedIconPath": "static/image/home_fill.png",
+				"text": "首页"
+			},
+			{
+				"pagePath": "pages/tabbar/workbench/workbench",
+				"iconPath": "static/image/form.png",
+				"selectedIconPath": "static/image/form_fill.png",
+				"text": "工作台"
+			},
+			{
+				"pagePath": "pages/tabbar/notice/notice",
+				"iconPath": "static/image/notice.png",
+				"selectedIconPath": "static/image/notice_fill.png",
+				"text": "通知"
+			},
+			{
+				"pagePath": "pages/tabbar/mine/mine",
+				"iconPath": "static/image/my.png",
+				"selectedIconPath": "static/image/my_fill.png",
+				"text": "我的"
+			}
+		]
 	}
 }

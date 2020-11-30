@@ -13,7 +13,7 @@
  */
 
 /* uni.scss */
-@import "uview-ui/theme.scss";
+@import 'uview-ui/theme.scss';
 /* iconfont.css */
 @import '/common/css/iconfont.css';
 
@@ -32,32 +32,32 @@ $uni-color-warning: #f0ad4e;
 $uni-color-error: #dd524d;
 
 /* 文字基本颜色 */
-$uni-text-color:#333;//基本色
-$uni-text-color-inverse:#fff;//反色
-$uni-text-color-grey:#999;//辅助灰色，如加载更多的提示信息
+$uni-text-color: #333; //基本色
+$uni-text-color-inverse: #fff; //反色
+$uni-text-color-grey: #999; //辅助灰色，如加载更多的提示信息
 $uni-text-color-placeholder: #808080;
-$uni-text-color-disable:#c0c0c0;
+$uni-text-color-disable: #c0c0c0;
 
 /* 背景颜色 */
-$uni-bg-color:#ffffff;
-$uni-bg-color-grey:#f8f8f8;
-$uni-bg-color-hover:#f1f1f1;//点击状态颜色
-$uni-bg-color-mask:rgba(0, 0, 0, 0.4);//遮罩颜色
+$uni-bg-color: #ffffff;
+$uni-bg-color-grey: #f8f8f8;
+$uni-bg-color-hover: #f1f1f1; //点击状态颜色
+$uni-bg-color-mask: rgba(0, 0, 0, 0.4); //遮罩颜色
 
 /* 边框颜色 */
-$uni-border-color:#c8c7cc;
+$uni-border-color: #c8c7cc;
 
 /* 尺寸变量 */
 
 /* 文字尺寸 */
-$uni-font-size-sm:24rpx;
-$uni-font-size-base:28rpx;
-$uni-font-size-lg:32rpx;
+$uni-font-size-sm: 24rpx;
+$uni-font-size-base: 28rpx;
+$uni-font-size-lg: 32rpx;
 
 /* 图片尺寸 */
-$uni-img-size-sm:40rpx;
-$uni-img-size-base:52rpx;
-$uni-img-size-lg:80rpx;
+$uni-img-size-sm: 40rpx;
+$uni-img-size-base: 52rpx;
+$uni-img-size-lg: 80rpx;
 
 /* Border Radius */
 $uni-border-radius-sm: 4rpx;
@@ -79,41 +79,145 @@ $uni-spacing-col-lg: 24rpx;
 $uni-opacity-disabled: 0.3; // 组件禁用态的透明度
 
 /* 文章场景相关 */
-$uni-color-title: #2C405A; // 文章标题颜色
-$uni-font-size-title:40rpx;
+$uni-color-title: #2c405a; // 文章标题颜色
+$uni-font-size-title: 40rpx;
 $uni-color-subtitle: #555555; // 二级标题颜色
-$uni-font-size-subtitle:36rpx;
-$uni-color-paragraph: #3F536E; // 文章段落颜色
-$uni-font-size-paragraph:30rpx;
+$uni-font-size-subtitle: 36rpx;
+$uni-color-paragraph: #3f536e; // 文章段落颜色
+$uni-font-size-paragraph: 30rpx;
 
 .button {
 	font-size: inherit;
 	border-radius: 0.4em;
+	background-color: #ffffff;
 }
 
 .button--primary {
-	color: #FFFFFF;
+	color: #ffffff;
 	background-color: $base-color;
 }
 
 .button--danger {
-	color: #FFFFFF;
+	color: #ffffff;
 	background-color: $danger-color;
 }
 
 .button-group {
 	display: flex;
 	align-items: flex-end;
-	
+
 	button {
 		flex: 1;
 	}
-	
+
 	button:first-child {
 		border-radius: 0.4em 0 0 0.4em;
 	}
-	
+
 	button:last-child {
 		border-radius: 0 0.4em 0.4em 0;
 	}
+}
+
+.request-page {
+	height: calc(100vh - 44px);
+	background-color: #f8f8f8;
+	padding: 1em 1em 0;
+
+	::v-deep button {
+		font-size: inherit;
+	}
+
+	.uni-btn-v {
+		button + button {
+			margin-top: 0.5em;
+		}
+
+		.reset-btn {
+			background-color: #fff;
+		}
+	}
+
+	.uni-form-item {
+		margin-bottom: 1em;
+
+		.title {
+			font-size: 1.2em;
+			font-weight: bold;
+			padding: 20rpx 0;
+		}
+
+		input,
+		.uni-textarea {
+			padding: 0.4em;
+			border: 1px solid #eee;
+			border-radius: 0.4em;
+			background-color: #fff;
+		}
+	}
+
+	.selected {
+		display: block;
+		font-size: 0.9rem;
+		padding: 0.4em;
+		border: 1px solid #eee;
+		border-radius: 0.4em;
+		background-color: #fff;
+	}
+}
+
+.request-item {
+	position: relative;
+	padding: 1em;
+	background-color: #fff;
+	border-radius: 0.4em;
+}
+
+.request-item-header {
+	display: flex;
+	align-items: center;
+	margin-bottom: 0.5em;
+}
+
+.request-item-header .title {
+	font-size: 0.85rem;
+}
+
+.request-item-header .time {
+	position: absolute;
+	right: 1em;
+	color: #999;
+}
+
+.request-status {
+	font-size: 0.7em;
+	padding: 0.4em;
+	border-radius: 0.4em;
+	color: #fff;
+	background-color: #2979ff;
+	margin-left: 1em;
+}
+
+.request-status_pass {
+	background-color: rgb(112, 191, 99);
+}
+
+.request-status_refuse {
+	background-color: rgb(225, 78, 57);
+}
+
+.request-item-content {
+	color: #666;
+	letter-spacing: 0.07em;
+}
+
+.triangle {
+	position: relative;
+	top: 1em;
+	left: 0.3em;
+	width: 0;
+	height: 0;
+	border-top: 0.5em solid #333;
+	border-left: 0.3em solid transparent;
+	border-right: 0.3em solid transparent;
 }

@@ -35,12 +35,18 @@
 			</view>
 			<view class="server_box">
 				<u-cell-group>
-					<u-cell-item title="排班表" value="本周安排"><text slot="icon" class="iconfont icon-paiban"></text></u-cell-item>
-					<u-cell-item title="个人设置" @click="naviTo('setting')"><text slot="icon" class="iconfont icon-shezhi"></text></u-cell-item>
+					<u-cell-item title="排班表" value="本周安排" @click="naviTo('scheduling')"
+						><text slot="icon" class="iconfont icon-paiban"></text
+					></u-cell-item>
+					<u-cell-item title="个人设置" @click="naviTo('setting')"
+						><text slot="icon" class="iconfont icon-shezhi"></text
+					></u-cell-item>
 					<!-- <u-cell-item title="在线客服">
 						<text slot="icon" class="iconfont icon-caidanguanli"></text>
 					</u-cell-item> -->
-					<u-cell-item title="反馈意见" @click="naviTo('feedBack')"><text slot="icon" class="iconfont icon-shenpi"></text></u-cell-item>
+					<u-cell-item title="反馈意见" @click="naviTo('feedBack')"
+						><text slot="icon" class="iconfont icon-shenpi"></text
+					></u-cell-item>
 				</u-cell-group>
 			</view>
 		</view>
@@ -65,10 +71,15 @@ export default {
 						url: '/pages/tabbar/mine/personalSettings/personalSettings'
 					});
 					break;
-        case 'feedBack':
-          uni.navigateTo({
-            url: '/pages/tabbar/mine/feedBack/feedBack'
-          })
+				case 'feedBack':
+					uni.navigateTo({
+						url: '/pages/tabbar/mine/feedBack/feedBack'
+					});
+					break;
+				case 'scheduling':
+					uni.navigateTo({
+						url: '/pages/scheduling/scheduling'
+					});
 			}
 		}
 	},
@@ -76,7 +87,10 @@ export default {
 		let menuButtonInfo = uni.getMenuButtonBoundingClientRect();
 		let Info = uni.getSystemInfoSync();
 		let statusBarHeight = Info.statusBarHeight; // 状态栏高度
-		let titleBarHeight = menuButtonInfo.bottom - Info.statusBarHeight + (menuButtonInfo.top - Info.statusBarHeight); // 胶囊按钮高度
+		let titleBarHeight =
+			menuButtonInfo.bottom -
+			Info.statusBarHeight +
+			(menuButtonInfo.top - Info.statusBarHeight); // 胶囊按钮高度
 		this.BarHeight = statusBarHeight + titleBarHeight + 'px';
 	},
 	mounted() {
