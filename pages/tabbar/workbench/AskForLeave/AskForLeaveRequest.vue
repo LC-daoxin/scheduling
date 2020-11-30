@@ -14,17 +14,7 @@
 				<view class="title">开始日期</view>
 				<view class="uni-list">
 					<view class="uni-list-cell">
-						<view class="uni-list-cell-db">
-							<picker
-								mode="date"
-								:value="start"
-								:start="startDate"
-								:end="endDate"
-								@change="bindDateChange"
-							>
-								<text class="selected">{{ start }}</text>
-							</picker>
-						</view>
+						<date-picker v-model="start"></date-picker>
 					</view>
 				</view>
 			</view>
@@ -32,17 +22,7 @@
 				<view class="title">结束日期</view>
 				<view class="uni-list">
 					<view class="uni-list-cell">
-						<view class="uni-list-cell-db">
-							<picker
-								mode="date"
-								:value="end"
-								:start="startDate"
-								:end="endDate"
-								@change="bindDateChange"
-							>
-								<text class="selected">{{ end }}</text>
-							</picker>
-						</view>
+						<date-picker v-model="end"></date-picker>
 					</view>
 				</view>
 			</view>
@@ -70,16 +50,12 @@
 </template>
 
 <script>
-import { getDate } from '@/utils/index.js';
 import LbPicker from '@/components/lb-picker';
+import DatePicker from '@/components/date-picker/DatePicker.vue'
 
 export default {
 	name: 'ShiftChangeRequest',
 	data() {
-		const currentDate = this.getDate({
-			format: true
-		});
-
 		return {
 			hours: 1,
 			start: '2020-11-30',
@@ -89,22 +65,9 @@ export default {
 			date: ''
 		};
 	},
-	computed: {
-		startDate() {
-			return this.getDate('start');
-		},
-		endDate() {
-			return this.getDate('end');
-		}
-	},
-	methods: {
-		getDate,
-		bindDateChange: function (e) {
-			this.date = e.target.value;
-		}
-	},
 	components: {
-		LbPicker
+		LbPicker,
+		DatePicker
 	}
 };
 </script>

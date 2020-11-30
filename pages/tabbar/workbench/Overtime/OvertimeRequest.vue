@@ -5,17 +5,7 @@
 				<view class="title">日期</view>
 				<view class="uni-list">
 					<view class="uni-list-cell">
-						<view class="uni-list-cell-db">
-							<picker
-								mode="date"
-								:value="date"
-								:start="startDate"
-								:end="endDate"
-								@change="bindDateChange"
-							>
-								<text class="selected-date">{{ date }}</text>
-							</picker>
-						</view>
+						<date-picker v-model="date"></date-picker>
 					</view>
 				</view>
 			</view>
@@ -43,33 +33,18 @@
 </template>
 
 <script>
-import { getDate } from '@/utils/index.js';
+import DatePicker from '@/components/date-picker/DatePicker.vue';
 
 export default {
 	name: 'OvertimeRequest',
 	data() {
-		const currentDate = this.getDate({
-			format: true
-		});
-
 		return {
-			date: currentDate,
+			date: '2020-10-31',
 			hours: 1
 		};
 	},
-	computed: {
-		startDate() {
-			return this.getDate('start');
-		},
-		endDate() {
-			return this.getDate('end');
-		}
-	},
-	methods: {
-		getDate,
-		bindDateChange: function (e) {
-			this.date = e.target.value;
-		}
+	components: {
+		DatePicker
 	}
 };
 </script>

@@ -5,17 +5,7 @@
 				<view class="title">改班日期</view>
 				<view class="uni-list">
 					<view class="uni-list-cell">
-						<view class="uni-list-cell-db">
-							<picker
-								mode="date"
-								:value="date"
-								:start="startDate"
-								:end="endDate"
-								@change="bindDateChange"
-							>
-								<text class="selected">{{ date }}</text>
-							</picker>
-						</view>
+						<date-picker v-model="date"></date-picker>
 					</view>
 				</view>
 			</view>
@@ -52,18 +42,14 @@
 </template>
 
 <script>
-import { getDate } from '@/utils/index.js';
 import LbPicker from '@/components/lb-picker';
+import DatePicker from '@/components/date-picker/DatePicker.vue'
 
 export default {
 	name: 'ShiftChangeRequest',
 	data() {
-		const currentDate = this.getDate({
-			format: true
-		});
-
 		return {
-			date: currentDate,
+			date: '2020-11-30',
 			hours: 1,
 			origin: '请选择原班种',
 			originList: [],
@@ -71,22 +57,9 @@ export default {
 			newerList: []
 		};
 	},
-	computed: {
-		startDate() {
-			return this.getDate('start');
-		},
-		endDate() {
-			return this.getDate('end');
-		}
-	},
-	methods: {
-		getDate,
-		bindDateChange: function (e) {
-			this.date = e.target.value;
-		}
-	},
 	components: {
-		LbPicker
+		LbPicker,
+		DatePicker
 	}
 };
 </script>

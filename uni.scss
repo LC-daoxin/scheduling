@@ -86,6 +86,7 @@ $uni-font-size-subtitle: 36rpx;
 $uni-color-paragraph: #3f536e; // 文章段落颜色
 $uni-font-size-paragraph: 30rpx;
 
+/* 按钮样式 */
 .button {
 	font-size: inherit;
 	border-radius: 0.4em;
@@ -119,6 +120,7 @@ $uni-font-size-paragraph: 30rpx;
 	}
 }
 
+/* 申请页面 */
 .request-page {
 	height: calc(100vh - 44px);
 	background-color: #f8f8f8;
@@ -211,6 +213,7 @@ $uni-font-size-paragraph: 30rpx;
 	letter-spacing: 0.07em;
 }
 
+/* 小三角 */
 .triangle {
 	position: relative;
 	top: 1em;
