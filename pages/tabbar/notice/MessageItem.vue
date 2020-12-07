@@ -37,6 +37,8 @@ export default {
 
 <style lang="scss" scoped>
 .message-item {
+	background: $uni-bg-color;
+
 	.no_read {
 		color: #333;
 	}
@@ -73,7 +75,7 @@ export default {
 			display: flex;
 			flex-direction: column;
 			box-sizing: border-box;
-			padding: 8px 10px 0;
+			padding: 8px 10px 0 0;
 			height: 70px;
 			width: calc(100% - 75px);
 			border-bottom: 1px solid #dbdfdf;

@@ -119,7 +119,7 @@ const RequestForLeaveForm = [
 const RequestOverTimeForm = [
 	{ label: '日期', key: 'applyDate', type: 'date' },
 	{ label: '时长', key: 'duration', type: 'numberInput' },
-	{ label: '申请理由', key: 'account', type: 'input' }
+	{ label: '申请理由', key: 'account', type: 'textarea' }
 ];
 // 改班表单
 const RequestShiftChangeForm = [
