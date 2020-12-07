@@ -4,8 +4,8 @@
 			<view class="head_box">
 				<u-avatar class="head_img" :src="userSrc" mode="circle" size="130"></u-avatar>
 				<view class="info">
-					<view class="head_name">张大夫</view>
-					<view class="departments">精神科</view>
+					<view class="head_name">{{ userInfo.nickName }}</view>
+					<view class="departments">{{ userInfo.office }}</view>
 				</view>
 			</view>
 			<image class="user_bg" src="../../../static/image/user-bg.png"></image>
@@ -20,7 +20,7 @@
 				<u-line color="#c8ccdb"></u-line>
 				<view class="menu_btnbox">
 					<view class="menu_btns">
-						<view class="p1">60</view>
+						<view class="p1">{{ userInfo.totalTime }}</view>
 						<view class="p2">当月工时</view>
 					</view>
 					<view class="menu_btns">
@@ -60,7 +60,23 @@ export default {
 			list: [],
 			current: 4,
 			userSrc: null,
-			BarHeight: 0 // 胶囊按钮高度 + 状态栏高度
+			BarHeight: 0, // 胶囊按钮高度 + 状态栏高度
+			userInfo: {
+				nickName: '张大夫',
+				avatarurl: null,
+				name: '张大夫',
+				mobile: '15811292046',
+				email: null,
+				hospital: null,
+				office: '精神科',
+				positional: null,
+				rank: null,
+				seniority: null,
+				education: null,
+				userCode: null,
+				id: 2,
+				totalTime: 60
+			}
 		};
 	},
 	methods: {
@@ -81,6 +97,22 @@ export default {
 						url: '/pages/scheduling/scheduling'
 					});
 			}
+		},
+		getUserInfo() {
+			const weixinCode = '';
+			uni.request({
+				url: t.$Url + `/user/${weixinCode}`,
+				method: 'get', //请求方式
+				success: res => {
+					const { code, msg, data } = res.data;
+					if (code === 'success') {
+						Object.assign(this.userInfo, data);
+					}
+				},
+				fail: error => {
+					console.log(error);
+				}
+			});
 		}
 	},
 	created() {

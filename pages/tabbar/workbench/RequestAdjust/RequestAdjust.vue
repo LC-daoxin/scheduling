@@ -1,16 +1,14 @@
 <template>
 	<div class="overtime">
 		<navigator
-			:url="requestUrl"
+			url="/pages/tabbar/workbench/RequestAdjust/RequestAdjustRequest"
 			v-for="(item, index) of requestList"
 			class="nav-item"
 			:key="index"
 		>
 			<request-item :dataArr="item">
-				<view class="request-item-content">请假类型：{{ item.type }}</view>
-				<view class="request-item-content">开始日期：{{ item.start }}</view>
-				<view class="request-item-content">结束日期：{{ item.end }}</view>
-				<view class="request-item-content">请假时长：{{ item.hours }}</view>
+				<view class="request-item-content">日期：{{ item.overtimeDate }}</view>
+				<view class="request-item-content">时长：{{ item.lenOfTime }}</view>
 			</request-item>
 		</navigator>
 		<div class="button-container">
@@ -28,38 +26,16 @@ export default {
 	name: 'Overtime',
 	data() {
 		return {
-			requestUrl: '/pages/tabbar/workbench/AskForLeave/AskForLeaveRequest',
+			requestUrl: '/pages/tabbar/workbench/Overtime/OvertimeRequest',
 			requestList: [
 				{
-					type: '婚假',
-					start: '2020-11-30',
-					end: '2020-12-01',
-					hours: '24',
+					status: 0,
 					requestTime: '11-30 10:45',
-					status: 0
+					lenOfTime: '2小时',
+					overtimeDate: '2020-12-01 至 2020-12-02'
 				}
 			]
 		};
-	},
-	methods: {
-		getList() {
-			const postData = {
-				gourpId: '',
-				applyType: '1',
-				status: ''
-			};
-			uni.request({
-				url: t.$Url + '/apply/applyList',
-				method: 'post', //请求方式
-				data: postData,
-				success: res => {
-					console.log(res);
-				},
-				fail: error => {
-					console.log(error);
-				}
-			});
-		}
 	},
 	components: {
 		RequestItem

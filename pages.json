@@ -156,6 +156,20 @@
 				"navigationBarTitleText": "请假申请",
 				"enablePullDownRefresh": false
 			}
+		},
+		{
+			"path": "pages/tabbar/workbench/RequestAdjust/RequestAdjust",
+			"style": {
+				"navigationBarTitleText": "调班申请",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/tabbar/workbench/RequestAdjust/RequestAdjustRequest",
+			"style": {
+				"navigationBarTitleText": "调班申请",
+				"enablePullDownRefresh": false
+			}
 		}
 	],
 	"globalStyle": {

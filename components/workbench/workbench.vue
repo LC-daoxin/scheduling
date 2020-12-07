@@ -4,14 +4,14 @@
 			<view class="workbench-title">{{ title }}</view>
 			<view class="workbench-content">
 				<u-row gutter="16">
-					<u-col span="4">
+					<!-- <u-col span="4">
 						<view class="layout-box">
 							<view class="box-content">
 								<image src="../../static/image/paibantixing.png" class="icon"></image>
 							</view>
 							<text class="box-text">排班提醒</text>
 						</view>
-					</u-col>
+					</u-col> -->
 					<u-col span="4">
 						<navigator url="/pages/tabbar/workbench/Overtime/Overtime">
 							<view class="layout-box">
@@ -23,15 +23,18 @@
 						</navigator>
 					</u-col>
 					<u-col span="4">
-						<view class="layout-box">
-							<view class="box-content">
-								<image src="../../static/image/tiaobanshenqing.png" class="icon"></image>
+						<navigator url="/pages/tabbar/workbench/RequestAdjust/RequestAdjust">
+							<view class="layout-box">
+								<view class="box-content">
+									<image
+										src="../../static/image/tiaobanshenqing.png"
+										class="icon"
+									></image>
+								</view>
+								<text class="box-text">调班申请</text>
 							</view>
-							<text class="box-text">调班申请</text>
-						</view>
+						</navigator>
 					</u-col>
-				</u-row>
-				<u-row gutter="16">
 					<u-col span="4">
 						<navigator url="/pages/tabbar/workbench/ShiftChange/ShiftChange">
 							<view class="layout-box">
@@ -42,6 +45,8 @@
 							</view>
 						</navigator>
 					</u-col>
+				</u-row>
+				<u-row gutter="16">
 					<u-col span="4">
 						<navigator url="/pages/tabbar/workbench/AskForLeave/AskForLeave">
 							<view class="layout-box">

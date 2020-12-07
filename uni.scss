@@ -120,54 +120,6 @@ $uni-font-size-paragraph: 30rpx;
 	}
 }
 
-/* 申请页面 */
-.request-page {
-	height: calc(100vh - 44px);
-	background-color: #f8f8f8;
-	padding: 1em 1em 0;
-
-	::v-deep button {
-		font-size: inherit;
-	}
-
-	.uni-btn-v {
-		button + button {
-			margin-top: 0.5em;
-		}
-
-		.reset-btn {
-			background-color: #fff;
-		}
-	}
-
-	.uni-form-item {
-		margin-bottom: 1em;
-
-		.title {
-			font-size: 1.2em;
-			font-weight: bold;
-			padding: 20rpx 0;
-		}
-
-		input,
-		.uni-textarea {
-			padding: 0.4em;
-			border: 1px solid #eee;
-			border-radius: 0.4em;
-			background-color: #fff;
-		}
-	}
-
-	.selected {
-		display: block;
-		font-size: 0.9rem;
-		padding: 0.4em;
-		border: 1px solid #eee;
-		border-radius: 0.4em;
-		background-color: #fff;
-	}
-}
-
 .request-item {
 	position: relative;
 	padding: 1em;
