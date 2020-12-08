@@ -94,8 +94,6 @@ class ReqeustFeedBack extends Request {
 		this.formData = {
 			title: '', // 标题
 			advise: '', // 内容
-			createUser: this.sender,
-			createId: this.senderId
 		};
 	}
 }

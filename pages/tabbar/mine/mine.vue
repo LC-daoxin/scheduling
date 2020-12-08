@@ -101,7 +101,7 @@ export default {
 		getUserInfo() {
 			const weixinCode = '';
 			uni.request({
-				url: t.$Url + `/user/${weixinCode}`,
+				url: `/api/user/${weixinCode}`,
 				method: 'get', //请求方式
 				success: res => {
 					const { code, msg, data } = res.data;
