@@ -2,6 +2,14 @@
 	export default {
 		onLaunch: function() {
 			console.log('App Launch')
+			//#ifdef MP-WEIXIN
+			uni.login({
+			    provider: 'weixin',
+			    success: function (loginRes) {
+			        console.log(loginRes);
+			    }
+			});
+			//#endif
 			// uni.authorize({
 			//     scope: 'scope.userInfo',
 			//     success(res) {

@@ -24,15 +24,15 @@
 							<view class="uni-calendar__header-btn uni-calendar--right"></view>
 						</view> -->
 					</view>
-					<view class="uni-calendar__header_selectWeek">
+					<!-- <view class="uni-calendar__header_selectWeek">
 						<view class="uni-calendar__header-btn-box" @click.stop="pre">
-							<text class="iconfont icon-left-circle"></text>
+							<text class="iconfont icon-xiangzuoyuanjiantouzuojiantouxiangzuomianxing"></text>
 						</view>
-						<text class="selectWeek-text">{{ '第四'+ (nowDate.weeks||'') +'周'}}</text>
+						<text class="selectWeek-text">{{ '第'+ (nowDate.weeks||'') +'周'}}</text>
 						<view class="uni-calendar__header-btn-box" @click.stop="next">
-							<text class="iconfont icon-right-circle"></text>
+							<text class="iconfont icon-xiangzuoyuanjiantouzuojiantouxiangzuomianxing1"></text>
 						</view>
-					</view>
+					</view> -->
 					<view class="uni-calendar__header_selectTime"></view>
 					<text class="uni-calendar__backtoday" @click="backtoday">回到今天</text>
 				</view>
