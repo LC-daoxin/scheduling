@@ -145,11 +145,11 @@
 							<text class="text">删除</text>
 						</view>
 					</view>
-					<view class="right-content" @click="selectKinds">
+					<view class="right-content">
 						<swiper class="class-swiper" :indicator-dots="indicatorDots" :autoplay="autoplay">
 							<swiper-item v-for="(page, pIndex) in pages" :key="pIndex">
 								<view class="swiper-page">
-									<view class="swiper-page-item" v-for="(item, Index) in page" :key="Index">
+									<view class="swiper-page-item" v-for="(item, Index) in page" :key="Index" @click="selectClass">
 										<view class="text" v-if="item.name">{{ item.name }}</view>
 										<view class="text" v-else><text class="iconfont icon-jia"></text></view>
 									</view>
@@ -407,9 +407,15 @@
 					result = this.emptyString;
 				}
 			},
-			// 选择班级种类
-			selectKinds () {
-				if (this.currentHIndex < this.headers.length) {
+			// 选择班种
+			selectClass () {
+				if (!this.currentCIndex || !this.currentHIndex) {
+					uni.showToast({
+					    title: '请先选择单元格',
+						icon: 'none',
+					    duration: 1500
+					});
+				} else if (this.currentHIndex < this.headers.length) {
 					this.currentHIndex += 1;
 					this.scrollLeft += this.defaultColWidth;
 					this.selectLeft = this.scrollLeft;
