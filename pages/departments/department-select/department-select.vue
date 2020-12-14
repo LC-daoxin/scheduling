@@ -147,7 +147,7 @@
 				this.subCategoryList = category.subCategoryList;
 			},
 			categorySubClick(category){
-				console.log(category);
+				this.$emit('change', category)
 			}
 		},
 		mounted() {

@@ -1,19 +1,19 @@
 <template>
 	<view class="content">
 		<uni-search-bar class="search" :radius="100" placeholder="请输入科室名称" @confirm="search" @input="input" @cancel="cancel"></uni-search-bar>
-		<view class="nav" :style="'height:'+height+'px'">
+		<view class="nav">
 			<scroll-view class="nav-left" scroll-y>
-				<view :class="{'nav-left-item': true, active: index===categoryActive}" v-for="(item,index) in categoryList" @click="categoryClickMain(item,index)" :key="index">
+				<view v-for="item of categoryList" @click="categoryClickMain(item, item.id)" :key="item.id" :class="{'nav-left-item': true, active: item.id===categoryActive}">
 					{{ item[label] }}
 				</view>
 			</scroll-view>
 			<scroll-view class="nav-right" scroll-y>
-				<view class="nav-right-item" v-for="(item,index2) in subCategoryList" :key="index2" @click="categoryClickSub(item)">
-					<view class="nav-right-item-content">{{ item[label] }}</view>
+				<view class="nav-right-item" v-for="subItem of item.officeLists" :key="subItem.id" @click="categoryClickSub(subItem)">
+					<view class="nav-right-item-content">{{ subItem[label] }}</view>
 				</view>
 			</scroll-view>
 		</view>
-		<button class="bottomBtn" @click="addDepartment">没有我所在的科室，手动填写</button>
+		<!-- <button class="bottomBtn" @click="addDepartment">没有我所在的科室，手动填写</button> -->
 	</view>
 </template>
 
@@ -22,7 +22,6 @@
 		name: "category",
 		data() {
 			return {
-				height: 0,
 				categoryActive: 0,
 				searchStatus: false
 			}
@@ -50,6 +49,10 @@
 			label: {
 				type: String,
 				default: 'name'
+			},
+			subCatePara: {
+				type: String,
+				default: 'officeLists'
 			}
 		},
 		methods: {
@@ -79,27 +82,27 @@
 			}
 			
 		},
-		mounted() {
-			const query = uni.createSelectorQuery().in(this);
-			let one = new Promise((resolve) => {query.select('.bottomBtn').boundingClientRect(data => {
-			  console.log("bottomBtn布局位置信息", data);
-			  resolve(data.top)
-			}).exec()})
-			let two = new Promise((resolve) => {query.select('.search').boundingClientRect(data => {
-			  console.log("search布局位置信息", data);
-			  resolve(data.height)
-			}).exec()})
-			Promise.all([one, two]).then((values) => {
-			  console.log(values);
-			  this.height = values[0] - values[1]
-			});
-			this.categoryActive = this.defaultActive
-		},
-		watch: {
-			subCategoryList(newValue, oldValue) {
+		// mounted() {
+			// const query = uni.createSelectorQuery().in(this);
+			// let one = new Promise((resolve) => {query.select('.bottomBtn').boundingClientRect(data => {
+			//   console.log("bottomBtn布局位置信息", data);
+			//   resolve(data.top)
+			// }).exec()})
+			// let two = new Promise((resolve) => {query.select('.search').boundingClientRect(data => {
+			//   console.log("search布局位置信息", data);
+			//   resolve(data.height)
+			// }).exec()})
+			// Promise.all([one, two]).then((values) => {
+			//   console.log(values);
+			//   this.height = values[0] - values[1]
+			// });
+			// this.categoryActive = this.defaultActive
+		// },
+		// watch: {
+		// 	subCategoryList(newValue, oldValue) {
 				
-			}
-		},
+		// 	}
+		// },
 	}
 </script>
 

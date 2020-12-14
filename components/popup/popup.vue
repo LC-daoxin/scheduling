@@ -34,6 +34,8 @@
 		font-size: 1.1em;
 		background-color: #fff;
 		border-radius: 0.8em;
+		max-height: 90vh;
+		overflow-y: auto;
 
 		.popup-inner_title {
 			color: #333;

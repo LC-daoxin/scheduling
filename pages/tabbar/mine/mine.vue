@@ -12,13 +12,13 @@
 		</view>
 		<view class="user_menu">
 			<image class="arc" src="../../../static/image/arc.png"></image>
-			<view class="my_box">
+		<!-- 	<view class="my_box">
 				<view class="top_nav">
 					<text class="iconfont icon-paiban"></text>
 					<text class="name">我的排班</text>
 				</view>
 				<u-line color="#c8ccdb"></u-line>
-			</view>
+			</view> -->
 			<view class="server_box">
 				<u-cell-group>
 					<u-cell-item title="个人设置" @click="naviTo('setting')"><text slot="icon" class="iconfont icon-shezhi"></text></u-cell-item>
@@ -85,6 +85,13 @@
 						uni.setStorage({
 							key: 'userInfo',
 							data: data
+						})
+					} else {
+						uni.showToast({
+							title: '系统错误',
+							content: msg,
+							icon: 'none',
+							duration: 1000
 						})
 					}
 				})
