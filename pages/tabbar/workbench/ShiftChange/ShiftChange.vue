@@ -1,46 +1,32 @@
 <template>
-	<div class="overtime">
-		<navigator
-			:url="requestUrl"
-			v-for="(item, index) of requestList"
-			class="nav-item"
-			:key="index"
-		>
-			<request-item :dataArr="item">
-				<view class="request-item-content">原班种：{{ item.origin }}</view>
-				<view class="request-item-content">新班种：{{ item.new }}</view>
-				<view class="request-item-content">改班日期：{{ item.lenOfTime }}</view>
-			</request-item>
-		</navigator>
-		<div class="button-container">
-			<navigator :url="requestUrl">
-				<button class="button button--primary">申请</button>
-			</navigator>
-		</div>
-	</div>
+	<request-list :label-config="shiftChange" :list="requestList" :url="requestUrl"></request-list>
 </template>
 
 <script>
-import RequestItem from '@/components/request-item/RequestItem.vue';
+import RequestList from '@/components/RequestList.vue'
+import {
+	shiftChange
+} from '@/utils/requestListConfig.js'
 
 export default {
 	name: 'Overtime',
 	data() {
 		return {
+			shiftChange,
       requestUrl: '/pages/tabbar/workbench/ShiftChange/ShiftChangeRequest',
 			requestList: [
 				{
 					status: 0,
 					requestTime: '11-30 10:45',
-					origin: '',
-          new: '',
-          reason: ''
+					sourceClass: '',
+          newClass: '',
+          changeDate: '2020-12-01'
 				}
 			]
 		};
 	},
 	components: {
-		RequestItem
+		RequestList
 	}
 };
 </script>

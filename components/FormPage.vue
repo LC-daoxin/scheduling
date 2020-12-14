@@ -2,7 +2,7 @@
 	<div class="form-page">
 		<form @submit="form.submit()" @reset="formReset">
 			<u-cell-group>
-				<view v-for="(item, itemIndex) of formConfig" :key="itemIndex">
+				<view v-for="(item, itemIndex) of formConfig" :key="itemIndex" class="form-item">
 					<u-cell-item
 						v-if="item.type !== 'date' && item.type !== 'select'"
 						:title="item.label"
@@ -85,6 +85,15 @@ export default {
 	height: calc(100vh - 44px);
 	background-color: $bg-color;
 	padding-top: 10px;
+	
+	.u-cell-box {
+		padding: 0 1em;
+		border-radius: 10px;
+		
+		::v-deep .u-cell-item-box {
+			border-radius: 10px;
+		}
+	}
 
 	.uni-btn-v {
 		padding: 0 1em;

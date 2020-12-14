@@ -1,40 +1,23 @@
 <template>
-	<div class="overtime">
-		<navigator
-			:url="requestUrl"
-			v-for="(item, index) of requestList"
-			class="nav-item"
-			:key="index"
-		>
-			<request-item :dataArr="item">
-				<view class="request-item-content">请假类型：{{ item.type }}</view>
-				<view class="request-item-content">开始日期：{{ item.start }}</view>
-				<view class="request-item-content">结束日期：{{ item.end }}</view>
-				<view class="request-item-content">请假时长：{{ item.hours }}</view>
-			</request-item>
-		</navigator>
-		<div class="button-container">
-			<navigator :url="requestUrl">
-				<button class="button button--primary">申请</button>
-			</navigator>
-		</div>
-	</div>
+		<request-list :label-config="askFromLeave" :list="requestList" :url="requestUrl"></request-list>
 </template>
 
 <script>
-import RequestItem from '@/components/request-item/RequestItem.vue';
+import RequestList from '@/components/RequestList.vue'
+import {askFromLeave} from '@/utils/requestListConfig.js'
 
 export default {
 	name: 'Overtime',
 	data() {
 		return {
+			askFromLeave,
 			requestUrl: '/pages/tabbar/workbench/AskForLeave/AskForLeaveRequest',
 			requestList: [
 				{
-					type: '婚假',
-					start: '2020-11-30',
-					end: '2020-12-01',
-					hours: '24',
+					leaveType: '婚假',
+					startDate: '2020-11-30',
+					endDate: '2020-12-01',
+					timeLen: '24',
 					requestTime: '11-30 10:45',
 					status: 0
 				}
@@ -62,29 +45,7 @@ export default {
 		}
 	},
 	components: {
-		RequestItem
+		RequestList
 	}
 };
 </script>
-
-<style lang="scss" scoped>
-.overtime {
-	height: calc(100vh - 10rem);
-	padding: 1em 1em 2em;
-	overflow: hidden auto;
-
-	.button-container {
-		position: absolute;
-		width: calc(100vw - 2rem);
-		bottom: 1rem;
-	}
-
-	.nav-item + .nav-item {
-		margin-top: 0.5rem;
-	}
-}
-
-::v-deep .request-status {
-	margin-left: 0;
-}
-</style>

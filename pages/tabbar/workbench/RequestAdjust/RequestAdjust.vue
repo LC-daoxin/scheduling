@@ -1,32 +1,19 @@
 <template>
-	<div class="overtime">
-		<navigator
-			url="/pages/tabbar/workbench/RequestAdjust/RequestAdjustRequest"
-			v-for="(item, index) of requestList"
-			class="nav-item"
-			:key="index"
-		>
-			<request-item :dataArr="item">
-				<view class="request-item-content">日期：{{ item.overtimeDate }}</view>
-				<view class="request-item-content">时长：{{ item.lenOfTime }}</view>
-			</request-item>
-		</navigator>
-		<div class="button-container">
-			<navigator :url="requestUrl">
-				<button class="button button--primary">申请</button>
-			</navigator>
-		</div>
-	</div>
+	<request-list :label-config="requestAdjust" :list="requestList" :url="requestUrl"></request-list>
 </template>
 
 <script>
-import RequestItem from '@/components/request-item/RequestItem.vue';
+import RequestList from '@/components/RequestList.vue'
+import {
+	requestAdjust
+} from '@/utils/requestListConfig.js'
 
 export default {
 	name: 'Overtime',
 	data() {
 		return {
-			requestUrl: '/pages/tabbar/workbench/Overtime/OvertimeRequest',
+			requestAdjust,
+			requestUrl: '/pages/tabbar/workbench/RequestAdjust/RequestAdjustRequest',
 			requestList: [
 				{
 					status: 0,
@@ -38,29 +25,7 @@ export default {
 		};
 	},
 	components: {
-		RequestItem
+		RequestList
 	}
 };
 </script>
-
-<style lang="scss" scoped>
-.overtime {
-	height: calc(100vh - 10rem);
-	padding: 1em 1em 2em;
-	overflow: hidden auto;
-
-	.button-container {
-		position: absolute;
-		width: calc(100vw - 2rem);
-		bottom: 1rem;
-	}
-
-	.nav-item + .nav-item {
-		margin-top: 0.5rem;
-	}
-}
-
-::v-deep .request-status {
-	margin-left: 0;
-}
-</style>
