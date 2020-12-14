@@ -138,7 +138,7 @@ export default {
 		},
 		zIndex: {
 			type: [Number, String],
-			default: ''
+			default: 10075
 		},
 		// 是否显示关闭图标
 		closeable: {
@@ -196,7 +196,7 @@ export default {
 		},
 		maskShow: {
 			type: Boolean,
-			default: false
+			default: true
 		}
 	},
 	data() {

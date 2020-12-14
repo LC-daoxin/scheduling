@@ -50,7 +50,7 @@
 </template>
 
 <script>
-	import { getWeek } from '@/utils/index';
+	import { getWeek, getCountDays } from '@/utils/index';
 	export default {
 	    data() {
 	        return {
@@ -1378,12 +1378,14 @@
 			this.initDate();
 		},
 		methods: {
+			getDetail () {
+			},
 			// 表头初始化-当月每日星期
 			initHeaders() {
 				let Info = uni.getSystemInfoSync();
 				let screenWidth = Info.screenWidth;
 				this.ColWidth = (screenWidth - this.firstColWidth)/7;
-				let currentMonthNum = this.getCountDays(); // 一个月多少天
+				let currentMonthNum = getCountDays(); // 一个月多少天
 				console.log(currentMonthNum)
 				for (let i = 1; i <= currentMonthNum; i++) {
 					let week = getWeek(new Date('2020/11/' + i).getDay())
@@ -1401,18 +1403,9 @@
 				this.nowDate.year = currnrtDate.getFullYear();
 				this.nowDate.month = currnrtDate.getMonth() + 1;
 			},
-			getCountDays() {
-				var curDate = new Date();
-				/* 获取当前月份 */
-				var curMonth = curDate.getMonth();
-				/*  生成实际的月份: 由于curMonth会比实际月份小1, 故需加1 */
-				curDate.setMonth(curMonth + 1);
-				/* 将日期设置为0, 这里为什么要这样设置, 我不知道原因, 这是从网上学来的 */
-				curDate.setDate(0);
-				/* 返回当月的天数 */
-				return curDate.getDate();
-			},
 			bindDateChange () {},
+			pre() {},
+			next() {},
 			publish () {
 				uni.showModal({
 				    title: '发布排班表',
@@ -1427,7 +1420,7 @@
 								duration: 1000
 							})
 				        } else if (res.cancel) {
-							console.log('取消')
+							console.log('保存')
 				        }
 				    }
 				});

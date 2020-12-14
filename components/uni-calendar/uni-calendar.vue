@@ -34,7 +34,7 @@
 						</view>
 					</view> -->
 					<view class="uni-calendar__header_selectTime"></view>
-					<text class="uni-calendar__backtoday" @click="backtoday">回到今天</text>
+					<view class="uni-calendar__toScheduling" @click="toScheduling">排班管理</view>
 				</view>
 				<view class="uni-calendar__box">
 					<view v-if="showMonth" class="uni-calendar__box-bg">
@@ -82,11 +82,18 @@
 					<view v-else class="plan">
 						<view class="plan-title">{{ calendar.extraInfo.data.type }}</view>
 						<view class="plan-time">{{ calendar.extraInfo.data.time }}</view>
-						<text class="uni-calendar__scheduling">排班表</text>
 					</view>
+					<text class="uni-calendar__scheduling uni-calendar__Btn" @click="toScheduling">全科排班表</text>
+					<text class="uni-calendar__remark uni-calendar__Btn" @click="openRemark">排班备注</text>
 				</view>
 			</view>
 		</view>
+		<u-popup class="remark-popup" v-model="showRemark" mode="bottom" height="260px" :closeable="true">
+			<view class="header">
+				排班备注
+			</view>
+			<view class="content">无</view>
+		</u-popup>
 	</view>
 </template>
 
@@ -170,6 +177,7 @@
 				calendar: {},
 				nowDate: '',
 				aniMaskShow: false,
+				showRemark: false, // 显示排班备注
 				btnChange: true // 图标 向上（week）向下 (month)
 			}
 		},
@@ -190,7 +198,6 @@
 			}
 		},
 		created() {
-			console.log(this.selected)
 			// 获取日历方法实例
 			this.cale = new Calendar({
 				// date: new Date(),
@@ -205,6 +212,19 @@
 			// this.setDay
 		},
 		methods: {
+			// 跳转到排班管理
+			toScheduling () {
+				uni.navigateTo({
+				    url: '/pages/scheduling/scheduling',
+					success: function(res) {
+						console.log(res)
+					}
+				});
+			},
+			// 打开排班备注
+			openRemark () {
+				this.showRemark = true
+			},
 			// 取消穿透
 			clean() {},
 			bindDateChange(e) {
@@ -390,6 +410,7 @@
 
 <style lang="scss" scoped>
 	@import '../../common/css/iconfont.css';
+	@import '../../uni.scss';
 	.uni-calendar-body {
 		padding: 5px;
 	}
@@ -498,19 +519,20 @@
 		// padding: 0 15px;
 	}
 
-	.uni-calendar__backtoday {
+	.uni-calendar__toScheduling {
 		position: absolute;
-		right: 0;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		right: 20rpx;
 		top: 25rpx;
-		padding: 0 5px;
-		padding-left: 10px;
+		padding: 5px 10px;
 		height: 25px;
-		line-height: 25px;
 		font-size: 12px;
-		border-top-left-radius: 25px;
-		border-bottom-left-radius: 25px;
-		color: $uni-text-color;
-		background-color: $uni-bg-color-hover;
+		color: $base-color;
+		border: 1px solid $base-color;
+		border-radius: 25px;
+		background-color: #fff;
 	}
 
 	.uni-calendar__header-text {
@@ -664,6 +686,7 @@
 	}
 	.current-plan {
 		height: 70px;
+		position: relative;
 		.no-plan {
 			text-align: center;
 			font-size: 14px;
@@ -682,20 +705,44 @@
 				font-size: 14px;
 				color: #9ea1a1;
 			}
-			.uni-calendar__scheduling {
-				position: absolute;
-				right: 0;
-				top: 20rpx;
-				padding: 0 8px;
-				padding-left: 10px;
-				height: 25px;
-				line-height: 25px;
-				font-size: 12px;
-				border-top-left-radius: 25px;
-				border-bottom-left-radius: 25px;
-				color: $uni-text-color;
-				background-color: $uni-bg-color-hover;
-			}
+		}
+		.uni-calendar__scheduling {
+			top: -15rpx;
+		}
+		.uni-calendar__remark {
+			top: 55rpx;
+		}
+		.uni-calendar__Btn {
+			position: absolute;
+			right: 0;
+			width: 85px;
+			box-sizing: border-box;
+			text-align: center;
+			padding: 0 8px;
+			height: 25px;
+			line-height: 25px;
+			font-size: 12px;
+			border-top-left-radius: 25px;
+			border-bottom-left-radius: 25px;
+			color: $uni-text-color;
+			background-color: $uni-bg-color-hover;
+		}
+	}
+	.remark-popup {
+		.header {
+			width: 100%;
+			height: 102rpx;
+			display: flex;
+			align-items: center;
+			background-color: $border-color;
+			padding-left: 25rpx;
+			font-size: 30rpx;
+			color: $half-text-color;
+		}
+		.content {
+			padding: 30rpx;
+			font-size: 30rpx;
+			color: $text-color;
 		}
 	}
 </style>
