@@ -20,20 +20,6 @@
 				<view class="publishBtn" @click="publish">发布</view>
 			</view>
 		</view>
-		<!-- <wyb-table
-			class="table"
-			ref="table"
-			first-line-fixed
-			:emptyString="emptyString"
-			:headers="headers"
-			:contents="data"
-			:defaultColWidth="ColWidth"
-			:firstColWidth="firstColWidth"
-			header-bg-color="#ffffff"
-			first-col-bg-color="#f9f9f9"
-			border-color="#f1f1f1"
-			height="600rpx"
-			/> -->
 		<s-table :headers="headers" :contents="contents"></s-table>
 		<view class="remark" @click="getDetail">
 			<view class="remark-title">
