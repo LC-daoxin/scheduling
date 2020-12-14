@@ -64,7 +64,9 @@
 				this.save()
 			},
 			departmentChange(item) {
-				console.log(item)
+				this.inputValue = item.name
+				this.$refs.departmentList.close()
+				this.save()
 			},
 			save() {
 				const postData = {

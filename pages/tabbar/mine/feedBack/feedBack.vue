@@ -6,7 +6,7 @@
 		</view>
 		<view class="feed-back-item">
 			<p>反馈内容</p>
-			<textarea v-model="formData.advise" placeholder="" />
+			<textarea v-model="formData.advise" />
 			</view>
 		<button class="button button--primary" @click="submit()">提交</button>
 	</view>

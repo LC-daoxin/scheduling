@@ -12,7 +12,7 @@
 		</view>
 		<view class="user_menu">
 			<image class="arc" src="../../../static/image/arc.png"></image>
-		<!-- 	<view class="my_box">
+			<!-- 	<view class="my_box">
 				<view class="top_nav">
 					<text class="iconfont icon-paiban"></text>
 					<text class="name">我的排班</text>
@@ -79,7 +79,11 @@
 			},
 			getUserInfo() {
 				requestGet('/user/detailUser', res => {
-					const { code, msg, data } = res.data;
+					const {
+						code,
+						msg,
+						data
+					} = res.data;
 					if (code === 'success') {
 						Object.assign(this.userInfo, data);
 						uni.setStorage({
@@ -107,7 +111,7 @@
 				(menuButtonInfo.top - Info.statusBarHeight); // 胶囊按钮高度
 			this.BarHeight = statusBarHeight + titleBarHeight + 'px';
 		},
-		mounted() {
+		onShow() {
 			this.list = this.$store.state.vuex_tabbar;
 			this.getUserInfo()
 		}
