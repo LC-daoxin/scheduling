@@ -1,6 +1,6 @@
 <template>
 	<popup title="选择医院" ref="popup">
-		<department-category :categoryList="categoryList" @categoryMainClick="categoryMainClick" @categorySubClick="categorySubClick"></department-category>
+		<department-category :categoryList="categoryList" @categoryMainClick="categoryMainClick" @categorySubClick="categorySubClick" ref="departmentCategory"></department-category>
 	</popup>
 </template>
 
@@ -29,6 +29,7 @@
 					} = res.data
 					if (code === 'success') {
 						this.categoryList = data
+						this.$refs.departmentCategory.setActiveMain(data[0])
 					} else {
 						uni.showToast({
 							title: '系统错误',

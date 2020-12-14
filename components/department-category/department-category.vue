@@ -3,12 +3,12 @@
 		<uni-search-bar class="search" :radius="100" placeholder="请输入科室名称" @confirm="search" @input="input" @cancel="cancel"></uni-search-bar>
 		<view class="nav">
 			<scroll-view class="nav-left" scroll-y>
-				<view v-for="item of categoryList" @click="categoryClickMain(item, item.id)" :key="item.id" :class="{'nav-left-item': true, active: item.id===categoryActive}">
+				<view v-for="item of categoryList" @click="setActiveMain(item)" :key="item.id" :class="{'nav-left-item': true, active: item.id===categoryActive}">
 					{{ item[label] }}
 				</view>
 			</scroll-view>
 			<scroll-view class="nav-right" scroll-y>
-				<view class="nav-right-item" v-for="subItem of item.officeLists" :key="subItem.id" @click="categoryClickSub(subItem)">
+				<view class="nav-right-item" v-for="subItem of activeMain.officeLists" :key="subItem.id" @click="categoryClickSub(subItem)">
 					<view class="nav-right-item-content">{{ subItem[label] }}</view>
 				</view>
 			</scroll-view>
@@ -23,7 +23,8 @@
 		data() {
 			return {
 				categoryActive: 0,
-				searchStatus: false
+				searchStatus: false,
+				activeMain: []
 			}
 		},
 		props: {
@@ -57,12 +58,15 @@
 		},
 		methods: {
 			categoryClickMain(category, index) {
-				this.$emit('categoryMainClick',category)
 				this.categoryActive = index;
 				// this.scrollTop = -this.scrollHeight * index;
 			},
 			categoryClickSub(category) {
 				this.$emit('categorySubClick',category)
+			},
+			setActiveMain(item) {
+				this.activeMain = item
+				this.categoryActive = item.id
 			},
 			search (e) {
 				console.log('search', e)
