@@ -14,7 +14,7 @@
 						</view>
 					</u-col>
 					<u-col span="6" class="box_2">
-						<view class="management-box">
+						<view class="management-box" @click="toManagement">
 							<text class="iconfont icon-caidanguanli"></text>
 							<text class="box-text">班种管理</text>
 						</view>
@@ -61,6 +61,15 @@ export default {
 		goScheduling () {
 			uni.navigateTo({
 				url: '/pages/scheduling/scheduling'
+			});
+		},
+		// 跳转到班种管理
+		toManagement () {
+			uni.navigateTo({
+			    url: '/pages/scheduling/class-management/class-management',
+				success: function(res) {
+					console.log(res)
+				}
 			});
 		}
 	}

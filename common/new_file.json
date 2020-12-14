@@ -1,0 +1,57 @@
+{
+	"data": [
+		{
+			"userId": 2,
+			"userName": "马晓勇",
+			"gourpId": 1,
+			"remark": "",
+			"content": [{
+				"schedulDate": "2020-11-01",
+				"type": "workday",
+				"workspeciName": ["晚班","白班"]
+			},{
+				"schedulDate": "2020-11-02",
+				"type": "workday",
+				"workspeciName": ["晚班","白班"]
+			},{
+				"schedulDate": "2020-11-03",
+				"type": "workday",
+				"workspeciName": ["晚班","白班"]
+			},{
+				"schedulDate": "2020-11-04",
+				"type": "workday",
+				"workspeciName": ["晚班","白班"]
+			},{
+				"schedulDate": "2020-11-05",
+				"type": "workday",
+				"workspeciName": ["晚班","白班"]
+			}]
+		},{
+			"userId": 2,
+			"userName": "马晓勇",
+			"gourpId": 1,
+			"remark": "",
+			"content": [{
+				"schedulDate": "2020-11-01",
+				"type": "workday",
+				"workspeciName": ["晚班","白班"]
+			},{
+				"schedulDate": "2020-11-02",
+				"type": "workday",
+				"workspeciName": ["晚班","白班"]
+			},{
+				"schedulDate": "2020-11-03",
+				"type": "workday",
+				"workspeciName": ["晚班","白班"]
+			},{
+				"schedulDate": "2020-11-04",
+				"type": "workday",
+				"workspeciName": ["晚班","白班"]
+			},{
+				"schedulDate": "2020-11-05",
+				"type": "workday",
+				"workspeciName": ["晚班","白班"]
+			}]
+		}
+	]
+}

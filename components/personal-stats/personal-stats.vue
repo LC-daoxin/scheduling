@@ -1,5 +1,5 @@
 <template>
-	<view class="personal">
+	<view class="personal" @click="toPersonalStats">
 		<view class="personal-content">
 			<view class="time">
 				<text class="total-time">
@@ -23,6 +23,16 @@
 				total_time: 60,
 				owed_time: 0
 			};
+		},
+		methods: {
+			toPersonalStats () {
+				uni.navigateTo({
+				    url: '/pages/scheduling/personal-stats/personal-stats',
+					success: function(res) {
+						console.log(res)
+					}
+				});
+			}
 		}
 	}
 </script>
