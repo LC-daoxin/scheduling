@@ -14,14 +14,18 @@
 						</view>
 					</u-col>
 					<u-col span="6" class="box_2">
-						<view class="management-box" @click="toManagement">
-							<text class="iconfont icon-caidanguanli"></text>
-							<text class="box-text">班种管理</text>
-						</view>
-						<view class="management-box">
-							<text class="iconfont icon-shezhi"></text>
-							<text class="box-text">排班管理</text>
-						</view>
+						<navigator url="/pages/scheduling/class-management/class-management">
+							<view class="management-box">
+								<text class="iconfont icon-caidanguanli"></text>
+								<text class="box-text">班种管理</text>
+							</view>
+						</navigator>
+						<navigator url="/pages/scheduling/scheduling-setting/scheduling-setting">
+							<view class="management-box">
+								<text class="iconfont icon-shezhi"></text>
+								<text class="box-text">排班管理</text>
+							</view>
+						</navigator>
 					</u-col>
 					<u-col span="4">
 						<view class="management-box_2" @click="examinationAndApproval">
@@ -64,14 +68,14 @@ export default {
 			});
 		},
 		// 跳转到班种管理
-		toManagement () {
-			uni.navigateTo({
-			    url: '/pages/scheduling/class-management/class-management',
-				success: function(res) {
-					console.log(res)
-				}
-			});
-		}
+		// toManagement () {
+		// 	uni.navigateTo({
+		// 	    url: '/pages/scheduling/class-management/class-management',
+		// 		success: function(res) {
+		// 			console.log(res)
+		// 		}
+		// 	});
+		// }
 	}
 };
 </script>

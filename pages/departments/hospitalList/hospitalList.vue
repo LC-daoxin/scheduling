@@ -4,7 +4,7 @@
 			<scroll-view class="list-content" scroll-y>
 				<uni-search-bar :radius="100" placeholder="若无医院信息,请输入所在医院信息查找" @confirm="search" @input="input" @cancel="cancel"></uni-search-bar>
 				<uni-list>
-				    <uni-list-item  v-for="(item,index) in list" :key="index" :title="item.name" @click="selected(item.id)"></uni-list-item>
+				    <uni-list-item clickable v-for="(item,index) in list" :key="index" :title="item.name" @click="selected(item)"></uni-list-item>
 				</uni-list>
 			</scroll-view>
 		</view>
@@ -32,8 +32,9 @@
 			}).exec();
 		},
 		methods: {
-			selected(id) {
-				this.$emit('select', id)
+			selected(item) {
+				uni.$emit('getHospital', item)
+				uni.navigateBack({})
 			},
 			getHospitalList() {
 				requestGet('/dept/hospList', res => {

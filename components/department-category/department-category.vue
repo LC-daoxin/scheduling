@@ -63,6 +63,8 @@
 			},
 			categoryClickSub(category) {
 				this.$emit('categorySubClick',category)
+				uni.$emit('getOffice', category)
+				uni.navigateBack({})
 			},
 			setActiveMain(item) {
 				this.activeMain = item

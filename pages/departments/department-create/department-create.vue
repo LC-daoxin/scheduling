@@ -1,12 +1,12 @@
 <template>
 	<view>
 		<uni-list>
-		    <uni-list-item link to="/pages/departments/hospitalList/hospitalList"  :rightText="info.hospitalName" @click="selectHospital()" >
+		    <uni-list-item link to="/pages/departments/hospitalList/hospitalList"  :rightText="info.hospitalName">
 				<template slot="header">
 					<text class="title">所属医院</text><text class="red">*</text>
 				</template>
 			</uni-list-item>
-		    <uni-list-item link to="/pages/departments/department-select/department-select"  :rightText="info.departmentName" @click="selectHospital()" >
+		    <uni-list-item link to="/pages/departments/department-select/department-select"  :rightText="info.officeName">
 				<template slot="header">
 					<text class="title">所属科室</text><text class="red">*</text>
 				</template>
@@ -16,37 +16,87 @@
 					<text class="title">科室名称</text><text class="red">*</text>
 				</template>
 				<template slot="footer">
-					<input class="uni-input" placeholder-style="text-align: right" placeholder="输入科室名称" />
+					<input class="uni-input" placeholder-style="text-align: right" placeholder="输入科室名称" v-model="info.groupName"/>
 				</template>
 			</uni-list-item>
-		    <uni-list-item>
+		    <!-- <uni-list-item>
 				<template slot="header">
 					<text class="title">您的姓名</text><text class="red">*</text>
 				</template>
 				<template slot="footer">
-					<input class="uni-input" placeholder-style="text-align: right" placeholder="输入您的姓名" />
+					<input class="uni-input" placeholder-style="text-align: right" placeholder="输入您的姓名" v-model="info.createUser"/>
 				</template>
-			</uni-list-item>
+			</uni-list-item> -->
 		</uni-list>
 		<button class="createBtn" @click="create">创建科室</button>
 	</view>
 </template>
 
 <script>
+	import { requestPost } from '@/utils/request.js'
 	export default {
 		data() {
 			return {
 				info: {
-					hospitalName: '',
-					departmentName: '',
-					officeName: '',
-					creatorName: ''
+					groupName: null,
+					hospitalId: null,
+					hospitalName: null,
+					officeId: null,
+					officeName: null
+					// createUser: null
 				}
 			};
 		},
+		onReady() {
+			let that = this
+			uni.$on('getHospital',function(item){
+				console.log('getHospital', item)
+				that.info.hospitalId = item.id;
+				that.info.hospitalName = item.name;
+			})
+			uni.$on('getOffice',function(item){
+				console.log('getOffice', item)
+				that.info.officeId = item.id;
+				that.info.officeName = item.name;
+				if (!that.info.groupName) {
+					that.info.groupName = item.name
+				}
+			})
+		},
 		methods: {
-			create () {},
-			selectHospital () {}
+			create () {
+				const postData = {
+					'groupName' : this.info.groupName,
+					'hospitalName' : this.info.hospitalName,
+					'hospitalId' : this.info.hospitalId,
+					'officeName' : this.info.officeName,
+					'officeId' : this.info.officeId,
+					// 'createId' : '',
+					// 'createUser' : this.info.createUser,
+				}
+				console.log(postData)
+				requestPost('/group/addGroup', postData, res => {
+					const { code, msg, data } = res.data;
+					if (code === 'success') {
+						console.log(res.data)
+						uni.showToast({
+							title: '排班组创建成功！',
+							content: msg,
+							duration: 1000
+						})
+						setTimeout(function()  {
+							uni.navigateTo({ url: '/pages/tabbar/home/home' });
+						}, 1050);
+					} else {
+						uni.showToast({
+							title: '系统错误',
+							content: msg,
+							icon: 'none',
+							duration: 1000
+						})
+					}
+				})
+			}
 		}
 	}
 </script>

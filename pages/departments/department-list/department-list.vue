@@ -6,7 +6,7 @@
 					<text>{{ item.name }}（{{ item.id }}）</text>
 				</template>
 				<template slot="footer">
-					<text v-if="item.selected" class="iconfont icon-zhengque"></text>
+					<!-- <text v-if="item.selected" class="iconfont icon-zhengque"></text> -->
 				</template>
 			</uni-list-item>
 		</uni-list>
@@ -15,6 +15,7 @@
 </template>
 
 <script>
+	import { requestGet } from '@/utils/request.js'
 	export default {
 		data() {
 			return {
@@ -39,6 +40,20 @@
 		},
 		onLoad: function (option) { //option为object类型，会序列化上个页面传递的参数
 			console.log('App onLoad：', option); //打印出上个页面传递的参数。
+			requestGet('/group/groupList', res => {
+				const {code, msg, data} = res.data
+				if (code === 'success') {
+					console.log(data)
+					this.list = data
+				} else {
+					uni.showToast({
+						title: '系统错误',
+						content: msg,
+						icon: 'none',
+						duration: 1000
+					})
+				}
+			})
 		},
 		methods: {
 			listItemSeleted (listItem) {
