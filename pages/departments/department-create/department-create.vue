@@ -84,9 +84,11 @@
 							content: msg,
 							duration: 1000
 						})
-						setTimeout(function()  {
-							uni.navigateTo({ url: '/pages/tabbar/home/home' });
-						}, 1050);
+						setTimeout(() => {
+							uni.switchTab({
+							    url: '/pages/tabbar/home/home'
+							});
+						}, 900)
 					} else {
 						uni.showToast({
 							title: '系统错误',

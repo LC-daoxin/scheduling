@@ -3,7 +3,7 @@
 		<uni-list class="list">
 		    <uni-list-item v-for="(item,index) in list" :key="index" :clickable="true" @click="listItemSeleted(item)">
 				<template slot="header">
-					<text>{{ item.name }}（{{ item.id }}）</text>
+					<text>{{ item.groupName }}（{{ item.groupId }}）</text>
 				</template>
 				<template slot="footer">
 					<!-- <text v-if="item.selected" class="iconfont icon-zhengque"></text> -->
@@ -19,27 +19,11 @@
 	export default {
 		data() {
 			return {
-				list:[{
-					id: 100001,
-					name: '心血管内科',
-					selected: false
-				},{
-					id: 100002,
-					name: '血液渗透科',
-					selected: false
-				},{
-					id: 100003,
-					name: '器官移植科',
-					selected: true
-				},{
-					id: 100004,
-					name: '妇产科',
-					selected: false
-				}]
+				list:[]
 			}
 		},
 		onLoad: function (option) { //option为object类型，会序列化上个页面传递的参数
-			console.log('App onLoad：', option); //打印出上个页面传递的参数。
+			// console.log('App onLoad：', option); //打印出上个页面传递的参数。
 			requestGet('/group/groupList', res => {
 				const {code, msg, data} = res.data
 				if (code === 'success') {
@@ -61,7 +45,7 @@
 				if (!listItem.selected) {
 					uni.showModal({
 					    title: '进入科室',
-					    content: `是否切换到${listItem.name}`,
+					    content: `是否切换到${listItem.groupName}`,
 					    success: function (res) {
 					        if (res.confirm) {
 					            that.list.forEach(item => {
@@ -70,7 +54,6 @@
 					            	} else {
 					            		item.selected = true
 					            	}
-					            	
 					            })
 								uni.reLaunch({ // 关闭所有页面，打开到应用内的某个页面
 								    url: `/pages/tabbar/home/home?refresh=true&departmentsName=${listItem.name}&id=${listItem.id}`,
