@@ -2,7 +2,7 @@
 	<view class="userbox">
 		<view class="user_header">
 			<view class="head_box">
-				<u-avatar class="head_img" :src="userSrc" mode="circle" size="130"></u-avatar>
+				<u-avatar class="head_img" :src="userInfo.avatarUrl" mode="circle" size="130"></u-avatar>
 				<view class="info">
 					<view class="head_name">{{ userInfo.nickName }}</view>
 					<view class="departments">{{ userInfo.office || '暂无科室' }}</view>
@@ -38,7 +38,6 @@
 			return {
 				list: [],
 				current: 4,
-				userSrc: null,
 				BarHeight: 0, // 胶囊按钮高度 + 状态栏高度
 				userInfo: {
 					nickName: '张大夫',
@@ -54,7 +53,8 @@
 					education: null,
 					userCode: null,
 					id: 2,
-					totalTime: 60
+					totalTime: 60,
+					avatarUrl: ''
 				}
 			};
 		},

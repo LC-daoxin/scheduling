@@ -1,10 +1,15 @@
 <template>
-		<request-list :label-config="askFromLeave" :list="requestList" :url="requestUrl"></request-list>
+	<request-list
+		:label-config="askFromLeave"
+		:list="requestList"
+		:url="requestUrl"
+	></request-list>
 </template>
 
 <script>
-import RequestList from '@/components/RequestList.vue'
-import {askFromLeave} from '@/utils/requestListConfig.js'
+import RequestList from '@/components/RequestList.vue';
+import { askFromLeave } from '@/utils/requestListConfig.js';
+import { requestPost } from '@/utils/request.js';
 
 export default {
 	name: 'Overtime',
@@ -12,37 +17,32 @@ export default {
 		return {
 			askFromLeave,
 			requestUrl: '/pages/tabbar/workbench/AskForLeave/AskForLeaveRequest',
-			requestList: [
-				{
-					leaveType: '婚假',
-					startDate: '2020-11-30',
-					endDate: '2020-12-01',
-					timeLen: '24',
-					requestTime: '11-30 10:45',
-					status: 0
-				}
-			]
+			requestList: []
 		};
 	},
 	methods: {
 		getList() {
 			const postData = {
-				gourpId: '',
-				applyType: '1',
-				status: ''
+				applyType: '1'
 			};
-			uni.request({
-				url: t.$Url + '/apply/applyList',
-				method: 'post', //请求方式
-				data: postData,
-				success: res => {
-					console.log(res);
-				},
-				fail: error => {
-					console.log(error);
+
+			requestPost('/apply/applyLeave', postData, res => {
+				const { code, msg, data } = res.data;
+				if (code === 'success') {
+					this.requestList = data;
+				} else {
+					uni.showToast({
+						title: '系统错误',
+						content: msg,
+						icon: 'none',
+						duration: 1500
+					});
 				}
 			});
 		}
+	},
+	mounted() {
+		this.getList()
 	},
 	components: {
 		RequestList

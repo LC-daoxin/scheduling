@@ -1,5 +1,6 @@
 import { dateFormat, getDate } from '@/utils';
-import { requestPost, requestGet } from '@/utils/request.js';
+import { requestPost } from '@/utils/request.js';
+import { getWorkList } from '@/utils/index.js';
 
 const format = 'YYYY-mm-dd HH:MM:SS';
 const msOfDay = 86400000;
@@ -17,17 +18,14 @@ const errorMsg = msg => {
 	});
 };
 
-const getWorkList = () => {
-	requestGet('/schedul/getWorkList/1', res => {
-		const { code, msg, data } = res.data;
-		if (code === 'success') {
-			classList = data;
-		} else {
-			errorMsg(msg);
-		}
-	});
-};
-getWorkList();
+getWorkList(res => {
+	const { code, msg, data } = res.data;
+	if (code === 'success') {
+		classList = data;
+	} else {
+		errorMsg(msg);
+	}
+});
 
 uni.getStorage({
 	key: 'userInfo',
@@ -149,42 +147,6 @@ class RequestShiftChange extends Request {
 		};
 	}
 }
-// 调班申请
-class RequestAdjust extends Request {
-	constructor() {
-		super();
-		this.api = '/apply/apply';
-		(this.applyType = '3'), (this.optionList = classList);
-		this.changerList = [];
-		this.changerName = '';
-		this.props = {
-			label: 'workName',
-			value: 'workName'
-		};
-		this.changerProps = {
-			label: 'userName',
-			value: 'userId'
-		}
-		this.formData = {
-			changer: '', // 调班对象
-			applyDate: getDate(), // 调班日期
-			senderSpeciName: '', // 申请班种
-			changeSpeciName: '', // 调换班种
-			account: '' // 申请理由
-		};
-
-		this.getChanger = () => {
-			requestGet('/schedul/getChanger', res => {
-				const { code, msg, data } = res.data;
-				if (code === 'success') {
-					this.changerList = data
-				} else {
-					errorMsg(msg);
-				}
-			});
-		};
-	}
-}
 // 反馈
 class ReqeustFeedBack extends Request {
 	constructor() {
@@ -201,7 +163,6 @@ export const form = {
 	RequestForLeave,
 	RequestOverTime,
 	RequestShiftChange,
-	RequestAdjust,
 	ReqeustFeedBack
 };
 
@@ -225,14 +186,6 @@ const RequestShiftChangeForm = [
 	{ label: '新班种', key: 'senderSpeciName', type: 'select' },
 	{ label: '申请理由', key: 'account', type: 'textarea' }
 ];
-// 调班表单
-const RequestAdjustForm = [
-	{ label: '调班对象', key: 'changer', type: 'select' },
-	{ label: '调班日期', key: 'applyDate', type: 'date' },
-	{ label: '申请班种', key: 'senderSpeciName', type: 'select' },
-	{ label: '调换班种', key: 'changeSpeciName', type: 'select' },
-	{ label: '申请理由', key: 'account', type: 'textarea' }
-];
 // 反馈表单
 const ReqeustFeedBackForm = [
 	{ label: '标题', key: 'title', type: 'input', placeholder: '请输入反馈标题' },
@@ -243,6 +196,5 @@ export const formConfig = {
 	RequestForLeaveForm,
 	RequestOverTimeForm,
 	RequestShiftChangeForm,
-	ReqeustFeedBackForm,
-	RequestAdjustForm
+	ReqeustFeedBackForm
 };
