@@ -3,7 +3,7 @@
 		<div class="request-item-header">
 				<view v-show="dataArr.title !== ''" class="title">{{ dataArr.title }}</view>
 				<view :class="'request-status ' + setStatus">{{ checkStatus }}</view>
-				<view class="time">{{ dataArr.requestTime }}</view>
+				<view class="time">{{ dataArr.createTime }}</view>
 		</div>
 		<slot></slot>
 	</view>
@@ -18,7 +18,7 @@
 					return {
 						title: '',
 						status: '',
-						requestTime: '',
+						createTime: '',
 						requestType: '',
 						startTime: '',
 						endTime: '',
@@ -30,6 +30,7 @@
 		},
 		computed: {
 			checkStatus() {
+				console.log(this.dataArr)
 				switch(this.dataArr.status) {
 					case 0:
 						return '待审批';

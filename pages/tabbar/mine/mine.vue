@@ -78,25 +78,10 @@
 				}
 			},
 			getUserInfo() {
-				requestGet('/user/detailUser', res => {
-					const {
-						code,
-						msg,
-						data
-					} = res.data;
-					if (code === 'success') {
-						Object.assign(this.userInfo, data);
-						uni.setStorage({
-							key: 'userInfo',
-							data: data
-						})
-					} else {
-						uni.showToast({
-							title: '系统错误',
-							content: msg,
-							icon: 'none',
-							duration: 1000
-						})
+				uni.getStorage({
+					key: 'userInfo',
+					success: res => {
+						Object.assign(this.userInfo, res.data)
 					}
 				})
 			}
@@ -238,6 +223,10 @@
 
 					.iconfont {
 						margin-right: 8px;
+					}
+
+					.u-cell-item {
+						border: 1px solid #eee;
 					}
 				}
 			}

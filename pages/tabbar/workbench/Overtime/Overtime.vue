@@ -7,6 +7,7 @@
 	import {
 		overTime
 	} from '@/utils/requestListConfig.js'
+	import { requestPost } from '@/utils/request.js'
 
 	export default {
 		name: 'Overtime',
@@ -14,14 +15,28 @@
 			return {
 				overTime,
 				requestUrl: '/pages/tabbar/workbench/Overtime/OvertimeRequest',
-				requestList: [{
-					status: 0,
-					requestTime: '11-30 10:45',
-					timeLen: '2小时',
-					requestStart: '2020-12-01',
-					requestEnd: '2020-12-02'
-				}]
+				requestList: []
 			};
+		},
+		methods: {
+			getList() {
+				requestPost('/apply/applyList', { applyType: '4' }, res => {
+					const {code, msg, data} = res.data
+					if (code === 'success') {
+						this.requestList = data
+					} else {
+						uni.showToast({
+							title: '系统错误',
+							content: msg,
+							icon: 'none',
+							duration: 1000
+						})
+					}
+				})
+			}
+		},
+		mounted() {
+			this.getList()
 		},
 		components: {
 			RequestList

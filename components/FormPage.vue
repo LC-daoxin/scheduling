@@ -1,5 +1,5 @@
 <template>
-	<div class="form-page">
+	<view class="form-page">
 		<form @submit="form.submit()" @reset="formReset">
 			<u-cell-group>
 				<view v-for="(item, itemIndex) of formConfig" :key="itemIndex" class="form-item">
@@ -14,9 +14,15 @@
 						<date-picker v-model="form['formData'][item.key]"></date-picker>
 					</u-cell-item>
 					<u-cell-item :title="item.label" v-if="item.type === 'select'">
-						<lb-picker class="lb-picker">
-							<view :list="form.originList">
-								{{ form['formData'][item.key] || '请选择' }}
+						<lb-picker
+							class="lb-picker"
+							:list="item.key === 'changer' ? form.changerList : form.optionList"
+							:props="item.key === 'changer' ? form.changerProps : form.props"
+							@change="pickerChange"
+							v-model="form['formData'][item.key]"
+						>
+							<view>
+								{{ form.changerName || form['formData'][item.key] || '请选择' }}
 							</view>
 						</lb-picker>
 					</u-cell-item>
@@ -35,11 +41,12 @@
 			</view>
 			<button class="button button--primary" @click="save">保存</button>
 		</popup>
-	</div>
+	</view>
 </template>
 
 <script>
 import { form, formConfig } from '@/utils/requestClass.js';
+import { requestGet } from '@/utils/request.js';
 import LbPicker from '@/components/lb-picker';
 import DatePicker from '@/components/date-picker/DatePicker.vue';
 import popup from '@/components/popup/popup.vue';
@@ -70,7 +77,18 @@ export default {
 			this.form.formData[this.inputTarget] = this.inputValue;
 			this.inputValue = '';
 			this.$refs.popup.close();
+		},
+		pickerChange({ item }) {
+			if (item.userName) form.changerName = item.userName;
+		},
+		getChanger() {
+			if (this.form.getChanger) {
+				this.form.getChanger();
+			}
 		}
+	},
+	mounted() {
+		this.getChanger();
 	},
 	components: {
 		LbPicker,
@@ -85,11 +103,11 @@ export default {
 	height: calc(100vh - 44px);
 	background-color: $bg-color;
 	padding-top: 10px;
-	
+
 	.u-cell-box {
 		padding: 0 1em;
 		border-radius: 10px;
-		
+
 		::v-deep .u-cell-item-box {
 			border-radius: 10px;
 		}

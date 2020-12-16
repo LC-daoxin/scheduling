@@ -18,6 +18,8 @@
 	import {
 		request
 	} from '@/utils/request.js'
+	import { getUserInfo } from '@/utils/index.js'
+
 	export default {
 		components: {
 			uniCalendar
@@ -211,6 +213,7 @@
 										key: 'token',
 										data: data
 									})
+									getUserInfo()
 								}
 							})
 						}

@@ -1,3 +1,5 @@
+import { requestGet } from '@/utils/request.js'
+
 // 根据日期获取当前是星期几
 export function getWeek(day) {
 	const weekArr = ['日', '一', '二', '三', '四', '五', '六'];
@@ -55,4 +57,27 @@ export function dateFormat(fmt, date) {
 		}
 	}
 	return fmt;
+}
+
+export function getUserInfo() {
+	requestGet('/user/detailUser', res => {
+		const {
+			code,
+			msg,
+			data
+		} = res.data;
+		if (code === 'success') {
+			uni.setStorage({
+				key: 'userInfo',
+				data: data
+			})
+		} else {
+			uni.showToast({
+				title: '系统错误',
+				content: msg,
+				icon: 'none',
+				duration: 1000
+			})
+		}
+	})
 }

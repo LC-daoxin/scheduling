@@ -1,13 +1,13 @@
 <template>
 	<div class="request-list">
-		<navigator
-			class="nav-item"
-			:url="url"
-			v-for="(item, index) of list"
-			:key="index"
-		>
+		<navigator class="nav-item" :url="url" v-for="(item, index) of list" :key="index">
 			<request-item :dataArr="item">
-				<view v-for="(param, key, paramIndex) in labelConfig" :key="paramIndex" class="request-item-content">{{ param }}：{{ item[key] }}</view>
+				<view
+					v-for="(param, key, paramIndex) in labelConfig"
+					:key="paramIndex"
+					class="request-item-content"
+					>{{ param }}：{{ item[key] }}{{ key === 'duration' ? '小时' : '' }}</view
+				>
 			</request-item>
 		</navigator>
 		<div class="button-container">
@@ -19,18 +19,18 @@
 </template>
 
 <script>
-	import RequestItem from '@/components/request-item/RequestItem.vue';
-	
-	export default {
-		props: {
-			labelConfig: Object,
-			list: Array,
-			url: String
-		},
-		components: {
-			RequestItem
-		}
+import RequestItem from '@/components/request-item/RequestItem.vue';
+
+export default {
+	props: {
+		labelConfig: Object,
+		list: Array,
+		url: String
+	},
+	components: {
+		RequestItem
 	}
+};
 </script>
 
 <style lang="scss" scoped>

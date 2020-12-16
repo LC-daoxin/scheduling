@@ -54,19 +54,38 @@
 <script>
 export default {
 	data() {
-		return {};
+		return {
+			isManager: false
+		};
 	},
 	methods: {
 		examinationAndApproval() {
-			uni.navigateTo({
-				url: '/pages/tabbar/workbench/ExaminationAndApproval/ExaminationAndApproval'
-			});
+			if (this.isManager) {
+				uni.navigateTo({
+					url: '/pages/tabbar/workbench/ExaminationAndApproval/ExaminationAndApproval'
+				});
+			} else {
+				uni.showToast({
+					title: '您不是小组管理员，无法进行审批',
+					icon: 'none',
+					duration: 1500
+				})
+			}
 		},
-		goScheduling () {
+		goScheduling() {
 			uni.navigateTo({
 				url: '/pages/scheduling/scheduling'
 			});
 		},
+		getUserInfo() {
+			uni.getStorage({
+				key: 'userInfo',
+				success: res => {
+					const role = res.data.groupRole;
+					role === 0 ? (this.isManager = false) : (this.isManager = true);
+				}
+			});
+		}
 		// 跳转到班种管理
 		// toManagement () {
 		// 	uni.navigateTo({
@@ -76,6 +95,9 @@ export default {
 		// 		}
 		// 	});
 		// }
+	},
+	mounted() {
+		this.getUserInfo()
 	}
 };
 </script>
