@@ -1350,7 +1350,8 @@
 				Year: 20,
 				Month: 12,
 				nowDate: {},
-				remark: '本周需要张三和李四在周五加班'
+				remark: '本周需要张三和李四在周五加班',
+				info: {}
 	        }
 	    },
 		filters: {
@@ -1358,6 +1359,14 @@
 				if (!val) return '';
 				return val.toString().substring(2,4);
 			}
+		},
+		onShow() {
+			uni.getStorage({
+				key: 'userInfo',
+				success: res => {
+					Object.assign(this.info, res.data)
+				}
+			})
 		},
 		mounted () {
 			this.initHeaders();

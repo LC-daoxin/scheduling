@@ -1,14 +1,15 @@
 <template>
 	<view>
-		<department-detail :info="info"></department-detail>
+		<department-detail :Info="Info"></department-detail>
 	</view>
 </template>
 
 <script>
+	import { getStorageInfo } from '@/utils/index.js'
 	export default {
 		data() {
 			return {
-				info: null // 科室信息
+				Info: {}, // Storage信息
 			};
 		},
 		onLoad: function(option){
@@ -17,9 +18,10 @@
 			uni.setNavigationBarTitle({
 			    title: `${option.departmentsName}`
 			});
+			this.Info = getStorageInfo()
 		},
 		onShareAppMessage(data) {
-			console.log(data)
+			console.log('onShareAppMessage', data)
 		    let dataset = data.target.dataset  
 		    return {  
 		        title: dataset.title,  

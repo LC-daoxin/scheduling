@@ -1,12 +1,12 @@
 <template>
 	<view>
 		<uni-list>
-		    <uni-list-item link to="/pages/departments/hospitalList/hospitalList"  :rightText="info.hospitalName">
+		    <uni-list-item link to="/pages/departments/hospitalList/hospitalList?type=1"  :rightText="info.hospitalName">
 				<template slot="header">
 					<text class="title">所属医院</text><text class="red">*</text>
 				</template>
 			</uni-list-item>
-		    <uni-list-item link to="/pages/departments/department-select/department-select"  :rightText="info.officeName">
+		    <uni-list-item link to="/pages/departments/department-select/department-select?type=1"  :rightText="info.officeName">
 				<template slot="header">
 					<text class="title">所属科室</text><text class="red">*</text>
 				</template>
@@ -34,6 +34,7 @@
 
 <script>
 	import { requestPost } from '@/utils/request.js'
+	import { getUserInfo } from '@/utils/index.js'
 	export default {
 		data() {
 			return {
@@ -70,20 +71,18 @@
 					'hospitalName' : this.info.hospitalName,
 					'hospitalId' : this.info.hospitalId,
 					'officeName' : this.info.officeName,
-					'officeId' : this.info.officeId,
-					// 'createId' : '',
-					// 'createUser' : this.info.createUser,
+					'officeId' : this.info.officeId
 				}
 				console.log(postData)
 				requestPost('/group/addGroup', postData, res => {
 					const { code, msg, data } = res.data;
 					if (code === 'success') {
-						console.log(res.data)
 						uni.showToast({
 							title: '排班组创建成功！',
 							content: msg,
 							duration: 1000
 						})
+						getUserInfo(); // 更新的用户信息
 						setTimeout(() => {
 							uni.switchTab({
 							    url: '/pages/tabbar/home/home'

@@ -59,6 +59,7 @@ export function dateFormat(fmt, date) {
 	return fmt;
 }
 
+// 获取用户信息
 export function getUserInfo() {
 	requestGet('/user/detailUser', res => {
 		const {
@@ -80,4 +81,53 @@ export function getUserInfo() {
 			})
 		}
 	})
+}
+
+// 获取组的信息
+function getGroupInfo(Id) {
+	return new Promise((resolve, reject) => {
+		requestGet(`/group/${Id}`, res => {
+			const {
+				code,
+				msg,
+				data
+			} = res.data;
+			if (code === 'success') {
+				uni.setStorage({
+					key: 'groupInfo',
+					data: data
+				})
+				resolve(data)
+			} else {
+				uni.showToast({
+					title: '系统错误',
+					content: msg,
+					icon: 'none',
+					duration: 1000
+				})
+				reject()
+			}
+		})
+	})
+}
+export { getGroupInfo }
+
+// 获取 Storage 用户信息及组信息
+export function getStorageInfo () {
+	const Info = {};
+	uni.getStorage({
+		key: 'userInfo',
+		success: res => {
+			Info.userInfo = res.data;
+			getGroupInfo(Info.userInfo.groupId).then(()=>{
+			    uni.getStorage({
+			    	key: 'groupInfo',
+			    	success: res => {
+						Info.groupInfo = res.data;
+			    	}
+			    })
+			});
+		}
+	})
+	return Info
 }

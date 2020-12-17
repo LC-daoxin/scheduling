@@ -36,6 +36,7 @@
 
 <script>
 	import mineCard from './mine-card.vue'
+	import { getStorageInfo } from '@/utils/index.js'
 	export default {
 		components: {
 			mineCard
@@ -101,11 +102,7 @@
 				}],
 				currentTabIndex: 0,
 				notice: '如统计数据有误，请先维护人员信息',
-				shareInfo: {
-					title: `超级排班邀请您加入'内科一组'，赶快点击加入吧！`,
-					imgurl: 'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-scheduling/7341daa0-2eeb-11eb-880a-0db19f4f74bb.png',
-					path: '/pages/tabbar/home/home?user=123'
-				}
+				shareInfo: {}
 			};
 		},
 		onShareAppMessage(data) {
@@ -116,6 +113,12 @@
 		        imageUrl: dataset.imgurl,  
 		        path: dataset.path  
 		    }  
+		},
+		onReady() {
+			let Info = getStorageInfo();
+			this.shareInfo.title = `${Info.userInfo.nickName} 邀请您加入'${Info.userInfo.groupName}'，赶快点击加入吧！`
+			this.shareInfo.imgurl = 'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-scheduling/7341daa0-2eeb-11eb-880a-0db19f4f74bb.png'
+			this.shareInfo.path = `/pages/tabbar/home/home?userid=${Info.userInfo.id}&&userName=${Info.userInfo.name}&&groupId=${Info.userInfo.groupId}&&groupName=${Info.userInfo.groupName}`
 		},
 		methods: {
 			isCurrentTab(index) {
