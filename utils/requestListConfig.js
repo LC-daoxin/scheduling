@@ -14,11 +14,11 @@ class OverTimeList extends RequestList {
 }
 
 class ShiftChangeList extends RequestList {
-	constructor(sourceClass, newClass, changeDate, ) {
+	constructor(applyDate, workspeciName, senderSpeciName, ) {
 		super()
-		this.sourceClass = sourceClass
-		this.newClass = newClass
-		this.changeDate = changeDate
+		this.applyDate = applyDate
+		this.workspeciName = workspeciName
+		this.senderSpeciName = senderSpeciName
 	}
 }
 
@@ -28,20 +28,21 @@ class AskFromLeaveList extends RequestList {
 		this.leaveType = leaveType
 		this.startDate = startDate
 		this.endDate = endDate
-		this.duration = duration
 	}
 }
 
 class RequestAdjustList extends RequestList {
-	constructor(lenOfTime, startDate, endDate) {
+	constructor(changer, changeSpeciName, applyEndDate, senderSpeciName, applyDate) {
 		super()
-		this.lenOfTime = lenOfTime
-		this.startDate = startDate
-		this.endDate = endDate
+		this.changer = changer
+		this.changeSpeciName = changeSpeciName
+		this.applyEndDate = applyEndDate
+		this.senderSpeciName = senderSpeciName
+		this.applyDate = applyDate
 	}
 }
 
-export const askFromLeave = new AskFromLeaveList('请假类型', '开始日期', '结束日期', '请假时长')
+export const askFromLeave = new AskFromLeaveList('请假类型', '开始日期', '结束日期')
 export const overTime = new OverTimeList('申请日期', '加班时长')
-export const shiftChange = new ShiftChangeList('原班种', '新班种', '申请日期')
-export const requestAdjust = new RequestAdjustList('申请时长', '开始日期', '结束日期')
+export const shiftChange = new ShiftChangeList('改班日期', '原班种', '新班种')
+export const requestAdjust = new RequestAdjustList('调换对象', '调换班种', '调换日期', '申请班种', '申请日期')

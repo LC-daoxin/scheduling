@@ -1,29 +1,44 @@
 <template>
-	<request-list :label-config="shiftChange" :list="requestList" :url="requestUrl"></request-list>
+	<request-list
+		:label-config="shiftChange"
+		:list="requestList"
+		:url="requestUrl"
+	></request-list>
 </template>
 
 <script>
-import RequestList from '@/components/RequestList.vue'
-import {
-	shiftChange
-} from '@/utils/requestListConfig.js'
+import RequestList from '@/components/RequestList.vue';
+import { shiftChange } from '@/utils/requestListConfig.js';
+import { requestPost } from '@/utils/request.js';
 
 export default {
 	name: 'Overtime',
 	data() {
 		return {
 			shiftChange,
-      requestUrl: '/pages/tabbar/workbench/ShiftChange/ShiftChangeRequest',
-			requestList: [
-				{
-					status: 0,
-					requestTime: '11-30 10:45',
-					sourceClass: '',
-          newClass: '',
-          changeDate: '2020-12-01'
-				}
-			]
+			requestUrl: '/pages/tabbar/workbench/ShiftChange/ShiftChangeRequest',
+			requestList: []
 		};
+	},
+	methods: {
+		getList() {
+			requestPost('/apply/applyList', { applyType: '2' }, res => {
+				const { code, msg, data } = res.data;
+				if (code === 'success') {
+					this.requestList = data;
+				} else {
+					uni.showToast({
+						title: '系统错误',
+						content: msg,
+						icon: 'none',
+						duration: 1500
+					});
+				}
+			});
+		}
+	},
+	onShow() {
+		this.getList();
 	},
 	components: {
 		RequestList

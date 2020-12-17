@@ -1,18 +1,18 @@
 <template>
 	<view class="message-item">
-		<view :class="{ imgHead: true, no_read: !msg.readStatus, read: msg.readStatus }" v-for="(msg, msgIndex) in notice.msgList" :key="msgIndex" @click="msgDetail">
+		<view :class="{ imgHead: true, no_read: !msg.status, read: msg.status === 1 }" v-for="(msg, msgIndex) in list" :key="msgIndex" @click="msgDetail(msg)">
 			<!-- 用户头像 -->
 			<view class="imgBox">
-				<view v-if="msg.userImgUrl === null" :style="{ background: msg.color }" class="text">{{ msg.userName }}</view>
-				<image v-else src="msg.userImgUrl"></image>
+				<u-avatar v-if="msg.avatarUrl" class="head_img" :src="msg.avatarUrl" mode="circle" size="90"></u-avatar>
+				<view v-else class="text">{{ msg.sender }}</view>
 			</view>
 			<!-- 消息内容 -->
 			<view class="contentBox">
 				<view class="contentBoxHead">
 					<view class="contentBoxHead_title">#{{ msg.groupName }}</view>
-					<view class="contentBoxHead_time">{{ msg.sendTime }}</view>
+					<view class="contentBoxHead_time">{{ msg.createTime }}</view>
 				</view>
-				<view class="contentBoxTitle">{{ msg.Title }}</view>
+				<view class="contentBoxTitle">{{ msg.title }}</view>
 				<view class="contentBoxText">{{ msg.content }}</view>
 			</view>
 		</view>
@@ -20,17 +20,37 @@
 </template>
 
 <script>
+import { requestGet } from '@/utils/request.js';
+
 export default {
 	name: 'MessageItem',
 	props: {
-		notice: Object
+		list: Array
 	},
 	methods: {
-		msgDetail() {
+		msgDetail(msg) {
+			this.isRead(msg.id);
+			uni.setStorage({
+				key: 'notice',
+				data: msg
+			})
 			uni.navigateTo({
 				url: '/pages/tabbar/notice/noticeDetail/noticeDetail'
 			});
-		}
+		},
+    isRead(id) {
+      requestGet('/schedul/read/' + id, res => {
+        const { code, msg, data } = res.data;
+				if (code !== 'success') {
+					uni.showToast({
+						title: '系统错误',
+						content: msg,
+						icon: 'none',
+						duration: 1500
+					});
+				}
+      })
+    }
 	}
 };
 </script>
@@ -64,6 +84,7 @@ export default {
 				height: 40px;
 				border-radius: 50%;
 				color: #fff;
+				background-color: $base-color;
 				font-weight: 500;
 				display: flex;
 				justify-content: center;
