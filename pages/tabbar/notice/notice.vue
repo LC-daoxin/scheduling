@@ -2,7 +2,8 @@
 	<view class="wrap">
 		<u-notice-bar
 			class="notice"
-			mode="horizontal"
+			mode="vertical"
+			no-list-hidden="暂无科室公告"
 			:list="notice"
 			:more-icon="true"
 		></u-notice-bar>
@@ -38,9 +39,7 @@ export default {
 			list: [],
 			current: 3,
 			currentTabIndex: 0,
-			notice: [
-				'本月由于工程项目任务急项目截止时间紧，需要全体成员每天8点上班，晚上10点下班！'
-			],
+			notice: [],
 			tabsContent,
 			currentTabs: 0,
 			swiperCurrent: 0,
@@ -72,10 +71,20 @@ export default {
 					});
 				}
 			});
-    }
+		},
+		setNoticeList() {
+			uni.getStorage({
+				key: 'notice',
+				success: res => {
+					this.notice = res.data.officeList;
+					console.log(this.notice)
+				}
+			});
+		}
 	},
 	onShow() {
 		this.getNoticeList();
+		this.setNoticeList();
 	},
 	components: {
 		MessageItem

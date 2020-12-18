@@ -30,7 +30,6 @@
 		},
 		computed: {
 			checkStatus() {
-				console.log(this.dataArr)
 				switch(this.dataArr.status) {
 					case 0:
 						return '待审批';

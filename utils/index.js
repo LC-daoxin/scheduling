@@ -94,6 +94,26 @@ export function getUserInfo() {
 				data: data
 			});
 			store.commit('updateUserInfo', data)
+			if (data.groupId) getNotice();
+		} else {
+			uni.showToast({
+				title: '系统错误',
+				content: msg,
+				icon: 'none',
+				duration: 1000
+			});
+		}
+	});
+}
+
+function getNotice() {
+	requestGet('/schedul/getNoticeList', res => {
+		const { code, msg, data } = res.data;
+		if (code === 'success') {
+			uni.setStorage({
+				key: 'notice',
+				data
+			});
 		} else {
 			uni.showToast({
 				title: '系统错误',
@@ -155,8 +175,8 @@ export function getStorageInfo () {
 	return Info
 }
 
-export function formRequestList(success) {
-	requestPost('/apply/applyList', { applyType: '3' }, success);
+export function formRequestList(type, success) {
+	requestPost('/apply/applyList', { applyType: type }, success);
 }
 
 export function getClassList(success) {
@@ -165,4 +185,4 @@ export function getClassList(success) {
 
 export function getWorkList(success) {
 	requestGet('/schedul/getWorkList/1', success);
-};
+}

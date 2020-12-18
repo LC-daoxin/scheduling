@@ -20,7 +20,7 @@
 					@tap="click(index)"
 					:class="['u-type-' + type]"
 				>
-					{{ item }}
+					{{ item.content }}
 				</view>
 			</swiper-item>
 		</swiper>

@@ -1,0 +1,45 @@
+.request-item {
+	position: relative;
+	padding: 1em;
+	background-color: #fff;
+	border-radius: 0.4em;
+}
+
+.request-item-header {
+	display: flex;
+	align-items: center;
+	margin-bottom: 0.5em;
+
+  .title {
+    font-size: 0.85rem;
+    margin-right: 0.5em;
+  }
+
+  .time {
+    position: absolute;
+    right: 1em;
+    color: #999;
+  }
+}
+
+.request-status {
+	font-size: 0.7em;
+	padding: 0.4em;
+	border-radius: 0.4em;
+	color: #fff;
+	background-color: #2979ff;
+	// margin-left: 1em;
+}
+
+.request-status_pass {
+	background-color: rgb(112, 191, 99);
+}
+
+.request-status_refuse {
+	background-color: rgb(225, 78, 57);
+}
+
+.request-item-content {
+	color: #666;
+	letter-spacing: 0.07em;
+}

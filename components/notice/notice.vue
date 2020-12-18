@@ -6,7 +6,7 @@
     <view class="center_notice">
       <swiper class="notice_swiper" vertical easing-function="easeInOutCubic" autoplay interval="3000">
         <swiper-item v-for="(item,index) in noticeList" :key="index" class="sw_item">
-		   <text class="sw_text">{{item.title}}</text>
+		   <text class="sw_text">{{item.content}}</text>
         </swiper-item>
       </swiper>
     </view>
