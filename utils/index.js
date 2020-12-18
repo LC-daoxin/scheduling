@@ -1,5 +1,5 @@
 import { requestGet, requestPost } from '@/utils/request.js';
-
+import store from '@/store'
 const errorMsg = msg => {
 	uni.showToast({
 		title: '系统错误',
@@ -69,26 +69,6 @@ export function dateFormat(fmt, date) {
 	return fmt;
 }
 
-// 获取用户信息
-export function getUserInfo() {
-	requestGet('/user/detailUser', res => {
-		const { code, msg, data } = res.data;
-		if (code === 'success') {
-			uni.setStorage({
-				key: 'userInfo',
-				data: data
-			});
-		} else {
-			uni.showToast({
-				title: '系统错误',
-				content: msg,
-				icon: 'none',
-				duration: 1000
-			});
-		}
-	});
-}
-
 export function formReqeust(data) {
 	requestPost('/apply/apply', data, res => {
 		const { code, msg } = res.data;
@@ -102,6 +82,27 @@ export function formReqeust(data) {
 			errorMsg(msg);
 		}
 	})
+}
+
+// 获取用户信息
+export function getUserInfo() {
+	requestGet('/user/detailUser', res => {
+		const { code, msg, data } = res.data;
+		if (code === 'success') {
+			uni.setStorage({
+				key: 'userInfo',
+				data: data
+			});
+			store.commit('updateUserInfo', data)
+		} else {
+			uni.showToast({
+				title: '系统错误',
+				content: msg,
+				icon: 'none',
+				duration: 1000
+			});
+		}
+	});
 }
 
 // 获取组的信息
@@ -118,6 +119,7 @@ function getGroupInfo(Id) {
 					key: 'groupInfo',
 					data: data
 				})
+				store.commit('updateGroupInfo', data)
 				resolve(data)
 			} else {
 				uni.showToast({
@@ -135,19 +137,19 @@ export { getGroupInfo }
 
 // 获取 Storage 用户信息及组信息
 export function getStorageInfo () {
-	const Info = {};
+	let Info = {};
 	uni.getStorage({
 		key: 'userInfo',
 		success: res => {
 			Info.userInfo = res.data;
-			getGroupInfo(Info.userInfo.groupId).then(()=>{
-			    uni.getStorage({
-			    	key: 'groupInfo',
-			    	success: res => {
-						Info.groupInfo = res.data;
-			    	}
-			    })
-			});
+			console.log('StorageuserInfo', res.data)
+		}
+	})
+	uni.getStorage({
+		key: 'groupInfo',
+		success: res => {
+			Info.groupInfo = res.data;
+			console.log('StoragegroupInfo', res.data)
 		}
 	})
 	return Info

@@ -3,18 +3,20 @@
 		<view :style="{'height':statusBarHeight}"></view>
 		<button v-if="!show" class="loginBtn" open-type="getUserInfo" @getuserinfo="getUserInfo">请登录<text class="iconfont icon-xiangyou"></text></button>
 		<view v-else class="header" :style="{'height':titleBarHeight}">
-			<u-button class="switchBtn" shape="circle" :custom-style="switchBtn" size="mini" @click="toList()">切换</u-button>
-			<view class="departments" @click="toInfo()">
-				{{ nav.departmentsName }}
-				<text class="iconfont icon-xiangyou"></text>
-			</view>
+			<u-button class="switchBtn" shape="circle" :custom-style="switchBtn" size="mini" @click="toList">切换</u-button>
+			<navigator url="/pages/departments/department-info/department-info">
+				<view class="departments">
+					<text>{{ Info.groupInfo.groupName }}</text>
+					<text class="iconfont icon-xiangyou"></text>
+				</view>
+			</navigator>
 		</view>
 	</view>
 </template>
 
 <script>
 	export default {
-		props:["nav", "show"],
+		props:["show"],
 		data() {
 			return {
 				statusBarHeight: 0, // 状态栏高度
@@ -26,44 +28,34 @@
 				}
 			}
 		},
+		computed: {
+		    Info () {
+		        return this.$store.state.Info
+		    }
+		},
 		created() {
 			let menuButtonInfo = uni.getMenuButtonBoundingClientRect();
-			let Info = uni.getSystemInfoSync()
-			console.log('系统信息:',Info)
-			console.log('胶囊按钮信息:',menuButtonInfo)
-			this.statusBarHeight = Info.statusBarHeight  + 'px' // 状态栏高度
+			let Info = uni.getSystemInfoSync();
+			this.statusBarHeight = Info.statusBarHeight  + 'px'; // 状态栏高度
 			this.titleBarHeight = (menuButtonInfo.bottom - Info.statusBarHeight) + (menuButtonInfo.top - Info.statusBarHeight)  + 'px';
 		},
 		methods: {
-			// 跳转到 切换科室列表页面
-			toList () {
-				uni.navigateTo({
-				    url: '/pages/departments/department-list/department-list?id=1',
-					success: function(res) {
-						console.log(res)
-					}
-				});
-			},
-			// 跳转到 科室详情信息页面
-			toInfo () {
-				uni.navigateTo({
-				    url: `/pages/departments/department-info/department-info?departmentsName=${this.nav.departmentsName}`,
-					success: function(res) {
-						console.log(res)
-					}
-				});
-			},
 			getUserInfo () {
 				let that =this
 				uni.getUserInfo({
 					success(res) {
 						console.log(res)
-						that.$emit('hasInfo', true)
+						that.$emit('hasInfo', true);
 					},
 					fail(res) {
 						console.log(res)
 					}
 				})
+			},
+			toList() {
+				uni.navigateTo({
+					url: '/pages/departments/department-list/department-list'
+				});
 			}
 		}
 	}

@@ -2,7 +2,7 @@
 	<view>
 		<!-- #ifdef MP-WEIXIN -->
 		<!-- 状态栏 +  -->
-		<home-navbar :nav="setNav" :show="hasInfo" @hasInfo="changeHasInfo"></home-navbar>
+		<home-navbar :show="hasInfo" @hasInfo="changeHasInfo"></home-navbar>
 		<!-- #endif -->
 		<!-- 公告 -->
 		<notice :colors="colors" :noticeList="noticeList"></notice>
@@ -18,7 +18,7 @@
 	import {
 		request
 	} from '@/utils/request.js'
-	import { getUserInfo } from '@/utils/index.js'
+	import { getUserInfo, getGroupInfo } from '@/utils/index.js'
 
 	export default {
 		components: {
@@ -26,10 +26,6 @@
 		},
 		data() {
 			return {
-				// 自定义导航栏对象
-				setNav: {
-					'departmentsName': '心血管内科'
-				},
 				hasInfo: false,
 				datelist: [{
 						date: '2020-09-27',
@@ -163,13 +159,9 @@
 						title: '前端，后台及测试同事10-11月培训安排'
 					}
 				],
-				colors: 'red'
+				colors: 'red',
+				groupInfo: {}
 			};
-		},
-		onLoad: function(option) { //option为object类型，会序列化上个页面传递的参数
-			if (option.departmentsName) {
-				this.setNav.departmentsName = option.departmentsName;
-			}
 		},
 		onShow() {
 			uni.getUserInfo({
@@ -214,6 +206,20 @@
 										data: data
 									})
 									getUserInfo()
+									uni.getStorage({
+										key: 'userInfo',
+										success: res => {
+											let userInfo = res.data;
+											getGroupInfo(userInfo.groupId).then(() => {
+												uni.getStorage({
+													key: 'groupInfo',
+													success: res => {
+														Object.assign(this.groupInfo, res.data)
+													}
+												})
+											})
+										}
+									})
 								}
 							})
 						}

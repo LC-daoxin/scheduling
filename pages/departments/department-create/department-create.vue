@@ -73,7 +73,6 @@
 					'officeName' : this.info.officeName,
 					'officeId' : this.info.officeId
 				}
-				console.log(postData)
 				requestPost('/group/addGroup', postData, res => {
 					const { code, msg, data } = res.data;
 					if (code === 'success') {

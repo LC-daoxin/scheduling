@@ -1,4 +1,5 @@
-const api = 'http://192.168.1.207:8088'
+// const api = 'http://192.168.1.207:8088'
+const api = 'http://49.235.137.137:8088'
 let authorization = ''
 
 uni.getStorage({
