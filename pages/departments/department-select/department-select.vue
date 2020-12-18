@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<department-category ref="departmentCategory" :categoryList="categoryList" :subCategoryList="subCategoryList" @categoryMainClick="categoryMainClick" @categorySubClick="categorySubClick"></department-category>
+		<department-category ref="departmentCategory" :categoryList="categoryList" :status='status' :subCategoryList="subCategoryList" @categoryMainClick="categoryMainClick" @categorySubClick="categorySubClick"></department-category>
 	</view>
 </template>
 
@@ -10,11 +10,15 @@
 		data() {
 			return {
 				categoryList:[], // 科类分类列表
-				subCategoryList:[]
+				subCategoryList:[],
+				status: null
 			};
 		},
 		onReady() {
 			this.getList();
+		},
+		onLoad: function(option){
+			this.status = option.type
 		},
 		methods: {
 			categoryMainClick(category){

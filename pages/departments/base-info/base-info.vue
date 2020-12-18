@@ -3,14 +3,14 @@
 		<view class="info">
 			<u-alert-tips type="warning" :show-icon="true" :description="description"></u-alert-tips>
 			<uni-list>
-			    <uni-list-item title="所属医院" link to="/pages/departments/hospitalList/hospitalList"  :rightText="info.hospitalName" @click="selectHospital()" ></uni-list-item>
-			    <uni-list-item title="所属科室" link to="/pages/departments/department-select/department-select"  :rightText="info.departmentName" @click="selectHospital()" ></uni-list-item>
-			    <uni-list-item title="科室名称" link :rightText="info.officeName" @click="editName('科室名称', 'name')" ></uni-list-item>
-			    <uni-list-item title="创建者" :rightText="info.creatorName"></uni-list-item>
-			    <uni-list-item title="编号" :rightText="info.creatorId"></uni-list-item>
+			    <uni-list-item title="所属医院" link to="/pages/departments/hospitalList/hospitalList?type=2"  :rightText="groupInfo.hospitalName" @click="selectHospital()" ></uni-list-item>
+			    <uni-list-item title="所属科室" link to="/pages/departments/department-select/department-select?type=2"  :rightText="groupInfo.officeName" @click="selectHospital()" ></uni-list-item>
+			    <uni-list-item title="科室名称" link :rightText="groupInfo.groupName" @click="editName('科室名称', 'name')" ></uni-list-item>
+			    <uni-list-item title="创建者" :rightText="groupInfo.createUser"></uni-list-item>
+			    <uni-list-item title="编号" :rightText="groupInfo.groupCode"></uni-list-item>
 			</uni-list>
 			<button class="transferBtn" @click="transfer">转让科室</button>
-			<button class="closeBtn"  @click="close" type="default">解散科室</button>
+			<button class="closeBtn"  @click="dissolve" type="default">解散科室</button>
 			<button class="bottomBtn" @click="goDepartment">切换科室</button>
 		</view>
 		<popup :title="editInfoTitle" ref="popup">
@@ -21,16 +21,13 @@
 </template>
 
 <script>
+	import { requestDelete, requestPost } from '@/utils/request.js'
+	import { getUserInfo, getGroupInfo } from '@/utils/index.js'
 	export default {
 		data() {
 			return {
-				info: {
-					hospitalName: '首都医科大学附属宣武医院',
-					departmentName: '心血管内科',
-					officeName: '内科二组',
-					creatorName: '赵易',
-					creatorId: '201001'
-				},
+				groupInfo: {},
+				userInfo: {},
 				description: '仅创建者和管理员可以修改科室名称和所属医院。',
 				editInfoTitle: '', // 弹窗标题名
 				inputTarget: '', // 输入的key
@@ -40,13 +37,69 @@
 				}
 			};
 		},
+		onShow() {
+			this.refreshInfo()
+		},
 		methods: {
+			// 刷新信息
+			refreshInfo () {
+				uni.getStorage({
+					key: 'userInfo',
+					success: res => {
+						Object.assign(this.userInfo, res.data);
+						console.log(this.userInfo)
+						getGroupInfo(this.userInfo.groupId).then(()=>{
+						    uni.getStorage({
+						    	key: 'groupInfo',
+						    	success: res => {
+						    		this.groupInfo = res.data;
+						    		console.log('show', this.groupInfo)
+						    	}
+						    })
+						});
+					}
+				})
+			},
 			// 选择医院
 			selectHospital () {
 			},
 			transfer () {},
-			// 
-			close () {},
+			// 解散科室（组）删除
+			dissolve () {
+				let that = this;
+				uni.showModal({
+				    title: '解散科室',
+				    content: `解散科室后，科室中的所有数据将会被删除。`,
+				    success: function (res) {
+				        if (res.confirm) {
+							requestDelete(`/group/${that.userInfo.groupId}`, res => {
+								const {code, msg, data} = res.data
+								if (code === 'success') {
+									uni.showToast({
+										title: '解散成功',
+										content: msg,
+										duration: 1000
+									})
+									setTimeout(() => {
+										uni.navigateTo({
+										    url: '/pages/departments/department-list/department-list'
+										});
+									}, 1000)
+								} else {
+									uni.showToast({
+										title: '系统错误',
+										content: msg,
+										icon: 'none',
+										duration: 1000
+									})
+								}
+							})
+				        } else if (res.cancel) {
+							console.log('取消解散')
+				        }
+				    }
+				});
+			},
 			// 切换科室
 			goDepartment () {
 				uni.navigateTo({
@@ -62,9 +115,25 @@
 			  this.$refs.popup.open();
 			},
 			save() {
-			  this.editInfo[this.inputTarget] = this.inputValue;
-			  this.inputValue = '';
-			  this.$refs.popup.close();
+			    this.editInfo[this.inputTarget] = this.inputValue;
+				let postData = {
+					'groupName': this.inputValue
+				}
+				requestPost('/group/updateGroup', postData, res => {
+					const {code, msg, data} = res.data;
+					if (code === 'success') {
+						 this.inputValue = '';
+						 this.$refs.popup.close();
+						 this.refreshInfo()
+					} else {
+						uni.showToast({
+							title: '系统错误',
+							content: msg,
+							icon: 'none',
+							duration: 1000
+						})
+					}
+				})
 			}
 		}
 	}

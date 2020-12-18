@@ -18,6 +18,7 @@
 </template>
 
 <script>
+	import { requestPost } from '@/utils/request.js'
 	export default {
 		name: "category",
 		data() {
@@ -54,6 +55,9 @@
 			subCatePara: {
 				type: String,
 				default: 'officeLists'
+			},
+			status: {
+				type: String // 选择科室的用途 1: 选择科室 2: 更新科室
 			}
 		},
 		methods: {
@@ -63,8 +67,28 @@
 			},
 			categoryClickSub(category) {
 				this.$emit('categorySubClick',category)
-				uni.$emit('getOffice', category)
-				uni.navigateBack({})
+				if (this.status === '1') {
+					uni.$emit('getOffice', category)
+					uni.navigateBack({})
+				} else if (this.status === '2') {
+					let postData = {
+						'officeName': category.name,
+						'officeId': category.id
+					}
+					requestPost('/group/updateGroup', postData, res => {
+						const {code, msg, data} = res.data;
+						if (code === 'success') {
+							uni.navigateBack({});
+						} else {
+							uni.showToast({
+								title: '系统错误',
+								content: msg,
+								icon: 'none',
+								duration: 1000
+							})
+						}
+					})
+				}
 			},
 			setActiveMain(item) {
 				this.activeMain = item

@@ -3,14 +3,14 @@
 		<view class="detatl-content">
 			<view class="info" @click="getDetail">
 				<view class="info-title">
-					<text class="title">{{ info.departmentsName }}</text>
+					<text class="title">{{ Info.userInfo.groupName }}</text>
 					<view class="text-right">
 						<text>详情</text>
 						<text class="iconfont icon-xiangyou"></text>
 					</view>
 				</view>
 				<view class="info-content">
-					创建者：<text class="name">{{ userList[0].name }}</text> 编号：<text>{{ userList[0].id }}</text>
+					创建者：<text class="name">{{ userList[0].userName }}</text> 编号：<text>{{ userList[0].userId }}</text>
 				</view>
 			</view>
 			<view class="user" @click="getUser">
@@ -23,7 +23,7 @@
 				</view>
 				<view class="user-content">
 					<view class="avatar-list">
-						<text class="avatar" v-for="(item,index) in newList" :key="index">{{ item.name.slice(0, 1) }}</text>
+						<text class="avatar" v-for="(item,index) in newList" :key="index">{{ item.userName.slice(0, 1) }}</text>
 						<text class="avatar">{{ '+' + (userList.length - 5) }}</text>
 					</view>
 					<button open-type="share" :data-title="shareInfo.title" :data-imgurl="shareInfo.imgurl" :data-path="shareInfo.path" class="inviteBtn" size="mini" plain="true">邀请人员</button>
@@ -35,47 +35,46 @@
 
 <script>
 	export default {
-		props: ['info'],
+		props: ['Info'],
 		data() {
 			return {
 				userList: [{
-					id: 201001,
-					name: '赵易'
+					userId: 201001,
+					userName: '赵易'
 				},{
-					id: 201002,
-					name: '钱尔'
+					userId: 201002,
+					userName: '钱尔'
 				},{
-					id: 201003,
-					name: '孙时'
+					userId: 201003,
+					userName: '孙时'
 				},{
-					id: 201004,
-					name: '李思'
+					userId: 201004,
+					userName: '李思'
 				},{
-					id: 201005,
-					name: '周梧'
+					userId: 201005,
+					userName: '周梧'
 				},{
-					id: 201006,
-					name: '吴柳'
+					userId: 201006,
+					userName: '吴柳'
 				},{
-					id: 201007,
-					name: '王奇'
+					userId: 201007,
+					userName: '王奇'
 				}],
 				newList: [], // 处理后的用户列表 5位
 				showIcon: false,
-				shareInfo: {
-					title: `超级排班邀请您加入'内科一组'，赶快点击加入吧！`,
-					imgurl: 'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-scheduling/7341daa0-2eeb-11eb-880a-0db19f4f74bb.png',
-					path: '/pages/tabbar/home/home?user=123'
-				}
+				shareInfo: {}
 			};
 		},
 		mounted () {
-			console.log(this.newList)
-			if (this.userList.length > 5) {
+			this.userList = this.Info.groupInfo.groupUserList
+			console.log(this.userList)
+			if (this.userList && this.userList.length > 5) {
 				this.showIcon = true;
 				this.newList = this.userList.slice(0, 5);
-				console.log(this.newList)
 			}
+			this.shareInfo.title = `${this.Info.userInfo.nickName} 邀请您加入'${this.Info.userInfo.groupName}'，赶快点击加入吧！`
+			this.shareInfo.imgurl = 'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-scheduling/7341daa0-2eeb-11eb-880a-0db19f4f74bb.png'
+			this.shareInfo.path = `/pages/tabbar/home/home?userid=${this.Info.userInfo.id}&&userName=${this.Info.userInfo.name}&&groupId=${this.Info.userInfo.groupId}&&groupName=${this.Info.userInfo.groupName}`
 		},
 		methods: {
 			// 获取科室详情

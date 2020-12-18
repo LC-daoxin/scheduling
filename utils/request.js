@@ -39,3 +39,14 @@ export const requestPost = (url, data, success) => {
 		success
 	})
 }
+
+export const requestDelete = (url, success) => {
+	return uni.request({
+		url: api + url,
+		method: 'DELETE',
+		header: {
+			'authorization': authorization || ''
+		},
+		success
+	})
+}
