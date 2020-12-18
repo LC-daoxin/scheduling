@@ -1,5 +1,5 @@
 <template>
-	<view class="shift-change-request">
+	<view class="form-page">
 		<form @submit="formReqeust(formData)" @reset="formReset">
 			<u-cell-group>
 				<u-cell-item title="改班日期">

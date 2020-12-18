@@ -109,8 +109,8 @@ class RequestForLeave extends Request {
 		};
 		this.formData = {
 			leaveType: '', // 请假类型
-			applyDate: today, // 开始日期
-			applyEndDate: tomorrow, // 结束日期
+			applyDate: '2020-12-01', // 开始日期
+			applyEndDate: '2020-12-03', // 结束日期
 			account: '' // 申请理由
 		};
 	}

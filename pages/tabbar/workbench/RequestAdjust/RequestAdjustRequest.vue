@@ -1,5 +1,5 @@
 <template>
-	<view class="request-adjust-request">
+	<view class="form-page">
 		<form @submit="formReqeust(formData)" @reset="formReset">
 			<u-cell-group>
 				<u-cell-item title="调班对象">
@@ -174,13 +174,3 @@ export default {
 	}
 };
 </script>
-
-<style lang="scss" scoped>
-.uni-btn-v {
-	padding: 0 1em;
-
-	.button {
-		margin-top: 0.5em;
-	}
-}
-</style>

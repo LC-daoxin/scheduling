@@ -23,7 +23,7 @@ $danger-color: #fc413f;
 $bg-color: #ecf3f8;
 $half-text-color: #666;
 $text-color: #333;
-$light-color:#ccc;
+$light-color: #ccc;
 $border-color: #eaecec;
 $warning-color: #fcbd71;
 
@@ -88,87 +88,6 @@ $uni-font-size-subtitle: 36rpx;
 $uni-color-paragraph: #3f536e; // 文章段落颜色
 $uni-font-size-paragraph: 30rpx;
 
-/* 按钮样式 */
-.button {
-	font-size: 18px;
-	border-radius: 5px;
-	line-height: 2.55555556;
-	background-color: #ffffff;
-}
-
-.button--primary {
-	color: #ffffff;
-	background-color: $base-color;
-}
-
-.button--danger {
-	color: #ffffff;
-	background-color: $danger-color;
-}
-
-.button-group {
-	display: flex;
-	align-items: flex-end;
-
-	button {
-		flex: 1;
-	}
-
-	button:first-child {
-		border-radius: 0.4em 0 0 0.4em;
-	}
-
-	button:last-child {
-		border-radius: 0 0.4em 0.4em 0;
-	}
-}
-
-.request-item {
-	position: relative;
-	padding: 1em;
-	background-color: #fff;
-	border-radius: 0.4em;
-}
-
-.request-item-header {
-	display: flex;
-	align-items: center;
-	margin-bottom: 0.5em;
-}
-
-.request-item-header .title {
-	font-size: 0.85rem;
-	margin-right: 0.5em;
-}
-
-.request-item-header .time {
-	position: absolute;
-	right: 1em;
-	color: #999;
-}
-
-.request-status {
-	font-size: 0.7em;
-	padding: 0.4em;
-	border-radius: 0.4em;
-	color: #fff;
-	background-color: #2979ff;
-	// margin-left: 1em;
-}
-
-.request-status_pass {
-	background-color: rgb(112, 191, 99);
-}
-
-.request-status_refuse {
-	background-color: rgb(225, 78, 57);
-}
-
-.request-item-content {
-	color: #666;
-	letter-spacing: 0.07em;
-}
-
 /* 小三角 */
 .triangle {
 	position: relative;
@@ -180,3 +99,7 @@ $uni-font-size-paragraph: 30rpx;
 	border-left: 0.3em solid transparent;
 	border-right: 0.3em solid transparent;
 }
+
+@import './common/css/button.scss';
+@import './common/css/requestItem.scss';
+@import './common/css/formPage.scss';

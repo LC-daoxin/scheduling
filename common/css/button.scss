@@ -1,0 +1,33 @@
+.button {
+	font-size: 18px;
+	border-radius: 5px;
+	line-height: 2.55555556;
+	background-color: #ffffff;
+}
+
+.button--primary {
+	color: #ffffff;
+	background-color: $base-color;
+}
+
+.button--danger {
+	color: #ffffff;
+	background-color: $danger-color;
+}
+
+.button-group {
+	display: flex;
+	align-items: flex-end;
+
+	button {
+		flex: 1;
+	}
+
+	button:first-child {
+		border-radius: 0.4em 0 0 0.4em;
+	}
+
+	button:last-child {
+		border-radius: 0 0.4em 0.4em 0;
+	}
+}

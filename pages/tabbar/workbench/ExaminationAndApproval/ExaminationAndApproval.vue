@@ -1,5 +1,6 @@
 <template>
 	<view class="tab-bar">
+		<u-toast ref="uToast" />
 		<view class="tab-header">
 			<view :class="'tab-header_item ' + isCurrentTab(0)" @click="switchTab(0)"
 				>待审批</view
@@ -23,7 +24,7 @@
 			</lb-picker>
 		</view>
 		<view class="tab-inner">
-			<view class="tab-inner_item" v-show="currentTabIndex === 0">
+			<view class="tab-inner_item">
 				<request-item
 					v-for="(request, requestIndex) of requestList"
 					:key="requestIndex"
@@ -36,7 +37,7 @@
 					<view class="request-item-content">请假时长：{{ request.lengthOfTime }}天</view>
 				</request-item>
 			</view>
-			<view class="tab-inner_item" v-show="currentTabIndex === 1">
+			<!-- <view class="tab-inner_item" v-show="currentTabIndex === 1">
 				<request-item
 					v-for="(verified, verifiedIndex) of verifiedList"
 					:key="verifiedIndex"
@@ -45,9 +46,11 @@
 					<view class="request-item-content">请假类型：{{ verified.requestType }}</view>
 					<view class="request-item-content">开始日期：{{ verified.startTime }}</view>
 					<view class="request-item-content">结束日期：{{ verified.endTime }}</view>
-					<view class="request-item-content">请假时长：{{ verified.lengthOfTime }}天</view>
+					<view class="request-item-content"
+						>请假时长：{{ verified.lengthOfTime }}天</view
+					>
 				</request-item>
-			</view>
+			</view> -->
 		</view>
 		<popup :title="popupTitle" ref="popup">
 			<view class="request-detail">{{ requestDetail }}</view>
@@ -60,11 +63,11 @@
 </template>
 
 <script>
+import { requestPost } from '@/utils/request.js';
 import LbPicker from '@/components/lb-picker';
 import popup from '@/components/popup/popup.vue';
 import RequestItem from '@/components/request-item/RequestItem.vue';
 import dateList from './dateList.js';
-import requestList from './requestList.js';
 import verifiedList from './verifiedList.js';
 
 export default {
@@ -78,7 +81,7 @@ export default {
 			filterDate: '全部日期',
 			typeList: ['全部类型', '调班申请', '请假申请'],
 			dateList,
-			requestList,
+			requestList: [],
 			verifiedList
 		};
 	},
@@ -92,7 +95,23 @@ export default {
 		verify(request) {
 			this.popupTitle = request.title;
 			this.$refs.popup.open();
+		},
+		getList() {
+			requestPost('/apply/approveList', { status: 0 }, res => {
+				const { code, msg, data } = res.data;
+				if (code === 'success') {
+					this.requestList = data;
+				} else {
+					this.$refs.uToast.show({
+						title: msg,
+						type: 'error'
+					});
+				}
+			});
 		}
+	},
+	mounted() {
+		this.getList();
 	},
 	components: {
 		LbPicker,

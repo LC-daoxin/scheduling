@@ -34,10 +34,12 @@
 						</view>
 					</u-col>
 					<u-col span="4">
-						<view class="management-box_2">
-							<text class="color_2 iconfont icon-ziyuan"></text>
-							<text class="box-text">统计</text>
-						</view>
+						<navigator url="/pages/tabbar/workbench/Statistical/index">
+							<view class="management-box_2">
+								<text class="color_2 iconfont icon-ziyuan"></text>
+								<text class="box-text">统计</text>
+							</view>
+						</navigator>
 					</u-col>
 					<u-col span="4">
 						<view class="management-box_2">
@@ -69,7 +71,7 @@ export default {
 					title: '您不是小组管理员，无法进行审批',
 					icon: 'none',
 					duration: 1500
-				})
+				});
 			}
 		},
 		goScheduling() {
@@ -97,7 +99,7 @@ export default {
 		// }
 	},
 	mounted() {
-		this.getUserInfo()
+		this.getUserInfo();
 	}
 };
 </script>

@@ -1,15 +1,18 @@
 <template>
-	<request-list
-		:label-config="askFromLeave"
-		:list="requestList"
-		:url="requestUrl"
-	></request-list>
+	<view>
+		<u-toast ref="uToast" />
+		<request-list
+			:label-config="askFromLeave"
+			:list="requestList"
+			:url="requestUrl"
+		></request-list>
+	</view>
 </template>
 
 <script>
 import RequestList from '@/components/RequestList.vue';
 import { askFromLeave } from '@/utils/requestListConfig.js';
-import { requestPost } from '@/utils/request.js';
+import { formRequestList } from '@/utils/index.js';
 
 export default {
 	name: 'Overtime',
@@ -22,20 +25,14 @@ export default {
 	},
 	methods: {
 		getList() {
-			const postData = {
-				applyType: '1'
-			};
-
-			requestPost('/apply/applyLeave', postData, res => {
+			formRequestList('1', res => {
 				const { code, msg, data } = res.data;
 				if (code === 'success') {
 					this.requestList = data;
 				} else {
-					uni.showToast({
-						title: '系统错误',
-						content: msg,
-						icon: 'none',
-						duration: 1500
+					this.$refs.uToast.show({
+						title: msg,
+						type: 'error'
 					});
 				}
 			});
@@ -49,3 +46,9 @@ export default {
 	}
 };
 </script>
+
+<style lang="scss" scoped>
+::v-deep .request-list {
+	height: calc(100vh - 5.5em) !important;
+}
+</style>

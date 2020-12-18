@@ -6,7 +6,7 @@
 					v-for="(param, key, paramIndex) in labelConfig"
 					:key="paramIndex"
 					class="request-item-content"
-					>{{ param }}：{{ item[key] }}{{ key === 'duration' ? '小时' : '' }}</view
+					>{{ param }}：{{ item[key] }}</view
 				>
 			</request-item>
 		</navigator>

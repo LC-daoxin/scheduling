@@ -163,35 +163,43 @@
 				"navigationBarTitleText": "调班申请",
 				"enablePullDownRefresh": false
 			}
-		},{
+		},
+		{
 			"path": "pages/tabbar/workbench/RequestAdjust/RequestAdjustRequest",
 			"style": {
 				"navigationBarTitleText": "调班申请",
 				"enablePullDownRefresh": false
 			}
-		},{
-            "path" : "pages/scheduling/class-management/class-management",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "班种管理",
-                "enablePullDownRefresh": false
-            }
-        },{
-            "path" : "pages/scheduling/personal-stats/personal-stats",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "个人统计",
-                "enablePullDownRefresh": false
-            }
-        },{
-            "path" : "pages/scheduling/scheduling-setting/scheduling-setting",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "排班设置",
-                "enablePullDownRefresh": false
-            }
-        }
-    ],
+		},
+		{
+			"path": "pages/scheduling/class-management/class-management",
+			"style": {
+				"navigationBarTitleText": "班种管理",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/scheduling/personal-stats/personal-stats",
+			"style": {
+				"navigationBarTitleText": "个人统计",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/scheduling/scheduling-setting/scheduling-setting",
+			"style": {
+				"navigationBarTitleText": "排班设置",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/tabbar/workbench/Statistical/index",
+			"style": {
+				"navigationBarTitleText": "统计",
+				"enablePullDownRefresh": false
+			}
+		}
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
