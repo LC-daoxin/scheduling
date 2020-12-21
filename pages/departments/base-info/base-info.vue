@@ -63,6 +63,7 @@
 			// 选择医院
 			selectHospital () {
 			},
+			// 转让科室
 			transfer () {},
 			// 解散科室（组）删除
 			dissolve () {

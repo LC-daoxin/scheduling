@@ -86,24 +86,28 @@ export function formReqeust(data) {
 
 // 获取用户信息
 export function getUserInfo() {
-	requestGet('/user/detailUser', res => {
-		const { code, msg, data } = res.data;
-		if (code === 'success') {
-			uni.setStorage({
-				key: 'userInfo',
-				data: data
-			});
-			store.commit('updateUserInfo', data)
-			if (data.groupId) getNotice();
-		} else {
-			uni.showToast({
-				title: '系统错误',
-				content: msg,
-				icon: 'none',
-				duration: 1000
-			});
-		}
-	});
+	return new Promise((resolve, reject) => {
+		requestGet('/user/detailUser', res => {
+			const { code, msg, data } = res.data;
+			if (code === 'success') {
+				uni.setStorage({
+					key: 'userInfo',
+					data: data
+				});
+				store.commit('updateUserInfo', data)
+				if (data.groupId) getNotice();
+				resolve(data)
+			} else {
+				uni.showToast({
+					title: '系统错误',
+					content: msg,
+					icon: 'none',
+					duration: 1000
+				});
+				reject(data)
+			}
+		});
+	})
 }
 
 function getNotice() {
@@ -148,7 +152,7 @@ function getGroupInfo(Id) {
 					icon: 'none',
 					duration: 1000
 				})
-				reject()
+				reject(data)
 			}
 		})
 	})
