@@ -31,58 +31,66 @@
 					:dataArr="request"
 					@click.native="verify(request)"
 				>
-					<view class="request-item-content">请假类型：{{ request.requestType }}</view>
-					<view class="request-item-content">开始日期：{{ request.startTime }}</view>
-					<view class="request-item-content">结束日期：{{ request.endTime }}</view>
-					<view class="request-item-content">请假时长：{{ request.lengthOfTime }}天</view>
+					<view v-if="request.applyType === 1">
+						<view class="request-item-content">请假类型：{{ request.leaveType }}</view>
+						<view class="request-item-content">开始日期：{{ request.applyDate }}</view>
+						<view class="request-item-content">结束日期：{{ request.applyEndDate }}</view>
+					</view>
+					<view v-if="request.applyType === 2">
+						<view class="request-item-content">改班日期：{{ request.applyDate }}</view>
+						<view class="request-item-content">原班种：{{ request.workspeciName }}</view>
+						<view class="request-item-content"
+							>新班种：{{ request.senderSpeciName }}</view
+						>
+					</view>
+					<view v-if="request.applyType === 3">
+						<view class="request-item-content">调换对象：{{ request.changer }}</view>
+						<view class="request-item-content"
+							>调换班种：{{ request.changeSpeciName }}</view
+						>
+						<view class="request-item-content">调换日期：{{ request.applyEndDate }}</view>
+						<view class="request-item-content"
+							>申请班种：{{ request.senderSpeciName }}</view
+						>
+						<view class="request-item-content">申请日期：{{ request.applyDate }}</view>
+					</view>
+					<view v-if="request.applyType === 4">
+						<view class="request-item-content">申请日期：{{ request.applyDate }}</view>
+						<view class="request-item-content">加班时长：{{ request.duration }}小时</view>
+						<view class="request-item-content">申请理由：{{ request.account }}</view>
+					</view>
 				</request-item>
 			</view>
-			<!-- <view class="tab-inner_item" v-show="currentTabIndex === 1">
-				<request-item
-					v-for="(verified, verifiedIndex) of verifiedList"
-					:key="verifiedIndex"
-					:dataArr="verified"
-				>
-					<view class="request-item-content">请假类型：{{ verified.requestType }}</view>
-					<view class="request-item-content">开始日期：{{ verified.startTime }}</view>
-					<view class="request-item-content">结束日期：{{ verified.endTime }}</view>
-					<view class="request-item-content"
-						>请假时长：{{ verified.lengthOfTime }}天</view
-					>
-				</request-item>
-			</view> -->
 		</view>
 		<popup :title="popupTitle" ref="popup">
 			<view class="request-detail">{{ requestDetail }}</view>
 			<view class="button-group">
-				<button class="button button--primary" @click="save">同意</button>
-				<button class="button button--danger" @click="save">拒绝</button>
+				<button class="button button--primary" @click="approval(0)">同意</button>
+				<button class="button button--danger" @click="approval(1)">拒绝</button>
 			</view>
 		</popup>
 	</view>
 </template>
 
 <script>
-import { requestPost } from '@/utils/request.js';
+import { requestPost, requestGet } from '@/utils/request.js';
 import LbPicker from '@/components/lb-picker';
 import popup from '@/components/popup/popup.vue';
 import RequestItem from '@/components/request-item/RequestItem.vue';
 import dateList from './dateList.js';
-import verifiedList from './verifiedList.js';
 
 export default {
 	data() {
 		return {
+			curId: '',
 			currentTabIndex: 0,
 			popupTitle: '',
-			requestDetail:
-				'我把衣服放进微波炉里烘干，结果衣服着火了。我需要请假一天，在家救火。',
+			requestDetail: '',
 			filterType: '全部类型',
 			filterDate: '全部日期',
 			typeList: ['全部类型', '调班申请', '请假申请'],
 			dateList,
-			requestList: [],
-			verifiedList
+			requestList: []
 		};
 	},
 	methods: {
@@ -91,16 +99,58 @@ export default {
 		},
 		switchTab(index) {
 			this.currentTabIndex = index;
+			this.getList();
 		},
 		verify(request) {
 			this.popupTitle = request.title;
+			this.curId = request.id;
+			this.requestDetail = request.account;
 			this.$refs.popup.open();
 		},
 		getList() {
-			requestPost('/apply/approveList', { status: 0 }, res => {
+			requestPost('/apply/approveList', { type: this.currentTabIndex }, res => {
 				const { code, msg, data } = res.data;
 				if (code === 'success') {
 					this.requestList = data;
+				} else {
+					this.$refs.uToast.show({
+						title: msg,
+						type: 'error'
+					});
+				}
+			});
+		},
+		approval(val) {
+			val === 0 ? this.agree() : this.refuse();
+		},
+		agree() {
+			requestGet('/apply/pass/' + this.curId, res => {
+				const { code, msg, data } = res.data;
+				if (code === 'success') {
+					this.$refs.uToast.show({
+						title: '操作成功',
+						type: 'success'
+					});
+					this.$refs.popup.close();
+					this.getList();
+				} else {
+					this.$refs.uToast.show({
+						title: msg,
+						type: 'error'
+					});
+				}
+			});
+		},
+		refuse() {
+			requestGet('/apply/refuse/' + this.curId, res => {
+				const { code, msg, data } = res.data;
+				if (code === 'success') {
+					this.$refs.uToast.show({
+						title: '操作成功',
+						type: 'success'
+					});
+					this.$refs.popup.close();
+					this.getList();
 				} else {
 					this.$refs.uToast.show({
 						title: msg,
@@ -127,13 +177,8 @@ export default {
 .tab-bar {
 	.tab-inner {
 		height: calc(100vh - 9.25em);
+		padding: 0 1em 1em;
 		background-color: $bg-color;
-
-		.tab-inner_item {
-			.request-item + .request-item {
-				margin-top: 0.8em;
-			}
-		}
 	}
 
 	.tab-header {

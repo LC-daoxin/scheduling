@@ -26,6 +26,12 @@ export function getDate(type) {
 		year = year - 60;
 	} else if (type === 'end') {
 		year = year + 2;
+	} else if (type === 'First') {
+		let day = 1;
+		return `${year}-${month}-${day}`;
+	} else if (type === 'Last') {
+		let LastDay = getCountDays();
+		return `${year}-${month}-${LastDay}`;
 	}
 	month = month > 9 ? month : '0' + month;
 	day = day > 9 ? day : '0' + day;
@@ -121,56 +127,52 @@ export function formReqeust(data) {
 		} else {
 			errorMsg(msg);
 		}
-	})
+	});
 }
 
 // 获取组的信息
 function getGroupInfo(Id) {
 	return new Promise((resolve, reject) => {
 		requestGet(`/group/${Id}`, res => {
-			const {
-				code,
-				msg,
-				data
-			} = res.data;
+			const { code, msg, data } = res.data;
 			if (code === 'success') {
 				uni.setStorage({
 					key: 'groupInfo',
 					data: data
-				})
-				resolve(data)
+				});
+				resolve(data);
 			} else {
 				uni.showToast({
 					title: '系统错误',
 					content: msg,
 					icon: 'none',
 					duration: 1000
-				})
-				reject()
+				});
+				reject();
 			}
-		})
-	})
+		});
+	});
 }
-export { getGroupInfo }
+export { getGroupInfo };
 
 // 获取 Storage 用户信息及组信息
-export function getStorageInfo () {
+export function getStorageInfo() {
 	const Info = {};
 	uni.getStorage({
 		key: 'userInfo',
 		success: res => {
 			Info.userInfo = res.data;
-			getGroupInfo(Info.userInfo.groupId).then(()=>{
-			    uni.getStorage({
-			    	key: 'groupInfo',
-			    	success: res => {
+			getGroupInfo(Info.userInfo.groupId).then(() => {
+				uni.getStorage({
+					key: 'groupInfo',
+					success: res => {
 						Info.groupInfo = res.data;
-			    	}
-			    })
+					}
+				});
 			});
 		}
-	})
-	return Info
+	});
+	return Info;
 }
 
 export function formRequestList(type, success) {
@@ -183,4 +185,8 @@ export function getClassList(success) {
 
 export function getWorkList(success) {
 	requestGet('/schedul/getWorkList/1', success);
+}
+
+export function getStatistics(data, success) {
+	requestPost('/schedul/totalTime', data, success);
 }

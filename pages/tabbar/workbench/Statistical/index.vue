@@ -21,17 +21,19 @@
 				</picker>
 			</view>
 		</view>
-		<statistical-item></statistical-item>
+		<statistical-item :data="statisData"></statistical-item>
 	</view>
 </template>
 
 <script>
 import { getCountDays, getDate } from '@/utils/index';
+import { requestPost } from '@/utils/request.js';
 import StatisticalItem from './StatisticalItem.vue';
 
 export default {
 	data() {
 		return {
+			statisData: [],
 			dateStart: this.getDate('First'),
 			dateEnd: this.getDate('Last')
 		};
@@ -56,6 +58,7 @@ export default {
 				});
 			} else {
 				this.dateStart = e.detail.value;
+				this.getStatis();
 			}
 		},
 		bindEndDateChange(e) {
@@ -68,8 +71,29 @@ export default {
 				});
 			} else {
 				this.dateEnd = e.detail.value;
+				this.getStatis();
 			}
+		},
+		getStatis() {
+			requestPost(
+				'/schedul/groupTotalTime',
+				{ startTime: this.dateStart, endTime: this.dateEnd },
+				res => {
+					const { code, msg, data } = res.data;
+					if (code === 'success') {
+						this.statisData = data;
+					} else {
+						this.$refs.uToast.show({
+							title: msg,
+							type: 'error'
+						});
+					}
+				}
+			);
 		}
+	},
+	mounted() {
+		this.getStatis();
 	},
 	components: {
 		StatisticalItem

@@ -1,14 +1,15 @@
 <template>
 	<view class="personal" @click="toPersonalStats">
+		<u-toast ref="uToast" />
 		<view class="personal-content">
 			<view class="time">
 				<text class="total-time">
 					<text class="title">总工时</text>
-					<text class="time">{{ total_time }} 小时</text>
+					<text class="time">{{ total_time || 0 }} 小时</text>
 				</text>
 				<text class="owed-time">
 					<text class="title">实际存欠</text>
-					<text class="time">{{ owed_time }} 小时</text>
+					<text class="time">{{ owed_time || 0 }} 小时</text>
 				</text>
 			</view>
 			<text class="iconfont icon-xiangyou"></text>
@@ -17,60 +18,81 @@
 </template>
 
 <script>
-	export default {
-		data() {
-			return {
-				total_time: 60,
-				owed_time: 0
-			};
+import { getDate, getStatistics } from '@/utils/index.js';
+export default {
+	data() {
+		return {
+			dateStart: this.getDate('First'),
+			dateEnd: this.getDate('Last'),
+			total_time: 0,
+			owed_time: 0
+		};
+	},
+	methods: {
+		getDate,
+		toPersonalStats() {
+			uni.navigateTo({
+				url: '/pages/scheduling/personal-stats/personal-stats',
+				success: function (res) {
+					console.log(res);
+				}
+			});
 		},
-		methods: {
-			toPersonalStats () {
-				uni.navigateTo({
-				    url: '/pages/scheduling/personal-stats/personal-stats',
-					success: function(res) {
-						console.log(res)
-					}
-				});
-			}
+		_getStatistics() {
+			getStatistics({ startTime: this.dateStart, endTime: this.dateEnd }, res => {
+				const { code, msg, data } = res.data;
+				if (code === 'success') {
+					this.total_time = data.totalTime;
+					this.owed_time = data.lackTime;
+				} else {
+					this.$refs.uToast.show({
+						title: msg,
+						type: 'error'
+					});
+				}
+			});
 		}
+	},
+	mounted() {
+		this._getStatistics();
 	}
+};
 </script>
 
 <style lang="scss" scoped>
-	@import '../../common/css/iconfont.css';
-	.personal {
-		padding: 5px;
-		&-content {
-			display: flex;
-			justify-content: space-between;
-			height: 50px;
-			font-size: 16px;
-			line-height: 50px;
-			padding: 0 20px;
-			background-color: #fff;
-			border-radius: 10px;
-			.time {
-				.total-time {
-					margin-right: 30px;
-					.title {
-						margin-right: 10px;
-					}
-					.time {
-						font-weight: 400;
-						color: orange;
-					}
+@import '../../common/css/iconfont.css';
+.personal {
+	padding: 5px;
+	&-content {
+		display: flex;
+		justify-content: space-between;
+		height: 50px;
+		font-size: 16px;
+		line-height: 50px;
+		padding: 0 20px;
+		background-color: #fff;
+		border-radius: 10px;
+		.time {
+			.total-time {
+				margin-right: 30px;
+				.title {
+					margin-right: 10px;
 				}
-				.owed-time {
-					.title {
-						margin-right: 10px;
-					}
-					.time {
-						font-weight: 400;
-						color: orange;
-					}
+				.time {
+					font-weight: 400;
+					color: orange;
+				}
+			}
+			.owed-time {
+				.title {
+					margin-right: 10px;
+				}
+				.time {
+					font-weight: 400;
+					color: orange;
 				}
 			}
 		}
 	}
+}
 </style>
