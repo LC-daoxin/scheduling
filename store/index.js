@@ -49,7 +49,11 @@ const store = new Vuex.Store({
 				isDot: false,
 				customIcon: false,
 			},
-		]
+		],
+		Info: {
+			groupInfo: {},
+			userInfo: {}
+		}
 	},
 	mutations: {
 		$uStore(state, payload) {
@@ -71,6 +75,16 @@ const store = new Vuex.Store({
 			}
 			// 保存变量到本地，见顶部函数定义
 			saveLifeData(saveKey, state[saveKey])
+		},
+		updateGroupInfo (state, data) {
+			// 变更组信息
+			state.Info.groupInfo = data
+			console.log('updateGroupInfo', data)
+		},
+		updateUserInfo (state, data) {
+			// 变更用户信息
+			state.Info.userInfo = data
+			console.log('updateUserInfo', data)
 		}
 	}
 })

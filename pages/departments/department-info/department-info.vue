@@ -1,24 +1,25 @@
 <template>
 	<view>
-		<department-detail :Info="Info"></department-detail>
+		<department-detail ref="detail"></department-detail>
 	</view>
 </template>
 
 <script>
-	import { getStorageInfo } from '@/utils/index.js'
 	export default {
 		data() {
 			return {
-				Info: {}, // Storage信息
 			};
 		},
-		onLoad: function(option){
-			console.log('App onLoad：', option); //打印出上个页面传递的参数。
-			this.info = option
+		computed: {
+		    Info () {
+		        return this.$store.state.Info
+		    }
+		},
+		onShow() {
 			uni.setNavigationBarTitle({
-			    title: `${option.departmentsName}`
+			    title: this.Info.groupInfo.groupName
 			});
-			this.Info = getStorageInfo()
+			this.$refs.detail.initInfo(this.Info)
 		},
 		onShareAppMessage(data) {
 			console.log('onShareAppMessage', data)

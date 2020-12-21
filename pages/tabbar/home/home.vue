@@ -2,7 +2,7 @@
 	<view>
 		<!-- #ifdef MP-WEIXIN -->
 		<!-- 状态栏 +  -->
-		<home-navbar :nav="setNav" :show="hasInfo" @hasInfo="changeHasInfo"></home-navbar>
+		<home-navbar :show="hasInfo" @hasInfo="changeHasInfo"></home-navbar>
 		<!-- #endif -->
 		<!-- 公告 -->
 		<notice :colors="colors" :noticeList="noticeList"></notice>
@@ -21,14 +21,15 @@
 
 <script>
 import uniCalendar from '@/components/uni-calendar/uni-calendar.vue';
-import { request } from '@/utils/request.js';
-import { getUserInfo } from '@/utils/index.js';
-
+import { request, requestPost } from '@/utils/request.js';
+import { getUserInfo, getGroupInfo } from '@/utils/index.js';
+import { getCountDays } from '@/utils/index';
 export default {
 	components: {
 		uniCalendar
 	},
 	data() {
+		let currentDate = new Date;
 		return {
 			// 自定义导航栏对象
 			setNav: {
@@ -160,16 +161,22 @@ export default {
 			list: [],
 			current: 0,
 			noticeList: [],
-			colors: 'red'
+			colors: 'red',
+			nowDate: {
+				year: currentDate.getFullYear(),
+				month: currentDate.getMonth() + 1,
+				day: getCountDays()
+			}
 		};
 	},
-	onLoad: function (option) {
-		//option为object类型，会序列化上个页面传递的参数
-		if (option.departmentsName) {
-			this.setNav.departmentsName = option.departmentsName;
-		}
-	},
 	onShow() {
+		uni.showLoading({
+		    title: '加载中',
+			mask: true
+		});
+		setTimeout(()=>{
+			uni.hideLoading();
+		}, 10000)
 		uni.getUserInfo({
 			success: res => {
 				if (res.errMsg === 'getUserInfo:ok') {
@@ -183,6 +190,9 @@ export default {
 				}
 			}
 		});
+	},
+	onLoad(option) {
+		console.log(option)
 	},
 	mounted() {
 		this.list = this.$store.state.vuex_tabbar;
@@ -210,7 +220,51 @@ export default {
 									uni.setStorage({
 										key: 'token',
 										data: data
-									});
+									})
+									getUserInfo().then(()=>{
+										uni.getStorage({
+											key: 'userInfo',
+											success: res => {
+												let data = res.data
+												getGroupInfo(data.groupId).then(()=>{
+													uni.hideLoading();
+													console.log(res)
+													let postData =  {
+														'userId': data.id,
+														'groupId': data.groupId,
+														'startTime': `${this.nowDate.year}-${this.nowDate.month}-01`,
+														'endTime': `${this.nowDate.year}-${this.nowDate.month}-${this.nowDate.day}`,
+													}
+													requestPost('/schedul/UserSchedulList', postData, res => {
+														const {code, msg, data} = res.data;
+														if (code === 'success') {
+															console.log(res.data);
+														} else {
+															uni.showToast({
+																title: '系统错误',
+																content: msg,
+																icon: 'none',
+																duration: 1000
+															})
+														}
+													})
+												})
+											}
+										})
+									})
+								}
+							})
+						}
+					}
+				})
+			},
+			authorize() {
+				wx.getSetting({
+					success: res => {
+						if (res.authSetting['scope.userInfo']) {
+							wx.getUserInfo({
+								success: res => {
+									this.login(res.userInfo);
 									getUserInfo();
 									this.setNoticeList();
 								}

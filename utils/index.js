@@ -1,5 +1,5 @@
 import { requestGet, requestPost } from '@/utils/request.js';
-
+import store from '@/store'
 const errorMsg = msg => {
 	uni.showToast({
 		title: '系统错误',
@@ -75,25 +75,45 @@ export function dateFormat(fmt, date) {
 	return fmt;
 }
 
+export function formReqeust(data) {
+	requestPost('/apply/apply', data, res => {
+		const { code, msg } = res.data;
+		if (code === 'success') {
+			uni.navigateBack();
+			uni.showToast({
+				title: '申请成功',
+				duration: 1500
+			});
+		} else {
+			errorMsg(msg);
+		}
+	})
+}
+
 // 获取用户信息
 export function getUserInfo() {
-	requestGet('/user/detailUser', res => {
-		const { code, msg, data } = res.data;
-		if (code === 'success') {
-			uni.setStorage({
-				key: 'userInfo',
-				data: data
-			});
-			if (data.groupId) getNotice();
-		} else {
-			uni.showToast({
-				title: '系统错误',
-				content: msg,
-				icon: 'none',
-				duration: 1000
-			});
-		}
-	});
+	return new Promise((resolve, reject) => {
+		requestGet('/user/detailUser', res => {
+			const { code, msg, data } = res.data;
+			if (code === 'success') {
+				uni.setStorage({
+					key: 'userInfo',
+					data: data
+				});
+				store.commit('updateUserInfo', data)
+				if (data.groupId) getNotice();
+				resolve(data)
+			} else {
+				uni.showToast({
+					title: '系统错误',
+					content: msg,
+					icon: 'none',
+					duration: 1000
+				});
+				reject(data)
+			}
+		});
+	})
 }
 
 function getNotice() {
@@ -139,16 +159,17 @@ function getGroupInfo(Id) {
 				uni.setStorage({
 					key: 'groupInfo',
 					data: data
-				});
-				resolve(data);
+				})
+				store.commit('updateGroupInfo', data)
+				resolve(data)
 			} else {
 				uni.showToast({
 					title: '系统错误',
 					content: msg,
 					icon: 'none',
 					duration: 1000
-				});
-				reject();
+				})
+				reject(data)
 			}
 		});
 	});
@@ -156,20 +177,20 @@ function getGroupInfo(Id) {
 export { getGroupInfo };
 
 // 获取 Storage 用户信息及组信息
-export function getStorageInfo() {
-	const Info = {};
+export function getStorageInfo () {
+	let Info = {};
 	uni.getStorage({
 		key: 'userInfo',
 		success: res => {
 			Info.userInfo = res.data;
-			getGroupInfo(Info.userInfo.groupId).then(() => {
-				uni.getStorage({
-					key: 'groupInfo',
-					success: res => {
-						Info.groupInfo = res.data;
-					}
-				});
-			});
+			console.log('StorageuserInfo', res.data)
+		}
+	})
+	uni.getStorage({
+		key: 'groupInfo',
+		success: res => {
+			Info.groupInfo = res.data;
+			console.log('StoragegroupInfo', res.data)
 		}
 	});
 	return Info;

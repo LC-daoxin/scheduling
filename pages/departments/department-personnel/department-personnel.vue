@@ -105,6 +105,11 @@
 				shareInfo: {}
 			};
 		},
+		computed: {
+		    Info () {
+		        return this.$store.state.Info
+		    }
+		},
 		onShareAppMessage(data) {
 			console.log(data)
 		    let dataset = data.target.dataset  
@@ -115,10 +120,9 @@
 		    }  
 		},
 		onReady() {
-			let Info = getStorageInfo();
-			this.shareInfo.title = `${Info.userInfo.nickName} 邀请您加入'${Info.userInfo.groupName}'，赶快点击加入吧！`
+			this.shareInfo.title = `${this.Info.userInfo.nickName} 邀请您加入'${this.Info.groupInfo.groupName}'，赶快点击加入吧！`
 			this.shareInfo.imgurl = 'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-scheduling/7341daa0-2eeb-11eb-880a-0db19f4f74bb.png'
-			this.shareInfo.path = `/pages/tabbar/home/home?userid=${Info.userInfo.id}&&userName=${Info.userInfo.name}&&groupId=${Info.userInfo.groupId}&&groupName=${Info.userInfo.groupName}`
+			this.shareInfo.path = `/pages/tabbar/home/home?userid=${this.Info.userInfo.id}&&userName=${this.Info.userInfo.name}&&groupId=${this.Info.groupInfo.id}&&groupName=${this.Info.groupInfo.groupName}`
 		},
 		methods: {
 			isCurrentTab(index) {

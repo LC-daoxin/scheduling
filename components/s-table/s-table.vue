@@ -24,7 +24,7 @@
 					height: tableHeight - (minHeight[1] || minHeight[0]) + 'rpx'
 				}"
 			>
-				<view class="table__fixed-item" v-for="(content, cindex) in contents" :key="cindex"
+				<view class="table__fixed-item" v-for="(content, cindex) in contentsSort" :key="cindex"
 					:style="{
 						display: 'flex',
 						width: firstColWidth + 'px',
@@ -89,7 +89,7 @@
 					height: tableHeight - (minHeight[1] || minHeight[0]) + 'rpx'
 				}"
 			>
-				<view class="s-table-content-line" v-for="(content, cIndex) in contents" :key="cIndex">
+				<view class="s-table-content-line" v-for="(content, cIndex) in contentsSort" :key="cIndex">
 					<view class="s-table-content-item" v-for="(header, hIndex) in headers" :key="header.key"
 						:style="{
 							minWidth: defaultColWidth + 'px',
@@ -149,7 +149,7 @@
 						<swiper class="class-swiper" :indicator-dots="indicatorDots" :autoplay="autoplay">
 							<swiper-item v-for="(page, pIndex) in pages" :key="pIndex">
 								<view class="swiper-page">
-									<view class="swiper-page-item" v-for="(item, Index) in page" :key="Index" @click="selectClass">
+									<view class="swiper-page-item" v-for="(item, Index) in page" :key="Index" @click="selectClass(item.name)">
 										<view class="text" v-if="item.name">{{ item.name }}</view>
 										<view class="text" v-else><text class="iconfont icon-jia"></text></view>
 									</view>
@@ -253,7 +253,7 @@
 			},
 			emptyString: {
 				type: String,
-				default: '-'
+				default: ''
 			},
 			firstColWidth: {
 				type: Number,
@@ -408,14 +408,30 @@
 				}
 			},
 			// 选择班种
-			selectClass () {
-				if (!this.currentCIndex || !this.currentHIndex) {
+			selectClass (ClassName) {
+				let currentItem = this.contentsSort[this.currentCIndex].content[this.currentHIndex];
+				let currentNextItem = this.contentsSort[this.currentCIndex].content[this.currentHIndex + 1];
+				console.log(currentItem)
+				console.log(currentNextItem)
+				if (this.currentCIndex === null || this.currentHIndex === null) {
 					uni.showToast({
 					    title: '请先选择单元格',
 						icon: 'none',
 					    duration: 1500
 					});
-				} else if (this.currentHIndex < this.headers.length) {
+				} else if (this.currentHIndex < this.headers.length && currentNextItem) {
+					if (currentItem.workspeciName.length >= 2) {
+						currentItem.workspeciName = [ClassName]
+					} else if (currentItem.workspeciName.length === 1) {
+						if (currentItem.workspeciName[0] !== ClassName) {
+							currentItem.workspeciName.push(ClassName)
+						} else {
+							currentItem.workspeciName = []
+						}
+					} else if (currentItem.workspeciName.length === 0) {
+						currentItem.workspeciName.push(ClassName)
+					}
+				} else if (!currentNextItem) {
 					this.currentHIndex += 1;
 					this.scrollLeft += this.defaultColWidth;
 					this.selectLeft = this.scrollLeft;

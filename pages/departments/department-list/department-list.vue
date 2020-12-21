@@ -6,7 +6,7 @@
 					<text>{{ item.groupName }}（{{ item.groupId }}）</text>
 				</template>
 				<template slot="footer">
-					<!-- <text v-if="item.selected" class="iconfont icon-zhengque"></text> -->
+					<text v-if="item.groupId === Info.groupInfo.id" class="iconfont icon-zhengque"></text>
 				</template>
 			</uni-list-item>
 		</uni-list>
@@ -15,15 +15,19 @@
 </template>
 
 <script>
-	import { requestGet } from '@/utils/request.js'
+	import { requestGet, requestPost } from '@/utils/request.js'
 	export default {
 		data() {
 			return {
 				list:[]
 			}
 		},
+		computed: {
+		    Info () {
+		        return this.$store.state.Info
+		    }
+		},
 		onLoad: function (option) { //option为object类型，会序列化上个页面传递的参数
-			// console.log('App onLoad：', option); //打印出上个页面传递的参数。
 			requestGet('/group/groupList', res => {
 				const {code, msg, data} = res.data
 				if (code === 'success') {
@@ -48,19 +52,34 @@
 					    content: `是否切换到${listItem.groupName}`,
 					    success: function (res) {
 					        if (res.confirm) {
-					            that.list.forEach(item => {
-					            	if (item.id !== listItem.id) {
-					            		item.selected = false
+								let ulist = that.Info.groupInfo.groupUserList;
+								let userId = that.Info.userInfo.id;
+								let status;
+								ulist.forEach(item => {
+									if (userId === item.userId) {
+										status = item.status
+									}
+								})
+								let postData = {
+									'groupId': listItem.groupId,
+									'groupName': listItem.groupName,
+									'groupRole': status,
+								}
+					            requestPost('/group/recordGroup', postData, res => {
+					            	const {code, msg, data} = res.data;
+					            	if (code === 'success') {
+										uni.reLaunch({ // 关闭所有页面，打开到应用内的某个页面
+										    url: `/pages/tabbar/home/home`
+										});
 					            	} else {
-					            		item.selected = true
+					            		uni.showToast({
+					            			title: '系统错误',
+					            			content: msg,
+					            			icon: 'none',
+					            			duration: 1000
+					            		})
 					            	}
 					            })
-								uni.reLaunch({ // 关闭所有页面，打开到应用内的某个页面
-								    url: `/pages/tabbar/home/home?refresh=true&departmentsName=${listItem.name}&id=${listItem.id}`,
-									success: function(res) {
-										console.log(res)
-									}
-								});
 					        } else if (res.cancel) {
 								console.log('取消')
 					        }
