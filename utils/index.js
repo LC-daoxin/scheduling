@@ -135,21 +135,6 @@ function getNotice() {
 	});
 }
 
-export function formReqeust(data) {
-	requestPost('/apply/apply', data, res => {
-		const { code, msg } = res.data;
-		if (code === 'success') {
-			uni.navigateBack();
-			uni.showToast({
-				title: '申请成功',
-				duration: 1500
-			});
-		} else {
-			errorMsg(msg);
-		}
-	});
-}
-
 // 获取组的信息
 function getGroupInfo(Id) {
 	return new Promise((resolve, reject) => {

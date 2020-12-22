@@ -92,7 +92,7 @@
 			<view class="header">
 				排班备注
 			</view>
-			<view class="content">无</view>
+			<textarea class="remark" v-model="remark" placeholder="无" :maxlength="500"/>
 		</u-popup>
 	</view>
 </template>
@@ -100,6 +100,7 @@
 <script>
 	import Calendar from './util.js';
 	import calendarItem from './uni-calendar-item.vue'
+	import { requestPost } from '@/utils/request.js';
 	/**
 	 * Calendar 日历
 	 * @description 日历组件可以查看日期，选择任意范围内的日期，打点操作。常用场景如：酒店日期预订、火车机票选择购买日期、上下班打卡等
@@ -178,7 +179,8 @@
 				nowDate: '',
 				aniMaskShow: false,
 				showRemark: false, // 显示排班备注
-				btnChange: true // 图标 向上（week）向下 (month)
+				btnChange: true, // 图标 向上（week）向下 (month)
+				remark: ''
 			}
 		},
 		watch: {
@@ -223,7 +225,23 @@
 			},
 			// 打开排班备注
 			openRemark () {
-				this.showRemark = true
+				this.showRemark = true;
+				let postData = {
+					'months': this.nowDate.fullDate.substring(0,7)
+				}
+				requestPost('/schedul/getremark', postData, res => {
+					const {code, msg, data} = res.data;
+					if (code === 'success') {
+						this.remark = data.remark;
+					} else {
+						uni.showToast({
+							title: '系统错误',
+							content: msg,
+							icon: 'none',
+							duration: 1000
+						})
+					}
+				})
 			},
 			// 取消穿透
 			clean() {},
@@ -731,17 +749,20 @@
 	.remark-popup {
 		.header {
 			width: 100%;
-			height: 102rpx;
+			height: 50px;
 			display: flex;
 			align-items: center;
-			background-color: $border-color;
+			background-color: #f7f7f7;
 			padding-left: 25rpx;
 			font-size: 30rpx;
 			color: $half-text-color;
 		}
-		.content {
+		.remark {
+			width: 100%;
+			height: 210px;
+			background-color: #fff;
+			box-sizing: border-box;
 			padding: 30rpx;
-			font-size: 30rpx;
 			color: $text-color;
 		}
 	}

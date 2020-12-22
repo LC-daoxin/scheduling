@@ -107,7 +107,7 @@
 						@click="handleTableItem(cIndex, hIndex)"
 					>
 						<view class="s-table-content-item-text" v-for="item in autoContentItem(cIndex, hIndex)">
-							{{ item }}
+							{{ item ? item : emptyString }}
 						</view>
 					</view>
 				</view>
@@ -117,10 +117,10 @@
 			<view class="setBox">
 				<view class="header">
 					<view class="list">
-						<view class="icon-box">
+						<!-- <view class="icon-box">
 							<text class="iconfont icon-xin"></text>
 							<text class="text">期望排班</text>
-						</view>
+						</view> -->
 						<view class="icon-box">
 							<text class="iconfont icon-zidonghua"></text>
 							<text class="text">自动排班</text>
@@ -136,10 +136,10 @@
 				</view>
 				<view class="content">
 					<view class="left-content">
-						<view class="left-box">
+						<!-- <view class="left-box">
 							<text class="iconfont icon-zuhe"></text>
 							<text class="text">组合</text>
-						</view>
+						</view> -->
 						<view class="left-box">
 							<text class="iconfont icon-shanchu"></text>
 							<text class="text">删除</text>
@@ -164,6 +164,8 @@
 </template>
 
 <script>
+	import { getCountDays } from '@/utils/index';
+	import { requestPost } from '@/utils/request.js';
 	export default {
 		data() {
 			return {
@@ -240,6 +242,9 @@
 			};
 		},
 		props: {
+			nowDate: {
+				type: Object
+			},
 			tableHeight: {
 				type: Number,
 				default: 600
@@ -330,15 +335,19 @@
 					let content = this.contentsSort[cIndex].content
 					let header = this.headers[hIndex]
 					let key;
-					let result = '';
+					let result = undefined;
 					if (header.key[0] === '0') {
 						key = header.key[1]
 					} else {
 						key = header.key
 					}
-					if (content[key - 1]) {
-						result = content[key - 1].workspeciName
-					} else {
+					let keyStr = key <= 9 ? '0' + key : key;
+					content.forEach((item,index) => {
+						if (item.schedulDate.substring(item.schedulDate.length - 2) === keyStr.toString()) {
+							result = content[index].workspeciName
+						}
+					})
+					if (!result) {
 						result = this.emptyString
 					}
 					return result
@@ -383,6 +392,49 @@
 			//#endif
 		},
 		methods: {
+			// 发布排班
+			publish (id, remark) {
+				let list = [];
+				this.contentsSort.forEach((item,index) => {
+					if (item.content.length > 0) {
+						item.content.forEach((cItem, i) => {
+							if (cItem.workspeciName.length > 0) {
+								list.push({
+									'groupId': item.groupId,
+									'userId': item.userId,
+									'userName': item.userName,
+									'schedulDate': cItem.schedulDate,
+									'works': cItem.workspeciName,
+								})
+							}
+						})
+					}
+				})
+				let postData = {
+					'months': `${this.nowDate.year}-${this.nowDate.month}`,
+					'remark': remark,
+					'groupId': id,
+					'schedullist': list
+				}
+				console.log(postData)
+				requestPost('/schedul/batchSchedul', postData, res => {
+					const {code, msg, data} = res.data;
+					console.log(res.data)
+					if (code === 'success') {
+						uni.showToast({
+							title: '排班发布成功',
+							duration: 1000
+						})
+					} else {
+						uni.showToast({
+							title: '系统错误',
+							content: msg,
+							icon: 'none',
+							duration: 1000
+						})
+					}
+				})
+			},
 			scroll (e) {
 				const scrollLeft = e.detail.scrollLeft;
 				const scrollTop = e.detail.scrollTop;
@@ -408,34 +460,74 @@
 				}
 			},
 			// 选择班种
-			selectClass (ClassName) {
-				let currentItem = this.contentsSort[this.currentCIndex].content[this.currentHIndex];
-				let currentNextItem = this.contentsSort[this.currentCIndex].content[this.currentHIndex + 1];
-				console.log(currentItem)
-				console.log(currentNextItem)
+			selectClass (className) {
 				if (this.currentCIndex === null || this.currentHIndex === null) {
 					uni.showToast({
 					    title: '请先选择单元格',
 						icon: 'none',
 					    duration: 1500
 					});
-				} else if (this.currentHIndex < this.headers.length && currentNextItem) {
-					if (currentItem.workspeciName.length >= 2) {
-						currentItem.workspeciName = [ClassName]
-					} else if (currentItem.workspeciName.length === 1) {
-						if (currentItem.workspeciName[0] !== ClassName) {
-							currentItem.workspeciName.push(ClassName)
-						} else {
-							currentItem.workspeciName = []
+				} else if (this.currentHIndex < this.headers.length) {
+					let content = this.contentsSort[this.currentCIndex].content;
+					let hasItem = false // 是否存在该条记录
+					let hasNextItem = false // 是否存在该条的下一个记录
+					let zIndex // hasItem为ture
+					let nIndex // hasNextItem为ture
+					content.forEach((item,index) => {
+						if (item.schedulDate.substring(item.schedulDate.length - 2) === this.headers[this.currentHIndex].key.toString()) {
+							hasItem = true
+							zIndex = index
+						} else if (this.currentHIndex < this.headers.length - 1 && item.schedulDate.substring(item.schedulDate.length - 2) === this.headers[this.currentHIndex + 1].key.toString()) {
+							hasNextItem = true
+							nIndex = index
 						}
-					} else if (currentItem.workspeciName.length === 0) {
-						currentItem.workspeciName.push(ClassName)
+					})
+					let currentItem = content[zIndex];
+					let currentNextItem =content[nIndex];
+					// 当前item是否存在记录
+					if (hasItem) {
+						// 处理当前记录
+						if (currentItem.workspeciName.length >= 2) {
+							currentItem.workspeciName = [className]
+						} else if (currentItem.workspeciName.length === 1) {
+							if (currentItem.workspeciName[0] !== className) {
+								currentItem.workspeciName.push(className)
+							} else {
+								currentItem.workspeciName = []
+							}
+						} else if (currentItem.workspeciName.length === 0) {
+							currentItem.workspeciName.push(className)
+						}
+						if (!(currentNextItem && nIndex <= getCountDays())) { // 如果下一条记录不存在的话，修改当前记录后，跳到下一个item
+							let Date = currentItem.schedulDate;
+							let day = parseInt(Date.substring(Date.length - 2)) + 1;
+							this.addItem(day);
+							this.moveItem();
+						}
+					} else {
+						let currentDay = parseInt(this.headers[this.currentHIndex].key)
+						this.addItem(currentDay, className)
+						if (!(currentNextItem && nIndex <= getCountDays())) { // 如果下一条记录不存在的话，跳到下一个item
+							this.moveItem();
+						}
 					}
-				} else if (!currentNextItem) {
-					this.currentHIndex += 1;
-					this.scrollLeft += this.defaultColWidth;
-					this.selectLeft = this.scrollLeft;
 				}
+			},
+			// 添加一条记录
+			addItem (day, className) {
+				day = day > 9 ? day : '0' + day;
+				let addItem = {
+					'schedulDate': `${this.nowDate.year}-${this.nowDate.month}-${day}`,
+					'type': 0,
+					'workspeciName': className ? [className] : []
+				}
+				this.contentsSort[this.currentCIndex].content.push(addItem);
+			},
+			// 记录显示，动态跳到下一个
+			moveItem () {
+				this.currentHIndex += 1;
+				this.scrollLeft += this.defaultColWidth;
+				this.selectLeft = this.scrollLeft;
 			},
 			close () {
 				this.setPopupShow = false;

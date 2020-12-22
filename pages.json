@@ -198,8 +198,16 @@
 				"navigationBarTitleText": "统计",
 				"enablePullDownRefresh": false
 			}
-		}
-	],
+		},
+		{
+            "path" : "pages/scheduling/remark/remark",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "排班备注",
+                "enablePullDownRefresh": false
+            }
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
