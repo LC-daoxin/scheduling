@@ -1,4 +1,7 @@
-import { requestGet, requestPost } from '@/utils/request.js';
+import {
+	requestGet,
+	requestPost
+} from '@/utils/request.js';
 import store from '@/store'
 const errorMsg = msg => {
 	uni.showToast({
@@ -77,7 +80,10 @@ export function dateFormat(fmt, date) {
 
 export function formReqeust(data) {
 	requestPost('/apply/apply', data, res => {
-		const { code, msg } = res.data;
+		const {
+			code,
+			msg
+		} = res.data;
 		if (code === 'success') {
 			uni.navigateBack();
 			uni.showToast({
@@ -94,7 +100,11 @@ export function formReqeust(data) {
 export function getUserInfo() {
 	return new Promise((resolve, reject) => {
 		requestGet('/user/detailUser', res => {
-			const { code, msg, data } = res.data;
+			const {
+				code,
+				msg,
+				data
+			} = res.data;
 			if (code === 'success') {
 				uni.setStorage({
 					key: 'userInfo',
@@ -118,7 +128,11 @@ export function getUserInfo() {
 
 function getNotice() {
 	requestGet('/schedul/getNoticeList', res => {
-		const { code, msg, data } = res.data;
+		const {
+			code,
+			msg,
+			data
+		} = res.data;
 		if (code === 'success') {
 			uni.setStorage({
 				key: 'notice',
@@ -135,26 +149,15 @@ function getNotice() {
 	});
 }
 
-export function formReqeust(data) {
-	requestPost('/apply/apply', data, res => {
-		const { code, msg } = res.data;
-		if (code === 'success') {
-			uni.navigateBack();
-			uni.showToast({
-				title: '申请成功',
-				duration: 1500
-			});
-		} else {
-			errorMsg(msg);
-		}
-	});
-}
-
 // 获取组的信息
 function getGroupInfo(Id) {
 	return new Promise((resolve, reject) => {
 		requestGet(`/group/${Id}`, res => {
-			const { code, msg, data } = res.data;
+			const {
+				code,
+				msg,
+				data
+			} = res.data;
 			if (code === 'success') {
 				uni.setStorage({
 					key: 'groupInfo',
@@ -174,10 +177,12 @@ function getGroupInfo(Id) {
 		});
 	});
 }
-export { getGroupInfo };
+export {
+	getGroupInfo
+};
 
 // 获取 Storage 用户信息及组信息
-export function getStorageInfo () {
+export function getStorageInfo() {
 	let Info = {};
 	uni.getStorage({
 		key: 'userInfo',
@@ -197,7 +202,9 @@ export function getStorageInfo () {
 }
 
 export function formRequestList(type, success) {
-	requestPost('/apply/applyList', { applyType: type }, success);
+	requestPost('/apply/applyList', {
+		applyType: type
+	}, success);
 }
 
 export function getClassList(success) {

@@ -34,7 +34,7 @@
 				</view>
 				<view class="statistics-item">
 					<view class="name">请假</view>
-					<view class="time">50小时</view>
+					<view class="time">{{ statisticsData.leaveDays || 0 }}天</view>
 				</view>
 			</view>
 			<view class="table">
