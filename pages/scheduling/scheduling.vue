@@ -11,7 +11,7 @@
 				<view class="select-btn-box" @click="pre">
 					<text class="iconfont icon-xiangzuoyuanjiantouzuojiantouxiangzuomianxing"></text>
 				</view>
-				<text class="selectMonth-text">{{ '12-01' + '至' + '12-31'}}</text>
+				<text class="selectMonth-text">{{ currentStartDate + ' 至 ' + currentEndDate}}</text>
 				<view class="select-btn-box" @click="next">
 					<text class="iconfont icon-xiangzuoyuanjiantouzuojiantouxiangzuomianxing1"></text>
 				</view>
@@ -20,8 +20,8 @@
 				<view class="publishBtn" @click="publish">发布</view>
 			</view>
 		</view>
-		<s-table v-if="contents.length > 0" :headers="headers" :contents="contents"></s-table>
-		<view class="remark" @click="getDetail">
+		<s-table ref="table" v-if="contents.length > 0" :headers="headers" :contents="contents" :nowDate="nowDate"></s-table>
+		<view class="remark" @click="toRemark">
 			<view class="remark-title">
 				<text class="title">排班备注</text>
 			</view>
@@ -37,14 +37,14 @@
 
 <script>
 	import { getWeek, getCountDays } from '@/utils/index';
-	import { requestPost } from '@/utils/request.js'
+	import { requestPost } from '@/utils/request.js';
 	export default {
 	    data() {
 	        return {
 				emptyString: '',
 	            headers: [],
-				contents1: [],
-				contents: [
+				contents: [],
+				contents1: [
 					{
 						"userId": 2,
 						"userName": "李雷",
@@ -54,10 +54,6 @@
 							"schedulDate": "2020-12-01",
 							"type": 1,
 							"workspeciName": ["白班"]
-						},{
-							"schedulDate": "2020-12-02",
-							"type": 1,
-							"workspeciName": ["晚班"]
 						},{
 							"schedulDate": "2020-12-03",
 							"type": 1,
@@ -82,6 +78,10 @@
 							"schedulDate": "2020-12-08",
 							"type": 1,
 							"workspeciName": ["白班"]
+						},{
+							"schedulDate": "2020-12-12",
+							"type": 1,
+							"workspeciName": ["白班"]
 						}]
 					},{
 						"userId": 2,
@@ -93,16 +93,31 @@
 							"type": 1,
 							"workspeciName": ["白班"]
 						},{
+							"schedulDate": "2020-12-03",
+							"type": 1,
+							"workspeciName": ["白班3"]
+						},{
 							"schedulDate": "2020-12-02",
 							"type": 1,
-							"workspeciName": ["晚班"]
+							"workspeciName": ["晚班2"]
+						},{
+							"schedulDate": "2020-12-06",
+							"type": 1,
+							"workspeciName": ["培训"]
 						},{
 							"schedulDate": "2020-12-04",
 							"type": 1,
 							"workspeciName": ["晚班","舞蹈"]
+						},{
+							"schedulDate": "2020-12-10",
+							"type": 1,
+							"workspeciName": ["晚班"]
+						},{
+							"schedulDate": "2020-12-31",
+							"type": 1,
+							"workspeciName": ["晚班","舞蹈"]
 						}]
 					}
-
 				],
 				ColWidth: 50,
 				firstColWidth: 60,
@@ -111,7 +126,9 @@
 					month: '',
 					day: ''
 				},
-				remark: '本周需要张三和李四在周五加班'
+				remark: '',
+				currentStartDate: '',
+				currentEndDate: ''
 	        }
 	    },
 		filters: {
@@ -129,24 +146,20 @@
 			this.initHeaders();
 			this.initDate();
 			this.getSchedulList();
+			this.getRemark();
 		},
 		methods: {
 			getSchedulList () {
 				let postData = {
 					'groupId': this.Info.groupInfo.id,
 					'startTime': `${this.nowDate.year}-${this.nowDate.month}-01`,
-					'endTime': `${this.nowDate.year}-${this.nowDate.month}-${getCountDays()}`,
+					'endTime': `${this.nowDate.year}-${this.nowDate.month}-${this.nowDate.day}`,
 				}
 				requestPost('/schedul/SchedulList', postData, res => {
 					const {code, msg, data} = res.data;
 					if (code === 'success') {
 						console.log(data)
-						console.log(this.contents)
-						this.contents.forEach(item => {
-							let newContent = []
-							// item.content
-						})
-						// this.contents = data;
+						this.contents = data;
 					} else {
 						uni.showToast({
 							title: '系统错误',
@@ -157,7 +170,28 @@
 					}
 				})
 			},
-			getDetail () {
+			getRemark () {
+				let postData = {
+					'months': `${this.nowDate.year}-${this.nowDate.month}`
+				}
+				requestPost('/schedul/getremark', postData, res => {
+					const {code, msg, data} = res.data;
+					if (code === 'success') {
+						this.remark = data.remark;
+					} else {
+						uni.showToast({
+							title: '系统错误',
+							content: msg,
+							icon: 'none',
+							duration: 1000
+						})
+					}
+				})
+			},
+			toRemark () {
+				uni.navigateTo({
+					url: '/pages/scheduling/remark/remark?year=' + this.nowDate.year + '&month=' + this.nowDate.month + '&remark=' + encodeURIComponent(JSON.stringify(this.remark))
+				});
 			},
 			// 表头初始化-当月每日星期
 			initHeaders() {
@@ -171,7 +205,6 @@
 					let Day = i.toString().length === 1 ? '0' + i : i;
 					this.headers.push({
 						label: [week, i],
-						// key: this.Year + '-' + this.Month + '-' + Day
 						key: Day
 					})
 				}
@@ -182,11 +215,14 @@
 				this.nowDate.year = currentDate.getFullYear();
 				this.nowDate.month = currentDate.getMonth() + 1;
 				this.nowDate.day = getCountDays();
+				this.currentStartDate = `${this.nowDate.month}-01`;
+				this.currentEndDate = `${this.nowDate.month}-${this.nowDate.day}`;
 			},
 			bindDateChange () {},
 			pre() {},
 			next() {},
 			publish () {
+				let that = this;
 				uni.showModal({
 				    title: '发布排班表',
 				    content: `第一次发布会通知所有排班人员，后续发布仅通知排班变动的成员。`,
@@ -195,10 +231,7 @@
 					confirmColor: '#5098ff',
 				    success: function (res) {
 				        if (res.confirm) {
-				            uni.showToast({
-								title: '排班发布成功',
-								duration: 1000
-							})
+							that.$refs.table.publish(that.Info.groupInfo.id, that.remark);
 				        } else if (res.cancel) {
 							console.log('保存')
 				        }

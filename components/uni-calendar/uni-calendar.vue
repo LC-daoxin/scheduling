@@ -13,26 +13,11 @@
 				</view>
 				<view class="uni-calendar__header">
 					<view class="uni-calendar__header_selectTime">
-						<!-- <view class="uni-calendar__header-btn-box" @click.stop="pre">
-							<view class="uni-calendar__header-btn uni-calendar--left"></view>
-						</view> -->
 						<picker start="2000" mode="date" :value="date" fields="month" @change="bindDateChange">
 							<text class="uni-calendar__header-text">{{ (nowDate.year||'') +'年'+( nowDate.month||'') +'月'}}</text>
 							<text class="iconfont icon-xia1"></text>
 						</picker>
-						<!-- <view class="uni-calendar__header-btn-box" @click.stop="next">
-							<view class="uni-calendar__header-btn uni-calendar--right"></view>
-						</view> -->
 					</view>
-					<!-- <view class="uni-calendar__header_selectWeek">
-						<view class="uni-calendar__header-btn-box" @click.stop="pre">
-							<text class="iconfont icon-xiangzuoyuanjiantouzuojiantouxiangzuomianxing"></text>
-						</view>
-						<text class="selectWeek-text">{{ '第'+ (nowDate.weeks||'') +'周'}}</text>
-						<view class="uni-calendar__header-btn-box" @click.stop="next">
-							<text class="iconfont icon-xiangzuoyuanjiantouzuojiantouxiangzuomianxing1"></text>
-						</view>
-					</view> -->
 					<view class="uni-calendar__header_selectTime"></view>
 					<view class="uni-calendar__toScheduling" @click="toScheduling">排班管理</view>
 				</view>
@@ -92,7 +77,7 @@
 			<view class="header">
 				排班备注
 			</view>
-			<view class="content">无</view>
+			<textarea class="remark" v-model="remark" placeholder="无" :maxlength="500"/>
 		</u-popup>
 	</view>
 </template>
@@ -100,26 +85,7 @@
 <script>
 	import Calendar from './util.js';
 	import calendarItem from './uni-calendar-item.vue'
-	/**
-	 * Calendar 日历
-	 * @description 日历组件可以查看日期，选择任意范围内的日期，打点操作。常用场景如：酒店日期预订、火车机票选择购买日期、上下班打卡等
-	 * @tutorial https://ext.dcloud.net.cn/plugin?id=56
-	 * @property {String} date 自定义当前时间，默认为今天
-	 * @property {Boolean} lunar 显示农历
-	 * @property {String} startDate 日期选择范围-开始日期
-	 * @property {String} endDate 日期选择范围-结束日期
-	 * @property {Boolean} range 范围选择
-	 * @property {Boolean} insert = [true|false] 插入模式,默认为false
-	 * 	@value true 弹窗模式
-	 * 	@value false 插入模式
-	 * @property {Boolean} clearDate = [true|false] 弹窗模式是否清空上次选择内容
-	 * @property {Array} selected 打点，期待格式[{date: '2019-06-27', info: '签到', data: { custom: '自定义信息', name: '自定义消息头',xxx:xxx... }}]
-	 * @property {Boolean} showMonth 是否选择月份为背景
-	 * @event {Function} change 日期改变，`insert :ture` 时生效
-	 * @event {Function} confirm 确认选择`insert :false` 时生效
-	 * @event {Function} monthSwitch 切换月份时触发
-	 * @example <uni-calendar :insert="true":lunar="true" :start-date="'2019-3-2'":end-date="'2019-5-20'"@change="change" />
-	 */
+	import { requestPost } from '@/utils/request.js';
 	export default {
 		components: {
 			calendarItem
@@ -155,14 +121,6 @@
 				type: Boolean,
 				default: true
 			},
-			// showMonth: {
-			// 	type: Boolean,
-			// 	default: false
-			// },
-			// showWeek: {
-			// 	type: Boolean,
-			// 	default: true
-			// },
 			clearDate: {
 				type: Boolean,
 				default: true
@@ -178,7 +136,8 @@
 				nowDate: '',
 				aniMaskShow: false,
 				showRemark: false, // 显示排班备注
-				btnChange: true // 图标 向上（week）向下 (month)
+				btnChange: true, // 图标 向上（week）向下 (month)
+				remark: ''
 			}
 		},
 		watch: {
@@ -223,7 +182,23 @@
 			},
 			// 打开排班备注
 			openRemark () {
-				this.showRemark = true
+				this.showRemark = true;
+				let postData = {
+					'months': this.nowDate.fullDate.substring(0,7)
+				}
+				requestPost('/schedul/getremark', postData, res => {
+					const {code, msg, data} = res.data;
+					if (code === 'success') {
+						this.remark = data.remark;
+					} else {
+						uni.showToast({
+							title: '系统错误',
+							content: msg,
+							icon: 'none',
+							duration: 1000
+						})
+					}
+				})
 			},
 			// 取消穿透
 			clean() {},
@@ -731,17 +706,20 @@
 	.remark-popup {
 		.header {
 			width: 100%;
-			height: 102rpx;
+			height: 50px;
 			display: flex;
 			align-items: center;
-			background-color: $border-color;
+			background-color: #f7f7f7;
 			padding-left: 25rpx;
 			font-size: 30rpx;
 			color: $half-text-color;
 		}
-		.content {
+		.remark {
+			width: 100%;
+			height: 210px;
+			background-color: #fff;
+			box-sizing: border-box;
 			padding: 30rpx;
-			font-size: 30rpx;
 			color: $text-color;
 		}
 	}

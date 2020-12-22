@@ -48,7 +48,7 @@
 				}
 			};
 		},
-		onReady() {
+		onLoad() {
 			let that = this
 			uni.$on('getHospital',function(item){
 				console.log('getHospital', item)
