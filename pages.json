@@ -207,6 +207,14 @@
                 "enablePullDownRefresh": false
             }
         }
+        ,{
+            "path" : "pages/scheduling/add-class/add-class",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "添加班种",
+                "enablePullDownRefresh": false
+            }
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

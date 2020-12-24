@@ -3,8 +3,8 @@
 		<view class="info">
 			<u-alert-tips type="warning" :show-icon="true" :description="description"></u-alert-tips>
 			<uni-list>
-			    <uni-list-item title="所属医院" link to="/pages/departments/hospitalList/hospitalList?type=2"  :rightText="groupInfo.hospitalName" @click="selectHospital()" ></uni-list-item>
-			    <uni-list-item title="所属科室" link to="/pages/departments/department-select/department-select?type=2"  :rightText="groupInfo.officeName" @click="selectHospital()" ></uni-list-item>
+			    <uni-list-item title="所属医院" link to="/pages/departments/hospitalList/hospitalList?type=2"  :rightText="groupInfo.hospitalName"></uni-list-item>
+			    <uni-list-item title="所属科室" link to="/pages/departments/department-select/department-select?type=2"  :rightText="groupInfo.officeName"></uni-list-item>
 			    <uni-list-item title="科室名称" link :rightText="groupInfo.groupName" @click="editName('科室名称', 'name')" ></uni-list-item>
 			    <uni-list-item title="创建者" :rightText="groupInfo.createUser"></uni-list-item>
 			    <uni-list-item title="编号" :rightText="groupInfo.groupCode"></uni-list-item>
@@ -60,9 +60,6 @@
 					}
 				})
 			},
-			// 选择医院
-			selectHospital () {
-			},
 			// 转让科室
 			transfer () {},
 			// 解散科室（组）删除
@@ -104,10 +101,7 @@
 			// 切换科室
 			goDepartment () {
 				uni.navigateTo({
-				    url: '/pages/departments/departments-list/departments-list',
-					success: function(res) {
-						console.log(res)
-					}
+				    url: '/pages/departments/departments-list/departments-list'
 				});
 			},
 			editName(title, key) {

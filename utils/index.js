@@ -189,10 +189,17 @@ export function getClassList(success) {
 	requestGet('/schedul/getCreateUser', success);
 }
 
-export function getWorkList(success) {
-	requestGet('/schedul/getWorkList/1', success);
+export function getWorkList(success, type = 1) {
+	requestGet(`/schedul/getWorkList/${type}`, success);
 }
 
 export function getStatistics(data, success) {
 	requestPost('/schedul/totalTime', data, success);
+}
+
+export function CompareTime(t1,t2) {  
+    let date = new Date();  
+    let a = t1.split(":");  
+    let b = t2.split(":");  
+    return date.setHours(a[0],a[1]) > date.setHours(b[0],b[1]);  
 }

@@ -140,7 +140,7 @@
 							<text class="iconfont icon-zuhe"></text>
 							<text class="text">组合</text>
 						</view> -->
-						<view class="left-box">
+						<view class="left-box" @click="deleteItem">
 							<text class="iconfont icon-shanchu"></text>
 							<text class="text">删除</text>
 						</view>
@@ -149,8 +149,8 @@
 						<swiper class="class-swiper" :indicator-dots="indicatorDots" :autoplay="autoplay">
 							<swiper-item v-for="(page, pIndex) in pages" :key="pIndex">
 								<view class="swiper-page">
-									<view class="swiper-page-item" v-for="(item, Index) in page" :key="Index" @click="selectClass(item.name)">
-										<view class="text" v-if="item.name">{{ item.name }}</view>
+									<view class="swiper-page-item" v-for="(item, Index) in page" :key="Index" @click="selectClass(item.workName)">
+										<view class="text" v-if="item.workName">{{ item.workName }}</view>
 										<view class="text" v-else><text class="iconfont icon-jia"></text></view>
 									</view>
 								</view>
@@ -164,8 +164,8 @@
 </template>
 
 <script>
-	import { getCountDays } from '@/utils/index';
-	import { requestPost } from '@/utils/request.js';
+	import { getCountDays, getWorkList } from '@/utils/index';
+	import { requestPost, requestGet } from '@/utils/request.js';
 	export default {
 		data() {
 			return {
@@ -181,64 +181,7 @@
 				},
 				indicatorDots: true,
 				autoplay: false,
-				classList: [{
-					name: '夜班',
-					time: [{
-						startTime: '24:00',
-						endTime: '06:00'
-					}]
-				},{
-					name: '白班',
-					time: [{
-						startTime: '08:00',
-						endTime: '16:00'
-					}]
-				},{
-					name: '晚班',
-					time: [{
-						startTime: '16:00',
-						endTime: '24:00'
-					}]
-				},{
-					name: '行政',
-					time: [{
-						startTime: '08:00',
-						endTime: '12:00'
-					},{
-						startTime: '14:00',
-						endTime: '18:00'
-					}]
-				},{
-					name: '休息',
-					time: [{
-						startTime: '00:00',
-						endTime: '24:00'
-					}]
-				},{
-					name: '培训',
-					time: [{
-						startTime: '14:00',
-						endTime: '16:00'
-					}]
-				},{
-					name: '管床',
-					time: [{
-						startTime: '12:00',
-						endTime: '18:00'
-					}]
-				},{
-					name: '外出',
-					time: [{
-						startTime: '08:00',
-						endTime: '18:00'
-					}]
-				},{
-					name: '外出2',
-					time: [{
-						startTime: '08:00',
-						endTime: '18:00'
-					}]
-				}]
+				classlist: []
 			};
 		},
 		props: {
@@ -369,14 +312,15 @@
 			},
 			pages() {
 				const pages = [];
-				this.classList.push({type: 'Add'})
-				this.classList.forEach((item, index) => {
+				// this.classlist.push({type: 'Add'})
+				this.classlist.forEach((item, index) => {
 					const page = Math.floor(index / 8);
 					if(!pages[page]) {
 						pages[page] = [];
 					}
 					pages[page].push(item);
 				})
+				console.log(pages)
 				return pages
 			}
 		},
@@ -390,6 +334,7 @@
 			//#ifdef H5
 			this.customStyle.top = Info.screenHeight - 150 + 'px'
 			//#endif
+			getWorkList(this.getWorkListSucc, 1);
 		},
 		methods: {
 			// 发布排班
@@ -416,7 +361,6 @@
 					'groupId': id,
 					'schedullist': list
 				}
-				console.log(postData)
 				requestPost('/schedul/batchSchedul', postData, res => {
 					const {code, msg, data} = res.data;
 					console.log(res.data)
@@ -457,6 +401,23 @@
 					result = content[header.key].category;
 				} else {
 					result = this.emptyString;
+				}
+			},
+			// 删除单个记录
+			deleteItem () {},
+			// 获取班种列表
+			getWorkListSucc(res) {
+				const { code, msg, data } = res.data;
+				console.log(data)
+				if (code === 'success') {
+					this.classlist = data;
+				} else {
+					uni.showToast({
+						title: '系统错误',
+						content: msg,
+						icon: 'none',
+						duration: 1500
+					});
 				}
 			},
 			// 选择班种
@@ -681,6 +642,9 @@
 									display: flex;
 									justify-content: center;
 									align-items: center;
+									white-space:nowrap;
+									overflow:hidden;
+									text-overflow:ellipsis;
 								}
 							}
 						}
