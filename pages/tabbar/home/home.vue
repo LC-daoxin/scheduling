@@ -8,6 +8,7 @@
 		<notice :colors="colors" :noticeList="noticeList"></notice>
 		<!-- 公告 -->
 		<uni-calendar
+			ref="calendar"
 			:insert="true"
 			:lunar="false"
 			:start-date="'2000-1-1'"
@@ -21,9 +22,9 @@
 
 <script>
 import uniCalendar from '@/components/uni-calendar/uni-calendar.vue';
-import { request, requestPost } from '@/utils/request.js';
+import { request, requestPost, requestGet } from '@/utils/request.js';
 import { getUserInfo, getGroupInfo } from '@/utils/index.js';
-import { getCountDays } from '@/utils/index';
+import { getCountDays, getWorkList } from '@/utils/index';
 export default {
 	components: {
 		uniCalendar
@@ -36,128 +37,7 @@ export default {
 				departmentsName: '心血管内科'
 			},
 			hasInfo: false,
-			datelist: [
-				{
-					date: '2020-09-27',
-					read: true,
-					info: '',
-					type: 'workday',
-					data: {}
-				},
-				{
-					date: '2020-10-01',
-					read: true,
-					info: '',
-					type: 'holiday',
-					data: {}
-				},
-				{
-					date: '2020-10-02',
-					read: true,
-					info: '',
-					type: 'holiday',
-					data: {}
-				},
-				{
-					date: '2020-10-03',
-					read: true,
-					info: '',
-					type: 'holiday',
-					data: {}
-				},
-				{
-					date: '2020-10-04',
-					read: true,
-					info: '',
-					type: 'holiday',
-					data: {}
-				},
-				{
-					date: '2020-10-05',
-					read: true,
-					info: '',
-					type: 'holiday',
-					data: {}
-				},
-				{
-					date: '2020-10-06',
-					read: true,
-					info: '',
-					type: 'holiday',
-					data: {}
-				},
-				{
-					date: '2020-10-07',
-					read: true,
-					info: '',
-					type: 'holiday',
-					data: {}
-				},
-				{
-					date: '2020-10-08',
-					read: true,
-					info: '',
-					type: 'holiday',
-					data: {}
-				},
-				{
-					date: '2020-10-10',
-					read: true,
-					info: '',
-					type: 'workday',
-					data: {}
-				},
-				{
-					date: '2020-11-15',
-					read: false,
-					info: '晚班',
-					type: '',
-					data: {
-						time: '15:00 - 23:00',
-						type: '晚班'
-					}
-				},
-				{
-					date: '2020-11-16',
-					read: false,
-					info: '早班',
-					type: '',
-					data: {
-						time: '7:00 - 15:00',
-						type: '早班'
-					}
-				},
-				{
-					date: '2020-11-17',
-					read: false,
-					info: '早班',
-					type: '',
-					data: {
-						time: '7:00 - 15:00',
-						type: '早班'
-					}
-				},
-				{
-					date: '2020-11-20',
-					read: false,
-					info: '晚班',
-					type: '',
-					data: {
-						time: '15:00 - 23:00',
-						type: '晚班'
-					}
-				},
-				{
-					date: '2020-11-25',
-					read: false,
-					info: '晚班',
-					type: '',
-					data: {
-						time: '15:00 - 23:00',
-						type: '晚班'
-					}
-				}
-			],
+			datelist: [],
 			list: [],
 			current: 0,
 			noticeList: [],
@@ -166,7 +46,8 @@ export default {
 				year: currentDate.getFullYear(),
 				month: currentDate.getMonth() + 1,
 				day: getCountDays()
-			}
+			},
+			classlist: [] // 班种列表
 		};
 	},
 	onShow() {
@@ -190,18 +71,85 @@ export default {
 				}
 			}
 		});
-	},
-	onLoad(option) {
-		console.log(option)
+		getWorkList(this.getWorkListSucc, 1);
 	},
 	mounted() {
+		let that = this;
 		this.list = this.$store.state.vuex_tabbar;
+		uni.$on('UserSchedulList',function(months){
+			that.getUserSchedulList(months);
+		})
 	},
 	methods: {
 		change(e) {},
-		swiperChange() {},
 		changeHasInfo(show) {
 			this.hasInfo = show;
+		},
+		getUserSchedulList (months) {
+			let postData;
+			if (months) {
+				postData = {
+					'startTime': `${months}-01`,
+					'endTime': `${months}-${getCountDays(months.substring(5,7))}`
+				}
+			} else {
+				postData = {
+					'startTime': `${this.nowDate.year}-${this.nowDate.month}-01`,
+					'endTime': `${this.nowDate.year}-${this.nowDate.month}-${this.nowDate.day}`
+				}
+			}
+			requestPost('/schedul/UserSchedulList', postData, res => {
+				const {code, msg, data} = res.data;
+				if (code === 'success') {
+					if (data.length > 0 && data[0].content.length > 0) {
+						console.log(this.classlist)
+						data[0].content.forEach(item => {
+							let data = [];
+							item.workspeciName.forEach(v => {
+								this.classlist.forEach(item => {
+									if (item.workName === v) {
+										data.push({
+											'time': item.timeInterval.replace(',',' '),
+											'type': v
+										})
+									}
+								})
+							})
+							this.datelist.push({
+								'date': item.schedulDate,
+								'read': true,
+								'info': item.workspeciName,
+								'type': '',
+								'data': data
+							})
+						})
+					} else {
+						this.datelist = []
+					}
+				} else {
+					uni.showToast({
+						title: '系统错误',
+						content: msg,
+						icon: 'none',
+						duration: 1000
+					})
+				}
+			})
+		},
+		// 获取班种列表
+		getWorkListSucc(res) {
+			const { code, msg, data } = res.data;
+			console.log(data)
+			if (code === 'success') {
+				this.classlist = data;
+			} else {
+				uni.showToast({
+					title: '系统错误',
+					content: msg,
+					icon: 'none',
+					duration: 1500
+				});
+			}
 		},
 		login(userInfo) {
 			wx.login({
@@ -228,26 +176,7 @@ export default {
 												let data = res.data
 												getGroupInfo(data.groupId).then(()=>{
 													uni.hideLoading();
-													console.log(res)
-													let postData =  {
-														'userId': data.id,
-														'groupId': data.groupId,
-														'startTime': `${this.nowDate.year}-${this.nowDate.month}-01`,
-														'endTime': `${this.nowDate.year}-${this.nowDate.month}-${this.nowDate.day}`,
-													}
-													requestPost('/schedul/UserSchedulList', postData, res => {
-														const {code, msg, data} = res.data;
-														if (code === 'success') {
-															console.log(res.data);
-														} else {
-															uni.showToast({
-																title: '系统错误',
-																content: msg,
-																icon: 'none',
-																duration: 1000
-															})
-														}
-													})
+													this.getUserSchedulList();
 												})
 											}
 										})

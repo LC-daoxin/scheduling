@@ -58,15 +58,15 @@
 					</view>
 					<view class="line-box">
 						<view class="line-circle" @click="changeMonthWeek">
-							<text :class="{iconfont: true, 'icon-xiangxia': btnChange, 'icon-xiangshang': !btnChange}"></text>
+							<text :class="{iconfont: true, 'icon-xiangxia': !showMonth, 'icon-xiangshang': showMonth}"></text>
 						</view>
 					</view>
 				</view>
 				<view class="current-plan">
 					<view v-if="!calendar.extraInfo" class="no-plan">暂无排班</view>
-					<view v-else class="plan">
-						<view class="plan-title">{{ calendar.extraInfo.data.type }}</view>
-						<view class="plan-time">{{ calendar.extraInfo.data.time }}</view>
+					<view v-else class="plan" v-for='item in calendar.extraInfo.data'>
+						<view class="plan-title">{{ item.type }}</view>
+						<view class="plan-time">{{ item.time }}</view>
 					</view>
 					<text class="uni-calendar__scheduling uni-calendar__Btn" @click="toScheduling">全科排班表</text>
 					<text class="uni-calendar__remark uni-calendar__Btn" @click="openRemark">排班备注</text>
@@ -85,7 +85,7 @@
 <script>
 	import Calendar from './util.js';
 	import calendarItem from './uni-calendar-item.vue'
-	import { requestPost } from '@/utils/request.js';
+	import { requestPost } from '@/utils/request';
 	export default {
 		components: {
 			calendarItem
@@ -128,15 +128,14 @@
 		},
 		data() {
 			return {
-				showMonth: false,
-				showWeek: true,
+				showMonth: true,
+				showWeek: false,
 				show: false,
 				weeks: [],
 				calendar: {},
 				nowDate: '',
 				aniMaskShow: false,
 				showRemark: false, // 显示排班备注
-				btnChange: true, // 图标 向上（week）向下 (month)
 				remark: ''
 			}
 		},
@@ -153,7 +152,8 @@
 			},
 			selected(newVal) {
 				this.cale.setSelectInfo(this.nowDate.fullDate, newVal)
-				this.weeks = this.cale.weeks
+				this.hideLast()
+				// this.weeks = this.cale.weeks
 			}
 		},
 		created() {
@@ -167,17 +167,14 @@
 			})
 			// 选中某一天
 			this.cale.setDate(this.date)
+			// setDay
 			this.init(this.cale.selectDate.fullDate)
-			// this.setDay
 		},
 		methods: {
 			// 跳转到排班管理
 			toScheduling () {
 				uni.navigateTo({
-				    url: '/pages/scheduling/scheduling',
-					success: function(res) {
-						console.log(res)
-					}
+				    url: '/pages/scheduling/scheduling'
 				});
 			},
 			// 打开排班备注
@@ -188,8 +185,10 @@
 				}
 				requestPost('/schedul/getremark', postData, res => {
 					const {code, msg, data} = res.data;
-					if (code === 'success') {
-						this.remark = data.remark;
+					if (code === 'success' && data) {
+						if (data && data.remark) {
+							this.remark = data.remark;
+						}
 					} else {
 						uni.showToast({
 							title: '系统错误',
@@ -203,19 +202,30 @@
 			// 取消穿透
 			clean() {},
 			bindDateChange(e) {
-				const value = e.detail.value + '-1'
-				console.log(this.cale.getDate(value));
+				const value = e.detail.value + '-1';
 				this.cale.setDate(value)
 				this.init(value)
+				let date =  this.cale.getDate(value);
+				let months = date.year + '-' + date.month
+				uni.$emit('UserSchedulList', months)
 			},
 			/**
 			 * 初始化日期显示
 			 * @param {Object} date
 			 */
 			init(date) {
-				console.log(this.cale.weeks)
-				this.currentWeek()
 				this.nowDate = this.calendar = this.cale.getInfo(date)
+				this.hideLast()
+				// this.currentWeek()
+			},
+			// 刷新日历，并隐藏最后无用的一行
+			hideLast () {
+				if (this.cale.weeks[Object.getOwnPropertyNames(this.cale.weeks).length - 1][0].disable) {
+					delete this.cale.weeks[Object.getOwnPropertyNames(this.cale.weeks).length - 1]
+					this.weeks = this.cale.weeks
+				} else {
+					this.weeks = this.cale.weeks // 刷新了日历
+				}
 			},
 			/**
 			 * 打开日历弹窗
@@ -302,6 +312,7 @@
 			 */
 			choiceDate(weeks) {
 				console.log(weeks)
+				console.log(this.showWeek)
 				if (weeks.disable) return
 				this.calendar = weeks
 				// 设置多选
@@ -329,24 +340,12 @@
 				this.weeks = [this.cale.weeks[CurretWeekNum]]
 			},
 			/**
-			 * 回到今天
-			 */
-			backtoday() {
-				this.showWeek = true
-				this.showMonth = false
-				let date = this.cale.getDate(new Date()).fullDate
-				this.cale.setDate(date)
-				this.init(date)
-				this.change()
-			},
-			/**
 			 * 上个月
 			 */
 			pre() {
 				const preDate = this.cale.getDate(this.nowDate.fullDate, -1, 'month').fullDate
 				this.setDate(preDate)
 				this.monthSwitch()
-
 			},
 			/**
 			 * 下个月
@@ -373,10 +372,8 @@
 				this.showMonth = !this.showMonth
 				if (this.showMonth) {
 					this.weeks = this.cale.weeks
-					this.btnChange = false
 				} else {
 					this.currentWeek()
-					this.btnChange = true
 				}
 			}
 		}
@@ -660,21 +657,24 @@
 	    margin-left: 15px;
 	}
 	.current-plan {
-		height: 70px;
+		min-height: 70px;
 		position: relative;
+		padding-bottom: 20rpx;
 		.no-plan {
 			text-align: center;
 			font-size: 14px;
 			color: #ccc;
 		}
 		.plan {
+			&:nth-child(2) {
+				margin-top: 10rpx;
+			}
 			text-align: left;
 			padding-left: 20px;
 			position: relative;
 			.plan-title {
-				font-size: 17px;
+				font-size: 32rpx;
 				font-weight: 400;
-				margin-bottom: 5px;
 			}
 			.plan-time {
 				font-size: 14px;

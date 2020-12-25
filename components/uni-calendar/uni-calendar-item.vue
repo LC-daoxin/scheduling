@@ -36,7 +36,7 @@
 				'uni-calendar-item--after-checked':weeks.afterMultiple,
 				'uni-calendar-item--disable':weeks.disable,
 				}">{{weeks.isDay?'今天': (weeks.lunar.IDayCn === '初一'?weeks.lunar.IMonthCn:weeks.lunar.IDayCn)}}</text>
-			<text v-if="weeks.extraInfo&&weeks.extraInfo.info" class="uni-calendar-item__weeks-lunar-text" :class="{
+			<view v-if="weeks.extraInfo&&weeks.extraInfo.info" class="uni-calendar-item__weeks-lunar-text" :class="{
 				'uni-calendar-item--extra':weeks.extraInfo.info,
 				'uni-calendar-item--isDay-text':weeks.isDay,
 				'uni-calendar-item--isDay':calendar.fullDate === weeks.fullDate && weeks.isDay,
@@ -45,7 +45,22 @@
 				'uni-calendar-item--multiple': weeks.multiple,
 				'uni-calendar-item--after-checked':weeks.afterMultiple,
 				'uni-calendar-item--disable':weeks.disable,
-				}">{{weeks.extraInfo.info}}</text>
+				}"
+				:style="{
+					display: 'flex',
+					flexDirection: 'column',
+					justifyContent: 'center',
+					alignItems: 'center'
+				}"
+			>
+				<view 
+					v-for='item in weeks.extraInfo.info'
+					:style="{
+						transform: 'scale(0.85)',
+						lineHeight: 1.2
+					}"
+				>{{ item }}</view>
+			</view>
 			<text v-if="weeks.extraInfo&&weeks.extraInfo.type" class="uni-calendar-item__weeks-box-type" :class="{
 				'uni-calendar-item--holiday':weeks.extraInfo.type === 'holiday',
 				'uni-calendar-item--workday':weeks.extraInfo.type === 'workday',
@@ -122,7 +137,7 @@
 		display: flex;
 		/* #endif */
 		flex-direction: column;
-		justify-content: center;
+		justify-content: flex-start;
 		align-items: center;
 		width: 100rpx;
 		height: 100rpx;
@@ -157,7 +172,7 @@
 	.uni-calendar-item--isDay {
 		background-color: $uni-color-primary;
 		opacity: 0.8;
-		color: #fff;
+		color: #fff !important;
 	}
 
 	.uni-calendar-item--extra {
