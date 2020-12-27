@@ -30,7 +30,7 @@ export function getDate(type) {
 	} else if (type === 'end') {
 		year = year + 2;
 	} else if (type === 'First') {
-		let day = 1;
+		let day = '01';
 		return `${year}-${month}-${day}`;
 	} else if (type === 'Last') {
 		let LastDay = getCountDays();
@@ -213,10 +213,6 @@ export function getClassList(success) {
 
 export function getWorkList(success, type = 1) {
 	requestGet(`/schedul/getWorkList/${type}`, success);
-}
-
-export function getStatistics(data, success) {
-	requestPost('/schedul/totalTime', data, success);
 }
 
 export function CompareTime(t1,t2) {  

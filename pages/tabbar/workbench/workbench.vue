@@ -1,6 +1,6 @@
 <template>
 	<view class="mine">
-		<department-detail :info="info"></department-detail>
+		<department-detail ref="detail"></department-detail>
 		<member-management></member-management>
 		<workbench title='成员申请'></workbench>
 	</view>
@@ -10,15 +10,15 @@
 	export default {
 		data() {
 			return {
-				info: {
-					departmentsName: '心血管内科'
-				}, // 科室信息
-				list: [],
-				current: 1
 			};
 		},
-		mounted () {
-			this.list = this.$store.state.vuex_tabbar
+		computed: {
+		    Info () {
+		        return this.$store.state.Info
+		    }
+		},
+		onShow() {
+			this.$refs.detail.initInfo(this.Info)
 		}
 	}
 </script>

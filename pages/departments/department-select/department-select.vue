@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<department-category ref="departmentCategory" :categoryList="categoryList" :status='status' :subCategoryList="subCategoryList" @categoryMainClick="categoryMainClick" @categorySubClick="categorySubClick"></department-category>
+		<department-category ref="departmentCategory" :categoryList="categoryList" :categoryListSort="categoryListSort" :status='status' @categorySubClick="categorySubClick"></department-category>
 	</view>
 </template>
 
@@ -10,20 +10,28 @@
 		data() {
 			return {
 				categoryList:[], // 科类分类列表
-				subCategoryList:[],
-				status: null
+				status: null,
+				categoryListSort: []
 			};
 		},
 		onReady() {
 			this.getList();
+			uni.$on('deptSearch', searchList => {
+				this.categoryList = searchList;
+				this.$refs.departmentCategory.setActiveMain(searchList[0]);
+			})
+			uni.$on('refreshSearch', () => {
+				this.getList();
+			})
+			uni.$on('cleanList', () => {
+				this.categoryList = [];
+				this.$refs.departmentCategory.setActiveMain();
+			})
 		},
 		onLoad: function(option){
 			this.status = option.type
 		},
 		methods: {
-			categoryMainClick(category){
-				this.subCategoryList = category.subCategoryList;
-			},
 			categorySubClick(category){
 				this.$emit('change', category)
 			},
@@ -35,9 +43,9 @@
 						data
 					} = res.data
 					if (code === 'success') {
-						this.categoryList = data
-						this.$refs.departmentCategory.setActiveMain(data[0])
-						this.subCategoryList = this.categoryList[0].subCategoryList;
+						this.categoryList = data;
+						this.categoryListSort = data;
+						this.$refs.departmentCategory.setActiveMain(data[0]);
 					} else {
 						uni.showToast({
 							title: '系统错误',

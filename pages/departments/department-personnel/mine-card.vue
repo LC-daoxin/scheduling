@@ -2,18 +2,17 @@
 	<view class="box">
 		<view class="box-content" @click="goInfo">
 			<view class="info">
-				<view class="name">{{ info.name }}</view>
+				<view class="name">{{ Info.userInfo.nickName }}</view>
 				<view class="info-content">
-					<view class="phone-number">{{ info.phoneNumber }}</view>
-					<view class="row-text">层级：<text class="tier">{{ info.tier }}</text> 年资：<text class="seniority">{{ info.seniority }}</text></view>
+					<view class="phone-number">{{ Info.userInfo.mobile }}</view>
+					<view class="row-text">层级：<text class="tier">{{ Info.userInfo.rank ? Info.userInfo.rank : '无' }}</text> 年资：<text class="seniority">{{ Info.userInfo.seniority ? Info.userInfo.seniority : '无' }}</text></view>
 				</view>
 			</view>
 			<view class="head-box">
 				<view class="head">
-					<text>{{ info.professionalTitle }}</text>
+					<text>{{ Info.userInfo.positional ? Info.userInfo.positional : '无' }}</text>
 				</view>
 			</view>
-			
 		</view>
 	</view>
 </template>
@@ -22,23 +21,19 @@
 	export default {
 		data() {
 			return {
-				info: {
-					name: '姚骁然',
-					phoneNumber: '15201367242',
-					professionalTitle: '副主任护师',
-					tier: 'N4',
-					seniority: 8
-				},
+				info: {},
 				userSrc: null
 			};
+		},
+		computed: {
+		    Info () {
+		        return this.$store.state.Info
+		    }
 		},
 		methods: {
 			goInfo () {
 				uni.navigateTo({
-				    url: '/pages/personnel/personnel-info/personnel-info',
-					success: function(res) {
-						console.log(res)
-					}
+				    url: '/pages/personnel/personnel-info/personnel-info'
 				});
 			}
 		}

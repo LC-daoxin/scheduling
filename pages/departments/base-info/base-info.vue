@@ -5,12 +5,12 @@
 			<uni-list>
 			    <uni-list-item title="所属医院" link to="/pages/departments/hospitalList/hospitalList?type=2"  :rightText="groupInfo.hospitalName"></uni-list-item>
 			    <uni-list-item title="所属科室" link to="/pages/departments/department-select/department-select?type=2"  :rightText="groupInfo.officeName"></uni-list-item>
-			    <uni-list-item title="科室名称" link :rightText="groupInfo.groupName" @click="editName('科室名称', 'name')" ></uni-list-item>
+			    <uni-list-item title="科室名称" link :rightText="groupInfo.groupName" @click="editName('科室名称', 'name', groupInfo.groupName)" ></uni-list-item>
 			    <uni-list-item title="创建者" :rightText="groupInfo.createUser"></uni-list-item>
 			    <uni-list-item title="编号" :rightText="groupInfo.groupCode"></uni-list-item>
 			</uni-list>
-			<button class="transferBtn" @click="transfer">转让科室</button>
-			<button class="closeBtn"  @click="dissolve" type="default">解散科室</button>
+			<!-- <button class="transferBtn" @click="transfer">转让科室</button> -->
+			<button class="closeBtn" @click="dissolve" type="default">解散科室</button>
 			<button class="bottomBtn" @click="goDepartment">切换科室</button>
 		</view>
 		<popup :title="editInfoTitle" ref="popup">
@@ -61,7 +61,7 @@
 				})
 			},
 			// 转让科室
-			transfer () {},
+			// transfer () {},
 			// 解散科室（组）删除
 			dissolve () {
 				let that = this;
@@ -104,9 +104,10 @@
 				    url: '/pages/departments/departments-list/departments-list'
 				});
 			},
-			editName(title, key) {
+			editName(title, key, value) {
 			  this.editInfoTitle = title;
 			  this.inputTarget = key;
+			  this.inputValue = value;
 			  this.$refs.popup.open();
 			},
 			save() {

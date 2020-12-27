@@ -52,6 +52,7 @@
 				</template>
 			</uni-list-item>
 		</uni-list>
+		<view class="remind">类型为"休息"的班种将不会计入总工时，不会收到上班提醒。</view>
 		<uni-list class="uni-list" v-if="pageType === '2'">
 		    <uni-list-item>
 				<template class="header" slot="header">
@@ -291,11 +292,13 @@
 				})
 			},
 			bindMultiPickerColumnChangeA (e) {
+				console.log(e)
 				this.multiIndexA[e.detail.column] = e.detail.value;
 				this.startOrEnd = true;
 				this.$forceUpdate()
 			},
 			bindMultiPickerColumnChangeB (e) {
+				console.log(e)
 				this.multiIndexB[e.detail.column] = e.detail.value;
 				this.startOrEnd = false;
 				this.$forceUpdate()
@@ -312,10 +315,10 @@
 			},
 			// 时间显示以及处理
 			createTime (e) {
-				let Time1 = (this.multiArray[0][this.multiIndexA[0]].value === 1 ? '次日': '') + this.multiArray[1][this.multiIndexA[1]].value + ':' + this.multiArray[1][this.multiIndexA[2]].value;
-				let Time2 = (this.multiArray[0][this.multiIndexB[0]].value === 1 ? '次日': '') + this.multiArray[2][this.multiIndexB[1]].value + ':' + this.multiArray[2][this.multiIndexB[2]].value;
-				let Time3 = (this.multiArray[0][this.multiIndexC[0]].value === 1 ? '次日': '') + this.multiArray[1][this.multiIndexC[1]].value + ':' + this.multiArray[1][this.multiIndexC[2]].value;
-				let Time4 = (this.multiArray[0][this.multiIndexD[0]].value === 1 ? '次日': '') + this.multiArray[2][this.multiIndexD[1]].value + ':' + this.multiArray[2][this.multiIndexD[2]].value;
+				let Time1 = (this.multiArray[0][this.multiIndexA[0]].value === 1 ? '次日': '') + this.multiArray[1][this.multiIndexA[1]].value + ':' + this.multiArray[2][this.multiIndexA[2]].value;
+				let Time2 = (this.multiArray[0][this.multiIndexB[0]].value === 1 ? '次日': '') + this.multiArray[1][this.multiIndexB[1]].value + ':' + this.multiArray[2][this.multiIndexB[2]].value;
+				let Time3 = (this.multiArray[0][this.multiIndexC[0]].value === 1 ? '次日': '') + this.multiArray[1][this.multiIndexC[1]].value + ':' + this.multiArray[2][this.multiIndexC[2]].value;
+				let Time4 = (this.multiArray[0][this.multiIndexD[0]].value === 1 ? '次日': '') + this.multiArray[1][this.multiIndexD[1]].value + ':' + this.multiArray[2][this.multiIndexD[2]].value;
 				let hours = 0;
 				if (Time1.indexOf('次日') !== -1 && Time2.indexOf('次日') !== -1 || Time1.indexOf('次日') === -1 && Time2.indexOf('次日') === -1) {
 					if (CompareTime(Time1.substr(-5, 5), Time2.substr(-5, 5))) {
@@ -482,5 +485,10 @@
 		width: 50%;
 		position: fixed;
 		bottom: 0;
+	}
+	.remind {
+		font-size: 24rpx;
+		color: #999;
+		padding: 12rpx 20rpx;
 	}
 </style>

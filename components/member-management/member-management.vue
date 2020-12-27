@@ -8,10 +8,12 @@
 			<view class="management-content">
 				<u-row gutter="20">
 					<u-col span="6" class="box_1">
-						<view class="management-box" @click="goScheduling">
-							<text class="iconfont icon-paiban"></text>
-							<text class="box-text">排班表</text>
-						</view>
+						<navigator url="/pages/scheduling/scheduling">
+							<view class="management-box">
+								<text class="iconfont icon-paiban"></text>
+								<text class="box-text">排班表</text>
+							</view>
+						</navigator>
 					</u-col>
 					<u-col span="6" class="box_2">
 						<navigator url="/pages/scheduling/class-management/class-management">
@@ -41,12 +43,12 @@
 							</view>
 						</navigator>
 					</u-col>
-					<u-col span="4">
+					<!-- <u-col span="4">
 						<view class="management-box_2">
 							<text class="color_3 iconfont icon-daochu"></text>
 							<text class="box-text">导出</text>
 						</view>
-					</u-col>
+					</u-col> -->
 				</u-row>
 			</view>
 		</view>
@@ -74,11 +76,6 @@ export default {
 				});
 			}
 		},
-		goScheduling() {
-			uni.navigateTo({
-				url: '/pages/scheduling/scheduling'
-			});
-		},
 		getUserInfo() {
 			uni.getStorage({
 				key: 'userInfo',
@@ -88,15 +85,6 @@ export default {
 				}
 			});
 		}
-		// 跳转到班种管理
-		// toManagement () {
-		// 	uni.navigateTo({
-		// 	    url: '/pages/scheduling/class-management/class-management',
-		// 		success: function(res) {
-		// 			console.log(res)
-		// 		}
-		// 	});
-		// }
 	},
 	mounted() {
 		this.getUserInfo();

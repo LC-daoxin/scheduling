@@ -10,14 +10,14 @@
 					:end="endDate"
 					@change="bindStartDateChange"
 				>
-					<text class="uni-input">{{ dateStart }}</text
+					<text class="uni-input">{{ startDate }}</text
 					><text class="iconfont icon-xia1"></text>
 				</picker>
 			</view>
 			<view>至</view>
 			<view class="endTime">
 				<picker mode="date" :start="startDate" :end="endDate" @change="bindEndDateChange">
-					<text class="uni-input">{{ dateEnd }}</text
+					<text class="uni-input">{{ endDate }}</text
 					><text class="iconfont icon-xia1"></text>
 				</picker>
 			</view>
@@ -56,7 +56,6 @@
 </template>
 
 <script>
-import { getCountDays, getDate } from '@/utils/index';
 import { requestPost } from '@/utils/request.js';
 import tTable from '@/components/t-table/t-table.vue';
 import tTh from '@/components/t-table/t-th.vue';
@@ -71,52 +70,48 @@ export default {
 	},
 	data() {
 		return {
-			dateStart: this.getDate('First'),
-			dateEnd: this.getDate('Last'),
+			startDate: '',
+			endDate: '',
 			statisticsData: {}
 		};
 	},
-	computed: {
-		startDate() {
-			return this.getDate('First');
-		},
-		endDate() {
-			return this.getDate('Last');
+	onLoad(option) {
+		if (option.startTime && option.endTime) {
+			this.startDate = option.startTime;
+			this.endDate = option.endTime;
 		}
 	},
-	onReady() {},
 	methods: {
-		getDate,
 		bindStartDateChange(e) {
 			let changeDate = e.detail.value;
-			if (new Date(changeDate) > new Date(this.dateEnd)) {
+			if (new Date(changeDate) > new Date(this.endDate)) {
 				this.$refs.uTips.show({
 					title: '开始时间不能大于结束时间',
 					type: 'error',
 					duration: '1200'
 				});
 			} else {
-				this.dateStart = e.detail.value;
+				this.startDate = e.detail.value;
 				this.getStatistics();
 			}
 		},
 		bindEndDateChange(e) {
 			let changeDate = e.detail.value;
-			if (new Date(changeDate) < new Date(this.dateStart)) {
+			if (new Date(changeDate) < new Date(this.startDate)) {
 				this.$refs.uTips.show({
 					title: '结束时间不能小于开始时间',
 					type: 'error',
 					duration: '1200'
 				});
 			} else {
-				this.dateEnd = e.detail.value;
+				this.endDate = e.detail.value;
 				this.getStatistics();
 			}
 		},
 		getStatistics() {
 			requestPost(
 				'/schedul/totalTime',
-				{ startTime: this.dateStart, endTime: this.dateEnd },
+				{ startTime: this.startDate, endTime: this.endDate },
 				res => {
 					const { code, msg, data } = res.data;
 					if (code === 'success') {

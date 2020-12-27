@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view v-if="pageShow">
 		<view class="head">
 			<view class="year">
 				<picker start="2000" mode="date" fields="month" @change="bindDateChange">
@@ -8,13 +8,13 @@
 				</picker>
 			</view>
 			<view class="selectMonth">
-				<view class="select-btn-box" @click="pre">
+				<!-- <view class="select-btn-box" @click="pre">
 					<text class="iconfont icon-xiangzuoyuanjiantouzuojiantouxiangzuomianxing"></text>
-				</view>
+				</view> -->
 				<text class="selectMonth-text">{{ currentStartDate + ' 至 ' + currentEndDate}}</text>
-				<view class="select-btn-box" @click="next">
+				<!-- <view class="select-btn-box" @click="next">
 					<text class="iconfont icon-xiangzuoyuanjiantouzuojiantouxiangzuomianxing1"></text>
-				</view>
+				</view> -->
 			</view>
 			<view class="publish">
 				<view class="publishBtn" @click="publish">发布</view>
@@ -41,84 +41,10 @@
 	export default {
 	    data() {
 	        return {
+				pageShow: true,
 				emptyString: '',
 	            headers: [],
 				contents: [],
-				contents1: [
-					{
-						"userId": 2,
-						"userName": "李雷",
-						"gourpId": 1,
-						"remark": "",
-						"content": [{
-							"schedulDate": "2020-12-01",
-							"type": 1,
-							"workspeciName": ["白班"]
-						},{
-							"schedulDate": "2020-12-03",
-							"type": 1,
-							"workspeciName": ["晚班","舞蹈"]
-						},{
-							"schedulDate": "2020-12-04",
-							"type": 1,
-							"workspeciName": ["晚班","白班"]
-						},{
-							"schedulDate": "2020-12-05",
-							"type": 1,
-							"workspeciName": ["唱歌","白班"]
-						},{
-							"schedulDate": "2020-12-06",
-							"type": 1,
-							"workspeciName": ["晚班","白班"]
-						},{
-							"schedulDate": "2020-12-07",
-							"type": 1,
-							"workspeciName": ["晚班","白班"]
-						},{
-							"schedulDate": "2020-12-08",
-							"type": 1,
-							"workspeciName": ["白班"]
-						},{
-							"schedulDate": "2020-12-12",
-							"type": 1,
-							"workspeciName": ["白班"]
-						}]
-					},{
-						"userId": 2,
-						"userName": "李雷",
-						"gourpId": 1,
-						"remark": "",
-						"content": [{
-							"schedulDate": "2020-12-01",
-							"type": 1,
-							"workspeciName": ["白班"]
-						},{
-							"schedulDate": "2020-12-03",
-							"type": 1,
-							"workspeciName": ["白班3"]
-						},{
-							"schedulDate": "2020-12-02",
-							"type": 1,
-							"workspeciName": ["晚班2"]
-						},{
-							"schedulDate": "2020-12-06",
-							"type": 1,
-							"workspeciName": ["培训"]
-						},{
-							"schedulDate": "2020-12-04",
-							"type": 1,
-							"workspeciName": ["晚班","舞蹈"]
-						},{
-							"schedulDate": "2020-12-10",
-							"type": 1,
-							"workspeciName": ["晚班"]
-						},{
-							"schedulDate": "2020-12-31",
-							"type": 1,
-							"workspeciName": ["晚班","舞蹈"]
-						}]
-					}
-				],
 				ColWidth: 50,
 				firstColWidth: 60,
 				nowDate: {
@@ -143,12 +69,40 @@
 		    }
 		},
 		onShow() {
-			this.initHeaders();
-			this.initDate();
-			this.getSchedulList();
-			this.getRemark();
+			this.init();
 		},
 		methods: {
+			reload () {
+				this.pageShow = false;            //先关闭，
+				this.$nextTick(function () {
+					this.pageShow = true;         //再打开
+				}) 
+			},
+			cleanPage () {
+				this.headers = [];
+				this.contents = [];
+				this.nowDate = {
+					year: '',
+					month: '',
+					day: ''
+				};
+				this.remark = '';
+				this.currentStartDate = '';
+				this.currentEndDate = '';
+			},
+			// 排班初始化
+			init (Date) {
+				uni.showLoading({
+				    title: '加载中',
+					mask: true
+				});
+				this.$nextTick(function(){
+					this.initDate(Date);
+					this.initHeaders(Date);
+					this.getSchedulList();
+					this.getRemark();
+				})
+			},
 			getSchedulList () {
 				let postData = {
 					'groupId': this.Info.groupInfo.id,
@@ -158,8 +112,9 @@
 				requestPost('/schedul/SchedulList', postData, res => {
 					const {code, msg, data} = res.data;
 					if (code === 'success') {
-						console.log(data)
 						this.contents = data;
+						console.log('全部排班列表', data)
+						uni.hideLoading();
 					} else {
 						uni.showToast({
 							title: '系统错误',
@@ -177,7 +132,9 @@
 				requestPost('/schedul/getremark', postData, res => {
 					const {code, msg, data} = res.data;
 					if (code === 'success') {
-						this.remark = data.remark;
+						if (data && data.remark) {
+							this.remark = data.remark;
+						}
 					} else {
 						uni.showToast({
 							title: '系统错误',
@@ -194,14 +151,14 @@
 				});
 			},
 			// 表头初始化-当月每日星期
-			initHeaders() {
+			initHeaders(date) {
 				let Info = uni.getSystemInfoSync();
 				let screenWidth = Info.screenWidth;
 				this.ColWidth = (screenWidth - this.firstColWidth)/7;
-				let currentMonthNum = getCountDays(); // 一个月多少天
+				let currentMonthNum = date ? getCountDays(date.substring(5, 7)) : getCountDays(); // 一个月多少天
 				console.log(currentMonthNum)
 				for (let i = 1; i <= currentMonthNum; i++) {
-					let week = getWeek(new Date('2020/11/' + i).getDay())
+					let week = getWeek(new Date(`${this.nowDate.year}/${this.nowDate.month}/` + i).getDay())
 					let Day = i.toString().length === 1 ? '0' + i : i;
 					this.headers.push({
 						label: [week, i],
@@ -210,30 +167,40 @@
 				}
 			},
 			// 时间初始化
-			initDate() {
-				let currentDate = new Date;
-				this.nowDate.year = currentDate.getFullYear();
-				this.nowDate.month = currentDate.getMonth() + 1;
-				this.nowDate.day = getCountDays();
-				this.currentStartDate = `${this.nowDate.month}-01`;
-				this.currentEndDate = `${this.nowDate.month}-${this.nowDate.day}`;
+			initDate(date) {
+				if (date) {
+					this.nowDate.year = date.substring(0, 4);
+					this.nowDate.month = date.substring(5, 7);
+					this.nowDate.day = getCountDays(date.substring(5, 7));
+					this.currentStartDate = `${this.nowDate.month}-01`;
+					this.currentEndDate = `${this.nowDate.month}-${this.nowDate.day}`;
+				} else {
+					let currentDate = new Date;
+					this.nowDate.year = currentDate.getFullYear();
+					this.nowDate.month = currentDate.getMonth() + 1;
+					this.nowDate.day = getCountDays();
+					this.currentStartDate = `${this.nowDate.month}-01`;
+					this.currentEndDate = `${this.nowDate.month}-${this.nowDate.day}`;
+				}
 			},
-			bindDateChange () {},
-			pre() {},
-			next() {},
+			bindDateChange (e) {
+				this.cleanPage();
+				this.reload();
+				this.init(e.detail.value);
+			},
 			publish () {
 				let that = this;
 				uni.showModal({
 				    title: '发布排班表',
 				    content: `第一次发布会通知所有排班人员，后续发布仅通知排班变动的成员。`,
-					cancelText: '保存',
+					cancelText: '取消',
 					confirmText: '发布',
 					confirmColor: '#5098ff',
 				    success: function (res) {
 				        if (res.confirm) {
 							that.$refs.table.publish(that.Info.groupInfo.id, that.remark);
 				        } else if (res.cancel) {
-							console.log('保存')
+							console.log('取消')
 				        }
 				    }
 				});

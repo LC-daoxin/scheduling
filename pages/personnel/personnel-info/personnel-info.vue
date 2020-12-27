@@ -1,49 +1,49 @@
 <template>
 	<view>
 		<uni-list class="uni-list">
-		    <uni-list-item title="姓名" link :rightText="info.name" @click="edit('更改姓名', 'name')">
+		    <uni-list-item title="姓名" :rightText="info.name" @click="edit('更改姓名', 'name')">
 				<template class="footer" slot="footer">
-					<view class="text">{{ info.name }}</view>
+					<view class="text"><text class="iconfont icon-xiangyou"></text>{{ info.name }}</view>
 				</template>
 			</uni-list-item>
-		    <uni-list-item title="手机号" link :rightText="info.phoneNumber" @click="edit('更改手机', 'phoneNumber')">
+		    <uni-list-item title="手机号" :rightText="info.phoneNumber" @click="edit('更改手机', 'phoneNumber')">
 				<template class="footer" slot="footer">
-					<view class="text">{{ info.phoneNumber }}</view>
+					<view class="text"><text class="iconfont icon-xiangyou"></text>{{ info.phoneNumber }}</view>
 				</template>
 			</uni-list-item>
 		</uni-list>
 		<uni-list class="uni-list">
-		    <uni-list-item title="职称" link :rightText="info.professionalTitle">
+		    <uni-list-item title="职称" :rightText="info.professionalTitle">
 				<template class="footer" slot="footer">
 					<picker class="picker" @change="ChangeProfessionalTitle" :value="professionalTitleindex" :range="professionalTitleArray">
-						<view class="text">{{ professionalTitleArray[professionalTitleindex] }}</view>
+						<view class="text"><text class="iconfont icon-xiangyou"></text>{{ professionalTitleArray[professionalTitleindex] }}</view>
 					</picker>
 				</template>
 			</uni-list-item>
-		    <uni-list-item title="层级" link :rightText="info.tier">
+		    <uni-list-item title="层级" :rightText="info.tier">
 				<template class="footer" slot="footer">
 					<picker class="picker" @change="ChangeTier" :value="tierindex" :range="tierArray">
-						<view class="text">{{ tierArray[tierindex] }}</view>
+						<view class="text"><text class="iconfont icon-xiangyou"></text>{{ tierArray[tierindex] }}</view>
 					</picker>
 				</template>
 			</uni-list-item>
-		    <uni-list-item title="年资" link :rightText="info.officeName">
+		    <uni-list-item title="年资" :rightText="info.officeName">
 				<template class="footer" slot="footer">
 					<picker class="picker" @change="ChangeSeniority" :value="seniorityIndex" :range="seniorityArray">
-						<view class="text">{{ seniorityArray[seniorityIndex] }}</view>
+						<view class="text"><text class="iconfont icon-xiangyou"></text>{{ seniorityArray[seniorityIndex] }}</view>
 					</picker>
 				</template>
 			</uni-list-item>
-		    <uni-list-item title="学历" link :rightText="info.education">
+		    <uni-list-item title="学历" :rightText="info.education">
 				<template class="footer" slot="footer">
 					<picker class="picker" @change="ChangeEducation" :value="educationIndex" :range="educationArray">
-						<view class="text">{{ educationArray[educationIndex] }}</view>
+						<view class="text"><text class="iconfont icon-xiangyou"></text>{{ educationArray[educationIndex] }}</view>
 					</picker>
 				</template>
 			</uni-list-item>
-		    <uni-list-item title="工号" link :rightText="info.jobNumber" @click="edit('更改工号', 'jobNumber')">
+		    <uni-list-item title="工号" :rightText="info.jobNumber" @click="edit('更改工号', 'jobNumber')">
 				<template class="footer" slot="footer">
-					<view class="text">{{ info.jobNumber }}</view>
+					<view class="text"><text class="iconfont icon-xiangyou"></text>{{ info.jobNumber }}</view>
 				</template>
 			</uni-list-item>
 		</uni-list>
@@ -138,6 +138,18 @@
 			.text {
 				font-size: 28rpx;
 				color: #999;
+				position: absolute;
+				right: 0;
+				left: 0;
+				top: 0;
+				bottom: 0;
+				display: flex;
+				align-items: center;
+				flex-direction: row-reverse;
+				.iconfont {
+					padding: 0 10px;
+					color: #999;
+				}
 			}
 		}
 		.header {

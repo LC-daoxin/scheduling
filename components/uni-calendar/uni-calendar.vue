@@ -207,7 +207,7 @@
 				this.init(value)
 				let date =  this.cale.getDate(value);
 				let months = date.year + '-' + date.month
-				uni.$emit('UserSchedulList', months)
+				uni.$emit('UserSchedulList', months);
 			},
 			/**
 			 * 初始化日期显示
@@ -311,8 +311,6 @@
 			 * @param {Object} weeks
 			 */
 			choiceDate(weeks) {
-				console.log(weeks)
-				console.log(this.showWeek)
 				if (weeks.disable) return
 				this.calendar = weeks
 				// 设置多选

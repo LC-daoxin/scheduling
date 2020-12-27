@@ -15,7 +15,7 @@
 				}"
 			>
 				<view class="table__fixed-text">
-					已发布
+					姓名
 				</view>
 			</view>
 			<!-- 固定列（除表头） -->
@@ -90,7 +90,7 @@
 				}"
 			>
 				<view class="s-table-content-line" v-for="(content, cIndex) in contentsSort" :key="cIndex">
-					<view class="s-table-content-item" v-for="(header, hIndex) in headers" :key="header.key"
+					<view :class="{'checkedview': checkedItem(cIndex, hIndex), 's-table-content-item': true}" v-for="(header, hIndex) in headers" :key="header.key"
 						:style="{
 							minWidth: defaultColWidth + 'px',
 							maxWidth: defaultColWidth + 'px',
@@ -121,11 +121,11 @@
 							<text class="iconfont icon-xin"></text>
 							<text class="text">期望排班</text>
 						</view> -->
-						<view class="icon-box">
+						<view class="icon-box" @click="autoSchedul">
 							<text class="iconfont icon-zidonghua"></text>
 							<text class="text">自动排班</text>
 						</view>
-						<view class="icon-box">
+						<view class="icon-box" @click="cleanSchedul">
 							<text class="iconfont icon-qingkong"></text>
 							<text class="text">清空排班</text>
 						</view>
@@ -181,7 +181,8 @@
 				},
 				indicatorDots: true,
 				autoplay: false,
-				classlist: []
+				classlist: [],
+				deleteId: []
 			};
 		},
 		props: {
@@ -320,7 +321,6 @@
 					}
 					pages[page].push(item);
 				})
-				console.log(pages)
 				return pages
 			}
 		},
@@ -340,10 +340,11 @@
 			// 发布排班
 			publish (id, remark) {
 				let list = [];
+				this.deleteId = []; // 清空删除id组
 				this.contentsSort.forEach((item,index) => {
 					if (item.content.length > 0) {
 						item.content.forEach((cItem, i) => {
-							if (cItem.workspeciName.length > 0) {
+							if (cItem.workspeciName.length > 0 && cItem.workspeciName[0] !== '') {
 								list.push({
 									'groupId': item.groupId,
 									'userId': item.userId,
@@ -351,24 +352,52 @@
 									'schedulDate': cItem.schedulDate,
 									'works': cItem.workspeciName,
 								})
+							} else {
+								this.deleteId.push(cItem.id)
 							}
 						})
 					}
 				})
+				let months = `${this.nowDate.year}-${this.nowDate.month}`
 				let postData = {
-					'months': `${this.nowDate.year}-${this.nowDate.month}`,
+					'months': months,
 					'remark': remark,
 					'groupId': id,
 					'schedullist': list
 				}
+				console.log('发布',postData)
 				requestPost('/schedul/batchSchedul', postData, res => {
 					const {code, msg, data} = res.data;
 					console.log(res.data)
 					if (code === 'success') {
+						this.deleteInfoList(); // 删除item List
 						uni.showToast({
 							title: '排班发布成功',
 							duration: 1000
 						})
+						setTimeout(() => {
+							uni.switchTab({
+							    url: '/pages/tabbar/home/home'
+							});
+							uni.$emit('UserSchedulList', months);
+						}, 1000)
+					} else {
+						uni.showToast({
+							title: '系统错误',
+							content: msg,
+							icon: 'none',
+							duration: 1000
+						})
+					}
+				})
+			},
+			// 删除排班信息
+			deleteInfoList () {
+				console.log(this.deleteId)
+				requestPost('/schedul/deleteSchedul', this.deleteId, res => {
+					const {code, msg, data} = res.data;
+					console.log(res.data)
+					if (code === 'success') {
 					} else {
 						uni.showToast({
 							title: '系统错误',
@@ -404,11 +433,28 @@
 				}
 			},
 			// 删除单个记录
-			deleteItem () {},
+			deleteItem () {
+				if (this.currentCIndex === null || this.currentHIndex === null) {
+					uni.showToast({
+					    title: '请先选择单元格',
+						icon: 'none',
+					    duration: 1500
+					});
+				} else if (this.currentHIndex < this.headers.length) {
+					let content = this.contentsSort[this.currentCIndex].content;
+					let hasItem = false // 是否存在该条记录
+					let zIndex // hasItem为ture
+					content.forEach((item,index) => {
+						if (item.schedulDate.substring(item.schedulDate.length - 2) === this.headers[this.currentHIndex].key.toString()) {
+							zIndex = index
+						}
+					})
+					content[zIndex].workspeciName = []
+				}
+			},
 			// 获取班种列表
 			getWorkListSucc(res) {
 				const { code, msg, data } = res.data;
-				console.log(data)
 				if (code === 'success') {
 					this.classlist = data;
 				} else {
@@ -435,10 +481,13 @@
 					let zIndex // hasItem为ture
 					let nIndex // hasNextItem为ture
 					content.forEach((item,index) => {
+						if (item.workspeciName[0] === '') {
+							item.workspeciName.splice(0, 1)
+						}
 						if (item.schedulDate.substring(item.schedulDate.length - 2) === this.headers[this.currentHIndex].key.toString()) {
 							hasItem = true
 							zIndex = index
-						} else if (this.currentHIndex < this.headers.length - 1 && item.schedulDate.substring(item.schedulDate.length - 2) === this.headers[this.currentHIndex + 1].key.toString()) {
+						} else if (this.currentHIndex < this.headers.length - 1 && item.schedulDate.substring(item.schedulDate.length - 2) === this.headers[this.currentHIndex + 1].key.toString() && item.workspeciName.length > 0 && item.workspeciName[0] !== '') {
 							hasNextItem = true
 							nIndex = index
 						}
@@ -487,11 +536,49 @@
 			// 记录显示，动态跳到下一个
 			moveItem () {
 				this.currentHIndex += 1;
-				this.scrollLeft += this.defaultColWidth;
-				this.selectLeft = this.scrollLeft;
+				const res = uni.getSystemInfoSync();
+				let windowWidth = res.windowWidth;
+				const query = uni.createSelectorQuery().in(this);
+				query.select('.checkedview').boundingClientRect(data => {
+				  let center = this.defaultColWidth*2 + this.firstColWidth;
+				  if (data.left >= center) {
+				  	this.scrollLeft += this.defaultColWidth;
+				  	this.selectLeft = this.scrollLeft;
+				  }
+				}).exec();
 			},
 			close () {
 				this.setPopupShow = false;
+			},
+			// 清空排班
+			cleanSchedul () {
+				let that = this;
+				uni.showModal({
+				    title: '清空排班',
+				    content: `是否清空排班数据？`,
+				    success: function (res) {
+				        if (res.confirm) {
+							if (that.contents.length > 0) {
+								that.contents.forEach(item => {
+									if (item.content.length > 0) {
+										item.content.forEach(v => {
+											v.workspeciName = []
+										})
+									}
+								})
+							}
+				        } else if (res.cancel) {
+				        }
+				    }
+				});
+			},
+			// 自动排班
+			autoSchedul () {
+				uni.showToast({
+					title: '开发中',
+					icon: 'none',
+					duration: 1500
+				});
 			}
 		}
 	}

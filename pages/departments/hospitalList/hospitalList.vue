@@ -9,7 +9,7 @@
 				</uni-list>
 			</scroll-view>
 		</view>
-		<button class="bottomBtn" @click="addHospital">没有我所在的医院，手动填写</button>
+		<!-- <button class="bottomBtn" @click="addHospital">没有我所在的医院，手动填写</button> -->
 	</view>
 </template>
 
@@ -91,14 +91,8 @@
 				console.log('cancel', e)
 			},
 			// 添加医院
-			addHospital () {
-				// uni.navigateTo({
-				//     url: '/pages/departments/base-info/base-info',
-				// 	success: function(res) {
-				// 		console.log(res)
-				// 	}
-				// });
-			}
+			// addHospital () {
+			// }
 		}
 	}
 </script>

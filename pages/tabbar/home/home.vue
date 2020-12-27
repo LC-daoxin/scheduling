@@ -98,11 +98,11 @@ export default {
 					'endTime': `${this.nowDate.year}-${this.nowDate.month}-${this.nowDate.day}`
 				}
 			}
+			this.datelist = []; // 清空list
 			requestPost('/schedul/UserSchedulList', postData, res => {
 				const {code, msg, data} = res.data;
 				if (code === 'success') {
 					if (data.length > 0 && data[0].content.length > 0) {
-						console.log(this.classlist)
 						data[0].content.forEach(item => {
 							let data = [];
 							item.workspeciName.forEach(v => {
@@ -122,6 +122,7 @@ export default {
 								'type': '',
 								'data': data
 							})
+							uni.hideLoading();
 						})
 					} else {
 						this.datelist = []
@@ -139,7 +140,6 @@ export default {
 		// 获取班种列表
 		getWorkListSucc(res) {
 			const { code, msg, data } = res.data;
-			console.log(data)
 			if (code === 'success') {
 				this.classlist = data;
 			} else {
@@ -175,7 +175,6 @@ export default {
 											success: res => {
 												let data = res.data
 												getGroupInfo(data.groupId).then(()=>{
-													uni.hideLoading();
 													this.getUserSchedulList();
 												})
 											}

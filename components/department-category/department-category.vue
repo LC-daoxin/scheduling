@@ -18,14 +18,14 @@
 </template>
 
 <script>
-	import { requestPost } from '@/utils/request.js'
+	import { requestGet, requestPost } from '@/utils/request.js'
 	export default {
 		name: "category",
 		data() {
 			return {
 				categoryActive: 0,
-				searchStatus: false,
-				activeMain: []
+				activeMain: [],
+				timeout: null //定义一个变量存放定时器
 			}
 		},
 		props: {
@@ -41,8 +41,8 @@
 					return null;
 				}
 			},
-			//侧边分类List
-			subCategoryList: {
+			// 第一次全部搜索的复制
+			categoryListSort: {
 				type: Array,
 				default: () => {
 					return null;
@@ -91,48 +91,88 @@
 				}
 			},
 			setActiveMain(item) {
-				this.activeMain = item
-				this.categoryActive = item.id
-			},
-			search (e) {
-				console.log('search', e)
-			},
-			input (e) {
-				console.log('input', e)
-				if (e.value.trim() !== '') {
-					this.searchStatus = true;
+				if (item) {
+					this.activeMain = item;
+					this.categoryActive = item.id;
+				} else {
+					this.activeMain = [];
 				}
 			},
+			// 判断是否已经存在
+			isArr(arr,id) {
+				for(var i=0;i<arr.length;i++){
+					if(id === arr[i].id){
+						return true;
+					}
+				}
+				return false;
+			},
+			search (e) {
+				if (e.value.trim() !== '') {
+					requestGet(`/dept/${e.value}`,res => {
+						const {code, msg, data} = res.data;
+						if (code === 'success') {
+							let Array = [];
+							if (data.length > 0) {
+								data.forEach((item, i) => {
+									this.categoryListSort.forEach(c => {
+										if (item.parentId === c.id && !this.isArr(Array, c.id)) {
+											Array.push({
+												id: c.id,
+												name: c.name,
+												officeLists: [],
+												parentId: 0
+											})
+										}
+									})
+								})
+								Array.forEach(item => {
+									data.forEach(v => {
+										if (item.id === v.parentId) {
+											item.officeLists.push({
+												id: v.id,
+												name: v.name,
+												parentId: v.parentId
+											})
+										}
+									})
+								})
+								uni.$emit('deptSearch', Array);
+							} else {
+								uni.$emit('cleanList');
+							}
+						} else {
+							uni.showToast({
+								title: '系统错误',
+								content: msg,
+								icon: 'none',
+								duration: 1000
+							})
+						}
+					})
+				} else {
+					uni.$emit('refreshSearch');
+				}
+			},
+			input (e) {
+				if (e.value.trim() !== '') {
+					this.debounce(this.search(e), 2000)
+				} else {
+					uni.$emit('refreshSearch');
+				}
+			},
+			debounce (func, wait) {
+				if (this.timeout) clearTimeout(this.timeout)
+				this.timeout = setTimeout(() => {
+					func
+				}, wait)
+			},
 			cancel (e) {
-				console.log('cancel', e)
+				uni.$emit('refreshSearch');
 			},
 			// 添加科室
-			addDepartment () {
-				
-			}
-			
-		},
-		// mounted() {
-			// const query = uni.createSelectorQuery().in(this);
-			// let one = new Promise((resolve) => {query.select('.bottomBtn').boundingClientRect(data => {
-			//   console.log("bottomBtn布局位置信息", data);
-			//   resolve(data.top)
-			// }).exec()})
-			// let two = new Promise((resolve) => {query.select('.search').boundingClientRect(data => {
-			//   console.log("search布局位置信息", data);
-			//   resolve(data.height)
-			// }).exec()})
-			// Promise.all([one, two]).then((values) => {
-			//   console.log(values);
-			//   this.height = values[0] - values[1]
-			// });
-			// this.categoryActive = this.defaultActive
-		// },
-		// watch: {
-		// 	subCategoryList(newValue, oldValue) {
-				
-		// 	}
-		// },
+			addDepartment () {}
+		}
 	}
 </script>
 
@@ -184,6 +224,7 @@
 				.nav-right {
 					flex: 1;
 					height: 100%;
+					padding-bottom: 20rpx;
 					.nav-right-item {
 						box-sizing: border-box;
 						width: 100%;
@@ -212,17 +253,5 @@
 				bottom: 0;
 			}
 		}
-		
-		// .active {
-		// 	color: #F24544;
-		// }
-		
-		// .padding {
-		// 	height: var(--status-bar-height);
-		// 	width: 100%;
-		// 	top: 0;
-		// 	position: fixed;
-		// 	background-color: #F24544;
-		// }
 	}
 </style>
