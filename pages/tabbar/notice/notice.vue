@@ -46,6 +46,11 @@ export default {
 			clientHeight: 0
 		};
 	},
+	computed: {
+	    Info () {
+	        return this.$store.state.Info
+	    }
+	},
 	methods: {
 		switchTab(index) {
 			this.currentTabIndex = index;
@@ -83,8 +88,14 @@ export default {
 		}
 	},
 	onShow() {
-		this.getNoticeList();
-		this.setNoticeList();
+		if (!this.Info.userInfo.groupId) {
+			uni.reLaunch({
+			    url: '/pages/departments/department-list/department-list'
+			});
+		} else {
+			this.getNoticeList();
+			this.setNoticeList();
+		}
 	},
 	components: {
 		MessageItem

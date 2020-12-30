@@ -215,6 +215,14 @@
                 "enablePullDownRefresh": false
             }
         }
+        ,{
+            "path" : "pages/personnel/join/join",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "加入科室",
+                "enablePullDownRefresh": false
+            }
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

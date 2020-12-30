@@ -34,7 +34,7 @@
 
 <script>
 	import { requestPost } from '@/utils/request.js'
-	import { getUserInfo } from '@/utils/index.js'
+	import { getUserInfo, selectGroup } from '@/utils/index.js'
 	export default {
 		data() {
 			return {
@@ -76,12 +76,12 @@
 				requestPost('/group/addGroup', postData, res => {
 					const { code, msg, data } = res.data;
 					if (code === 'success') {
+						selectGroup(data.id, data.groupName, 2);
 						uni.showToast({
 							title: '排班组创建成功！',
 							content: msg,
 							duration: 1000
 						})
-						getUserInfo(); // 更新的用户信息
 						setTimeout(() => {
 							uni.switchTab({
 							    url: '/pages/tabbar/home/home'
@@ -89,10 +89,9 @@
 						}, 900)
 					} else {
 						uni.showToast({
-							title: '系统错误',
-							content: msg,
+							title: '系统错误 /group/addGroup ' + msg,
 							icon: 'none',
-							duration: 1000
+							duration: 2000
 						})
 					}
 				})

@@ -17,7 +17,7 @@
 				</view> -->
 			</view>
 			<view class="publish">
-				<view class="publishBtn" @click="publish">发布</view>
+				<view  v-if="Info.userInfo && Info.userInfo.groupRole !== 0" class="publishBtn" @click="publish">发布</view>
 			</view>
 		</view>
 		<s-table ref="table" v-if="contents.length > 0" :headers="headers" :contents="contents" :nowDate="nowDate"></s-table>
@@ -69,7 +69,13 @@
 		    }
 		},
 		onShow() {
-			this.init();
+			if (!this.Info.userInfo.groupId) {
+				uni.reLaunch({
+				    url: '/pages/departments/department-list/department-list'
+				});
+			} else {
+				this.init();
+			}
 		},
 		methods: {
 			reload () {
@@ -92,10 +98,10 @@
 			},
 			// 排班初始化
 			init (Date) {
-				uni.showLoading({
-				    title: '加载中',
-					mask: true
-				});
+				// uni.showLoading({
+				//     title: '加载中',
+				// 	mask: true
+				// });
 				this.$nextTick(function(){
 					this.initDate(Date);
 					this.initHeaders(Date);

@@ -15,7 +15,8 @@
 </template>
 
 <script>
-	import { requestGet, requestPost } from '@/utils/request.js'
+	import { requestGet, requestPost } from '@/utils/request.js';
+	import { getGroupInfo, selectGroup } from '@/utils/index.js';
 	export default {
 		data() {
 			return {
@@ -28,17 +29,21 @@
 		    }
 		},
 		onLoad: function (option) { //option为object类型，会序列化上个页面传递的参数
+			uni.showLoading({
+			    title: '加载中',
+				mask: true
+			});
 			requestGet('/group/groupList', res => {
-				const {code, msg, data} = res.data
+				const {code, data} = res.data
 				if (code === 'success') {
-					console.log(data)
+					console.log('科室列表', data)
 					this.list = data
+					uni.hideLoading();
 				} else {
 					uni.showToast({
-						title: '系统错误',
-						content: msg,
+						title: '系统错误 /group/groupList ' + msg,
 						icon: 'none',
-						duration: 1000
+						duration: 2000
 					})
 				}
 			})
@@ -52,36 +57,17 @@
 					    content: `是否切换到${listItem.groupName}`,
 					    success: function (res) {
 					        if (res.confirm) {
-								let ulist = that.Info.groupInfo.groupUserList;
-								let userId = that.Info.userInfo.id;
-								let status;
-								ulist.forEach(item => {
-									if (userId === item.userId) {
-										status = item.status
-									}
+								getGroupInfo(listItem.groupId).then(() => {
+									let ulist = that.Info.groupInfo.groupUserList;
+									let userId = that.Info.userInfo.id;
+									let status;
+									ulist.forEach(item => {
+										if (userId === item.userId) {
+											status = item.status
+										}
+									})
+									selectGroup(listItem.groupId, listItem.groupName, status);
 								})
-								let postData = {
-									'groupId': listItem.groupId,
-									'groupName': listItem.groupName,
-									'groupRole': status,
-								}
-					            requestPost('/group/recordGroup', postData, res => {
-					            	const {code, msg, data} = res.data;
-					            	if (code === 'success') {
-										uni.reLaunch({ // 关闭所有页面，打开到应用内的某个页面
-										    url: `/pages/tabbar/home/home`
-										});
-					            	} else {
-					            		uni.showToast({
-					            			title: '系统错误',
-					            			content: msg,
-					            			icon: 'none',
-					            			duration: 1000
-					            		})
-					            	}
-					            })
-					        } else if (res.cancel) {
-								console.log('取消')
 					        }
 					    }
 					});
@@ -90,10 +76,7 @@
 			// 创建科室
 			createDepartment () {
 				uni.navigateTo({
-				    url: '/pages/departments/department-create/department-create',
-					success: function(res) {
-						console.log(res)
-					}
+				    url: '/pages/departments/department-create/department-create'
 				});
 			}
 		}

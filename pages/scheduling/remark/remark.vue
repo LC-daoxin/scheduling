@@ -3,8 +3,8 @@
 		<view class="header">
 			<view class="month">{{ year }}年{{ month }}月</view>
 		</view>
-		<textarea class="remark" v-model="newRemark" placeholder="请输入排班备注(不超过500字)" :maxlength="500"/>
-		<button class="bottomBtn" @click="saveRemark">保存</button>
+		<textarea :disabled="Info.userInfo.groupRole === 0" class="remark" v-model="newRemark" placeholder="请输入排班备注(不超过500字)"  :maxlength="500"/>
+		<button v-if="Info.userInfo && Info.userInfo.groupRole !== 0" class="bottomBtn" @click="saveRemark">保存</button>
 	</view>
 </template>
 
@@ -23,6 +23,11 @@
 			this.year = option.year;
 			this.month = option.month;
 			this.newRemark = JSON.parse(decodeURIComponent(option.remark));
+		},
+		computed: {
+		    Info () {
+		        return this.$store.state.Info
+		    }
 		},
 		methods: {
 			saveRemark () {

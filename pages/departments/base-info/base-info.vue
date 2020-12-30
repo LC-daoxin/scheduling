@@ -10,7 +10,7 @@
 			    <uni-list-item title="编号" :rightText="groupInfo.groupCode"></uni-list-item>
 			</uni-list>
 			<!-- <button class="transferBtn" @click="transfer">转让科室</button> -->
-			<button class="closeBtn" @click="dissolve" type="default">解散科室</button>
+			<button v-if="Info.userInfo.groupRole === 2" class="closeBtn" @click="dissolve" type="default">解散科室</button>
 			<button class="bottomBtn" @click="goDepartment">切换科室</button>
 		</view>
 		<popup :title="editInfoTitle" ref="popup">
@@ -36,6 +36,11 @@
 				  name: ''
 				}
 			};
+		},
+		computed: {
+		    Info () {
+		        return this.$store.state.Info
+		    }
 		},
 		onShow() {
 			this.refreshInfo()
@@ -73,27 +78,26 @@
 							requestDelete(`/group/${that.userInfo.groupId}`, res => {
 								const {code, msg, data} = res.data
 								if (code === 'success') {
+									uni.removeStorageSync('groupInfo');
+									getUserInfo();
 									uni.showToast({
 										title: '解散成功',
 										content: msg,
 										duration: 1000
 									})
 									setTimeout(() => {
-										uni.navigateTo({
+										uni.reLaunch({
 										    url: '/pages/departments/department-list/department-list'
 										});
 									}, 1000)
 								} else {
 									uni.showToast({
-										title: '系统错误',
-										content: msg,
+										title: '系统错误 Delete /group/${groupId}',
 										icon: 'none',
-										duration: 1000
+										duration: 2000
 									})
 								}
 							})
-				        } else if (res.cancel) {
-							console.log('取消解散')
 				        }
 				    }
 				});

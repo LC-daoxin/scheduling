@@ -39,23 +39,7 @@
 				list: [],
 				current: 4,
 				BarHeight: 0, // 胶囊按钮高度 + 状态栏高度
-				userInfo: {
-					nickName: '张大夫',
-					avatarurl: null,
-					name: '张大夫',
-					mobile: '15811292046',
-					email: null,
-					hospital: null,
-					office: null,
-					positional: null,
-					rank: null,
-					seniority: null,
-					education: null,
-					userCode: null,
-					id: 2,
-					totalTime: 60,
-					avatarUrl: ''
-				}
+				userInfo: {}
 			};
 		},
 		methods: {

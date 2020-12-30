@@ -1,36 +1,5 @@
 <template>
   <view class="wrap">
-    <!-- <view class="tab-bar">
-      <view class="tab-header">
-		<view :class="'tab-header_item ' + isCurrentTab(0)" @click="switchTab(0)">人员</view>
-		<view :class="'tab-header_item ' + isCurrentTab(1)" @click="switchTab(1)">统计</view>
-      </view>
-      <view class="tab-inner">
-        <view v-show="currentTabIndex === 0" class="tab-inner_item">
-			<u-alert-tips type="warning" :show-icon="true">
-				<view class="desc">
-					科室中有<text class='text_number'>5</text>人无法接收到排班发布通知。 <text class='text_go'>去查看</text>
-				</view>
-			</u-alert-tips>
-			<mine-card></mine-card>
-			<uni-list class="userlist">
-			    <uni-list-item v-for="(item,index) in userList" :key="index" :clickable="true" @click="goInfo(item)">
-					<template slot="header">
-						<text class="name">{{ item.name }}</text>
-						<text class="professionalTitle">{{ item.professionalTitle }}</text>
-					</template>
-					<template class="footer" slot="footer">
-						<view v-if="item.permission !== '用户'" class="permission">{{ item.permission }}</view>
-					</template>
-				</uni-list-item>
-			</uni-list>
-			<button class="bottomBtn"  open-type="share" :data-title="shareInfo.title" :data-imgurl="shareInfo.imgurl" :data-path="shareInfo.path">邀请成员</button>
-        </view>
-		<view v-show="currentTabIndex === 1" class="tab-inner_item">
-			<u-alert-tips type="warning" :show-icon="true" :description="notice"></u-alert-tips>
-		</view>
-      </view>
-    </view> -->
 	<u-alert-tips type="warning" :show-icon="true">
 		<view class="desc">
 			科室中有<text class='text_number'>{{ Info.groupInfo.groupUserList.length }}</text>人无法接收到排班发布通知。 <!-- <text class='text_go'>去查看</text> -->
@@ -40,8 +9,8 @@
 	<uni-list class="userlist">
 	    <uni-list-item v-for="(item,index) in userList" :key="index" :clickable="true" @click="goInfo(item)">
 			<template slot="header">
-				<text class="name">{{ item.userName }}</text>
-				<text class="professionalTitle">{{ item.professionalTitle }}</text>
+				<text class="name">{{ item.info.nickName || item.userName }}</text>
+				<text class="professionalTitle">{{ item.info.positional ? item.info.positional : '无' }}</text>
 			</template>
 			<template class="footer" slot="footer">
 				<view v-if="item.status !== 0" class="permission">{{ item.status === 1 ? '管理员' : '创建者' }}</view>
@@ -55,6 +24,7 @@
 <script>
 	import mineCard from './mine-card.vue'
 	import { getStorageInfo } from '@/utils/index.js'
+	import { requestGet } from '@/utils/request.js';
 	export default {
 		components: {
 			mineCard
@@ -62,33 +32,6 @@
 		data() {
 			return {
 				userList: [],
-				userList1: [{
-					name: '赵易',
-					id: 201001,
-					phoneNumber: '15201367242',
-					professionalTitle: '主任护师',
-					tier: 'N4',
-					seniority: 8,
-					permission: '创建者'
-				},{
-					name: '钱尔',
-					id: 201002,
-					phoneNumber: '15201367242',
-					professionalTitle: '副主任护师',
-					tier: 'N4',
-					seniority: 8,
-					permission: '管理员'
-				},{
-					name: '李思',
-					id: 201004,
-					phoneNumber: '15201367242',
-					professionalTitle: '护士',
-					tier: 'N4',
-					seniority: 8,
-					permission: '用户'
-				}],
-				// currentTabIndex: 0,
-				// notice: '如统计数据有误，请先维护人员信息',
 				shareInfo: {}
 			};
 		},
@@ -98,7 +41,6 @@
 		    }
 		},
 		onShareAppMessage(data) {
-			console.log(data)
 		    let dataset = data.target.dataset  
 		    return {  
 		        title: dataset.title,  
@@ -106,24 +48,46 @@
 		        path: dataset.path  
 		    }  
 		},
-		onReady() {
+		onShow() {
+			uni.showLoading({
+			    title: '加载中',
+				mask: true
+			});
 			this.shareInfo.title = `${this.Info.userInfo.nickName} 邀请您加入'${this.Info.groupInfo.groupName}'，赶快点击加入吧！`
 			this.shareInfo.imgurl = 'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-scheduling/7341daa0-2eeb-11eb-880a-0db19f4f74bb.png'
-			this.shareInfo.path = `/pages/tabbar/home/home?userid=${this.Info.userInfo.id}&&userName=${this.Info.userInfo.name}&&groupId=${this.Info.groupInfo.id}&&groupName=${this.Info.groupInfo.groupName}`
-			console.log(this.Info)
+			this.shareInfo.path = `/pages/personnel/join/join?userid=${this.Info.userInfo.id}&&userName=${this.Info.userInfo.name}&&groupId=${this.Info.groupInfo.id}&&groupName=${this.Info.groupInfo.groupName}`
 			this.userList = this.Info.groupInfo.groupUserList;
+			if (this.userList.length > 0) {
+				this.userList.forEach((item, i) => {
+					this.getUserInfo(item.userId, i)
+				})
+			}
 		},
 		methods: {
-			// isCurrentTab(index) {
-			// 	return this.currentTabIndex === index ? 'tab-header_item_active' : '';
-			// },
-			// switchTab(index) {
-			// 	this.currentTabIndex = index;
-			// },
-			goInfo () {
+			goInfo (item) {
 				uni.navigateTo({
-				    url: '/pages/personnel/personnel-info/personnel-info'
+				    url: `/pages/personnel/personnel-info/personnel-info?info=${encodeURIComponent(JSON.stringify(item))}&type=1`
 				});
+			},
+			getUserInfo (Id, i) {
+				requestGet(`/user/detail/${Id}`,res => {
+					const {code, msg, data} = res.data;
+					if (code === 'success') {
+						console.log(data)
+						this.userList[i].info = data;
+						this.$forceUpdate();
+						setTimeout(() => {
+							uni.hideLoading();
+						}, 1000)
+					} else {
+						uni.showToast({
+							title: '系统错误',
+							content: msg,
+							icon: 'none',
+							duration: 1000
+						})
+					}
+				})
 			}
 		}
 	};

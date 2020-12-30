@@ -19,7 +19,7 @@
 						</picker>
 					</view>
 					<view class="uni-calendar__header_selectTime"></view>
-					<view class="uni-calendar__toScheduling" @click="toScheduling">排班管理</view>
+					<view v-if="Info.userInfo && Info.userInfo.groupRole !== 0" class="uni-calendar__toScheduling" @click="toScheduling">排班管理</view>
 				</view>
 				<view class="uni-calendar__box">
 					<view v-if="showMonth" class="uni-calendar__box-bg">
@@ -68,8 +68,8 @@
 						<view class="plan-title">{{ item.type }}</view>
 						<view class="plan-time">{{ item.time }}</view>
 					</view>
-					<text class="uni-calendar__scheduling uni-calendar__Btn" @click="toScheduling">全科排班表</text>
-					<text class="uni-calendar__remark uni-calendar__Btn" @click="openRemark">排班备注</text>
+					<text v-if="Info.userInfo" class="uni-calendar__scheduling uni-calendar__Btn" @click="toScheduling">全科排班表</text>
+					<text v-if="Info.userInfo" class="uni-calendar__remark uni-calendar__Btn" @click="openRemark">排班备注</text>
 				</view>
 			</view>
 		</view>
@@ -138,6 +138,11 @@
 				showRemark: false, // 显示排班备注
 				remark: ''
 			}
+		},
+		computed: {
+		    Info () {
+		        return this.$store.state.Info
+		    }
 		},
 		watch: {
 			date(newVal) {

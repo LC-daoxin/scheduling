@@ -68,7 +68,8 @@
 		<button v-if="pageType === '1'" class="bottomBtn save" @click="addClass">添加</button>
 		<button v-else class="bottomBtn save" @click="saveClass">保存</button>
 		<popup :title="editInfoTitle" ref="popup">
-			<input type="text" v-model="inputValue"/>
+			<input v-if="inputTarget === 'workName'" type="text" :maxlength="4" v-model="inputValue"/>
+			<input v-else type="text" v-model="inputValue"/>
 			<button class="button button--primary" @click="saveChange">保存</button>
 		</popup>
 	</view>

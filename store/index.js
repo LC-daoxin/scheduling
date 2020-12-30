@@ -51,8 +51,8 @@ const store = new Vuex.Store({
 			},
 		],
 		Info: {
-			groupInfo: {},
-			userInfo: {}
+			groupInfo: null,
+			userInfo: null
 		}
 	},
 	mutations: {

@@ -5,6 +5,7 @@
 </template>
 
 <script>
+	import { getGroupInfo } from '@/utils/index.js';
 	export default {
 		data() {
 			return {
@@ -19,7 +20,9 @@
 			uni.setNavigationBarTitle({
 			    title: this.Info.groupInfo.groupName
 			});
-			this.$refs.detail.initInfo(this.Info)
+			getGroupInfo(this.Info.userInfo.groupId).then(() => {
+				this.$refs.detail.initInfo(this.Info)
+			});
 		},
 		onShareAppMessage(data) {
 			console.log('onShareAppMessage', data)

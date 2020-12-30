@@ -5,7 +5,7 @@
 		<home-navbar :show="hasInfo" @hasInfo="changeHasInfo"></home-navbar>
 		<!-- #endif -->
 		<!-- 公告 -->
-		<notice :colors="colors" :noticeList="noticeList"></notice>
+		<notice v-if="noticeShow" :colors="colors" :noticeList="noticeList" ></notice>
 		<!-- 公告 -->
 		<uni-calendar
 			ref="calendar"
@@ -15,8 +15,9 @@
 			:selected="datelist"
 			@change="change"
 		/>
-		<personal-stats></personal-stats>
+		<personal-stats v-if="Info.userInfo"></personal-stats>
 		<activity></activity>
+		<!-- <navigator url="/pages/personnel/join/join?userid=1&&userName=林策&&groupId=31&&groupName=性病科"><button>to</button></navigator> -->
 	</view>
 </template>
 
@@ -32,11 +33,8 @@ export default {
 	data() {
 		let currentDate = new Date;
 		return {
-			// 自定义导航栏对象
-			setNav: {
-				departmentsName: '心血管内科'
-			},
 			hasInfo: false,
+			noticeShow: true,
 			datelist: [],
 			list: [],
 			current: 0,
@@ -50,28 +48,18 @@ export default {
 			classlist: [] // 班种列表
 		};
 	},
+	onUnload() {
+	    // 移除监听事件  
+	    uni.$off('getAppUserInfo');
+	},
 	onShow() {
-		uni.showLoading({
-		    title: '加载中',
-			mask: true
-		});
-		setTimeout(()=>{
-			uni.hideLoading();
-		}, 10000)
-		uni.getUserInfo({
-			success: res => {
-				if (res.errMsg === 'getUserInfo:ok') {
-					this.hasInfo = true;
-					this.authorize();
-				}
-			},
-			fail: res => {
-				if (res) {
-					this.hasInfo = false;
-				}
-			}
-		});
 		getWorkList(this.getWorkListSucc, 1);
+		this.showPageInfo();
+	},
+	computed: {
+	    Info () {
+	        return this.$store.state.Info
+	    }
 	},
 	mounted() {
 		let that = this;
@@ -79,12 +67,58 @@ export default {
 		uni.$on('UserSchedulList',function(months){
 			that.getUserSchedulList(months);
 		})
+		uni.$on('getHomeInfo',function(){
+			console.log('getHomeInfo')
+			that.getUserSchedulList();
+			that.showPageInfo();
+		})
 	},
 	methods: {
+		// 页面数据显示
+		showPageInfo () {
+			console.log('showPageInfo页面数据显示')
+			let that = this;
+			wx.getStorage({
+				key: 'userInfo',
+				success: function (res){
+					if (res.data) {
+						console.log(res)
+						that.hasInfo = true;
+					}
+				}
+			})
+			wx.getStorage({
+				key: 'groupInfo',
+				success: function (res){
+					if (!res.data) {
+						uni.navigateTo({
+							url: '/pages/departments/department-list/department-list'
+						});
+					}
+				}
+			})
+			wx.getStorage({
+				key: 'notice',
+				success: function (res){
+					console.log('notice', res)
+					if (res.data.hospList.length > 0) {
+						that.noticeShow = true;
+						that.noticeList = res.data.hospList;
+					} else {
+						that.noticeShow = false;
+					}
+				},
+				fail: function (err){
+					that.noticeShow = false;
+					that.noticeList = [];
+				}
+			})
+		},
 		change(e) {},
 		changeHasInfo(show) {
 			this.hasInfo = show;
 		},
+		// 获取个人排班表-日历显示
 		getUserSchedulList (months) {
 			let postData;
 			if (months) {
@@ -98,9 +132,10 @@ export default {
 					'endTime': `${this.nowDate.year}-${this.nowDate.month}-${this.nowDate.day}`
 				}
 			}
-			this.datelist = []; // 清空list
+			this.datelist = []; //清空
 			requestPost('/schedul/UserSchedulList', postData, res => {
 				const {code, msg, data} = res.data;
+				console.log('日历', data)
 				if (code === 'success') {
 					if (data.length > 0 && data[0].content.length > 0) {
 						data[0].content.forEach(item => {
@@ -122,17 +157,15 @@ export default {
 								'type': '',
 								'data': data
 							})
-							uni.hideLoading();
 						})
 					} else {
 						this.datelist = []
 					}
 				} else {
 					uni.showToast({
-						title: '系统错误',
-						content: msg,
+						title: '系统错误 /schedul/UserSchedulList',
 						icon: 'none',
-						duration: 1000
+						duration: 2000
 					})
 				}
 			})
@@ -150,89 +183,6 @@ export default {
 					duration: 1500
 				});
 			}
-		},
-		login(userInfo) {
-			wx.login({
-				success: res => {
-					if (res.code) {
-						request(
-							'/user/addUser',
-							'post',
-							{
-								code: res.code,
-								...userInfo
-							},
-							res => {
-								const { code, msg, data } = res.data;
-								if (code === 'success') {
-									uni.setStorage({
-										key: 'token',
-										data: data
-									})
-									getUserInfo().then(()=>{
-										uni.getStorage({
-											key: 'userInfo',
-											success: res => {
-												let data = res.data
-												getGroupInfo(data.groupId).then(()=>{
-													this.getUserSchedulList();
-												})
-											}
-										})
-									})
-								}
-							})
-						}
-					}
-				})
-			},
-			authorize() {
-				wx.getSetting({
-					success: res => {
-						if (res.authSetting['scope.userInfo']) {
-							wx.getUserInfo({
-								success: res => {
-									this.login(res.userInfo);
-									getUserInfo();
-									this.setNoticeList();
-								}
-							}
-						);
-					}
-				}
-			});
-		},
-		setNoticeList() {
-			uni.getStorage({
-				key: 'notice',
-				success: res => {
-					this.noticeList = res.data.hospList;
-				}
-			});
-		},
-		authorize() {
-			wx.getSetting({
-				success: res => {
-					if (res.authSetting['scope.userInfo']) {
-						wx.getUserInfo({
-							success: res => {
-								this.login(res.userInfo);
-							}
-						});
-					}
-				}
-			});
-		},
-		getSetting() {
-			success: res => {
-				if (res.authSetting['scope.userInfo']) {
-					wx.getUserInfo({
-						success: res => {
-							this.login(res.userInfo);
-						}
-					});
-				}
-			};
 		}
 	}
 };

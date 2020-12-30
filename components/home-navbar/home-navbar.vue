@@ -4,12 +4,10 @@
 		<button v-if="!show" class="loginBtn" open-type="getUserInfo" @getuserinfo="getUserInfo">请登录<text class="iconfont icon-xiangyou"></text></button>
 		<view v-else class="header" :style="{'height':titleBarHeight}">
 			<u-button class="switchBtn" shape="circle" :custom-style="switchBtn" size="mini" @click="toList">切换</u-button>
-			<navigator url="/pages/departments/department-info/department-info">
-				<view class="departments">
-					<text>{{ Info.groupInfo.groupName }}</text>
-					<text class="iconfont icon-xiangyou"></text>
-				</view>
-			</navigator>
+			<view class="departments" @click="toDepartment">
+				<text>{{ Info.groupInfo.groupName ? Info.groupInfo.groupName : '无' }}</text>
+				<text class="iconfont icon-xiangyou"></text>
+			</view>
 		</view>
 	</view>
 </template>
@@ -40,22 +38,26 @@
 			this.titleBarHeight = (menuButtonInfo.bottom - Info.statusBarHeight) + (menuButtonInfo.top - Info.statusBarHeight)  + 'px';
 		},
 		methods: {
-			getUserInfo () {
-				let that =this
-				uni.getUserInfo({
-					success(res) {
-						console.log(res)
-						that.$emit('hasInfo', true);
-					},
-					fail(res) {
-						console.log(res)
-					}
-				})
+			getUserInfo (res) {
+				if (res.detail.errMsg === 'getUserInfo:ok') {
+					uni.$emit('getAppUserInfo');
+				}
 			},
 			toList() {
 				uni.navigateTo({
 					url: '/pages/departments/department-list/department-list'
 				});
+			},
+			toDepartment () {
+				if (this.Info.userInfo.groupId) {
+					uni.navigateTo({
+						url: '/pages/departments/department-info/department-info'
+					});
+				} else {
+					uni.reLaunch({
+					    url: '/pages/departments/department-list/department-list'
+					});
+				}
 			}
 		}
 	}

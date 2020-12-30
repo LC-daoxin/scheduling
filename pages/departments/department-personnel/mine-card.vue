@@ -2,9 +2,9 @@
 	<view class="box">
 		<view class="box-content" @click="goInfo">
 			<view class="info">
-				<view class="name">{{ Info.userInfo.nickName }}</view>
+				<view class="name">{{ Info.userInfo.nickName ? Info.userInfo.nickName : '无' }}</view>
 				<view class="info-content">
-					<view class="phone-number">{{ Info.userInfo.mobile }}</view>
+					<view class="phone-number">{{ Info.userInfo.mobile ? Info.userInfo.mobile : '无' }}</view>
 					<view class="row-text">层级：<text class="tier">{{ Info.userInfo.rank ? Info.userInfo.rank : '无' }}</text> 年资：<text class="seniority">{{ Info.userInfo.seniority ? Info.userInfo.seniority : '无' }}</text></view>
 				</view>
 			</view>
@@ -33,7 +33,7 @@
 		methods: {
 			goInfo () {
 				uni.navigateTo({
-				    url: '/pages/personnel/personnel-info/personnel-info'
+					url: `/pages/personnel/personnel-info/personnel-info?info=${encodeURIComponent(JSON.stringify(this.Info))}&type=2`
 				});
 			}
 		}

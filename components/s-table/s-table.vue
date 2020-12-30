@@ -21,7 +21,7 @@
 			<!-- 固定列（除表头） -->
 			<scroll-view class="table__fixed-others" scroll-y :throttle="false" :debounce="false" :scroll-top="scrollTop"
 				:style="{
-					height: tableHeight - (minHeight[1] || minHeight[0]) + 'rpx'
+					minHeight: tableHeight - (minHeight[1] || minHeight[0]) + 'rpx'
 				}"
 			>
 				<view class="table__fixed-item" v-for="(content, cindex) in contentsSort" :key="cindex"
@@ -82,7 +82,7 @@
 				</view>
 			</view>
 		</scroll-view>
-		<scroll-view scroll-x scroll-y @scroll="scroll"  :scroll-left="selectLeft">
+		<scroll-view scroll-x scroll-y @scroll="scroll" :scroll-left="selectLeft">
 			<view class="s-table-content"
 				:style="{
 					marginLeft: firstColWidth + 'px',
@@ -113,7 +113,7 @@
 				</view>
 			</view>
 		</scroll-view>
-		<u-popup v-model="setPopupShow" zIndex="1" :maskShow="false" :customStyle="customStyle" :mask="false" mode="bottom" safe-area-inset-bottom>
+		<u-popup  v-if="Info.userInfo && Info.userInfo.groupRole !== 0" v-model="setPopupShow" zIndex="1" :maskShow="false" :customStyle="customStyle" :mask="false" mode="bottom" safe-area-inset-bottom>
 			<view class="setBox">
 				<view class="header">
 					<view class="list">
@@ -322,6 +322,9 @@
 					pages[page].push(item);
 				})
 				return pages
+			},
+			Info () {
+			    return this.$store.state.Info
 			}
 		},
 		mounted () {
@@ -370,7 +373,9 @@
 					const {code, msg, data} = res.data;
 					console.log(res.data)
 					if (code === 'success') {
-						this.deleteInfoList(); // 删除item List
+						if (this.deleteId.length !== 0) {
+							this.deleteInfoList(); // 删除item List
+						}
 						uni.showToast({
 							title: '排班发布成功',
 							duration: 1000
@@ -586,6 +591,7 @@
 
 <style lang="scss" scoped>
 	.s-table-box {
+		background-color: #fff;
 		position: relative;
 		overflow: hidden;
 		.table__fixed-columns {

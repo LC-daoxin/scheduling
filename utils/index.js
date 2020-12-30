@@ -115,10 +115,9 @@ export function getUserInfo() {
 				resolve(data)
 			} else {
 				uni.showToast({
-					title: '系统错误',
-					content: msg,
+					title: '系统错误 /user/detailUser',
 					icon: 'none',
-					duration: 1000
+					duration: 2000
 				});
 				reject(data)
 			}
@@ -140,10 +139,9 @@ function getNotice() {
 			});
 		} else {
 			uni.showToast({
-				title: '系统错误',
-				content: msg,
+				title: '系统错误 /schedul/getNoticeList',
 				icon: 'none',
-				duration: 1000
+				duration: 2000
 			});
 		}
 	});
@@ -167,10 +165,9 @@ function getGroupInfo(Id) {
 				resolve(data)
 			} else {
 				uni.showToast({
-					title: '系统错误',
-					content: msg,
+					title: '系统错误 /group/${Id}',
 					icon: 'none',
-					duration: 1000
+					duration: 2000
 				})
 				reject(data)
 			}
@@ -220,4 +217,28 @@ export function CompareTime(t1,t2) {
     let a = t1.split(":");  
     let b = t2.split(":");  
     return date.setHours(a[0],a[1]) > date.setHours(b[0],b[1]);  
+}
+
+// 选择默认的组
+export function selectGroup(groupId, groupName, groupRole) {  
+    let postData = {
+    	'groupId': groupId,
+    	'groupName': groupName,
+    	'groupRole': groupRole
+    }
+    requestPost('/group/recordGroup', postData, res => {
+    	const {code, msg, data} = res.data;
+    	if (code === 'success') {
+    		uni.switchTab({
+    		    url: `/pages/tabbar/home/home`
+    		});
+    		uni.$emit('getAppUserInfo');
+    	} else {
+    		uni.showToast({
+    			title: '系统错误 /group/recordGroup',
+    			icon: 'none',
+    			duration: 2000
+    		})
+    	}
+    })
 }

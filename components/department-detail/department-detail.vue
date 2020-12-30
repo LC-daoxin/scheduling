@@ -4,7 +4,7 @@
 			<navigator url="/pages/departments/base-info/base-info">
 				<view class="info">
 					<view class="info-title">
-						<text class="title">{{ Info.groupInfo.groupName }}</text>
+						<text class="title" v-if="Info.groupInfo">{{ Info.groupInfo.groupName }}</text>
 						<view class="text-right">
 							<text>详情</text>
 							<text class="iconfont icon-xiangyou"></text>
@@ -15,24 +15,22 @@
 					</view>
 				</view>
 			</navigator>
-			<navigator url="/pages/departments/department-personnel/department-personnel">
-				<view class="user">
-					<view class="user-title">
-						<text class="title">科室人员</text>
-						<view class="text-right">
-							<text>共{{ userList.length }}人</text>
-							<text class="iconfont icon-xiangyou"></text>
-						</view>
-					</view>
-					<view class="user-content">
-						<view class="avatar-list">
-							<text class="avatar" v-for="(item,index) in newList" :key="index">{{ item.userName.slice(0, 1) }}</text>
-							<text class="avatar" v-if="showIcon">{{ '+' + (userList.length - 5) }}</text>
-						</view>
-						<button open-type="share" :data-title="shareInfo.title" :data-imgurl="shareInfo.imgurl" :data-path="shareInfo.path" class="inviteBtn" size="mini" plain="true">邀请人员</button>
+			<view class="user" @click="toPersonnel">
+				<view class="user-title">
+					<text class="title">科室人员</text>
+					<view class="text-right">
+						<text>共{{ userList.length }}人</text>
+						<text class="iconfont icon-xiangyou"></text>
 					</view>
 				</view>
-			</navigator>
+				<view class="user-content">
+					<view class="avatar-list">
+						<text class="avatar" v-for="(item,index) in newList" :key="index">{{ item.userName.slice(0, 1) }}</text>
+						<text class="avatar" v-if="showIcon">{{ '+' + (userList.length - 5) }}</text>
+					</view>
+				</view>
+			</view>
+			<button open-type="share" :data-title="shareInfo.title" :data-imgurl="shareInfo.imgurl" :data-path="shareInfo.path" class="inviteBtn" size="mini" plain="true">邀请人员</button>
 		</view>
 	</view>
 </template>
@@ -44,13 +42,23 @@
 				userList: [],
 				newList: [], // 处理后的用户列表 5位
 				showIcon: false,
-				shareInfo: {},
-				Info: {}
+				shareInfo: {}
 			};
 		},
+		computed: {
+		    Info () {
+		        return this.$store.state.Info
+		    }
+		},
+		mounted() {
+			this.shareInfo.title = `${this.Info.userInfo && this.Info.userInfo.nickName} 邀请您加入'${this.Info.groupInfo && this.Info.groupInfo.groupName}'，赶快点击加入吧！`
+			this.shareInfo.imgurl = 'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-scheduling/7341daa0-2eeb-11eb-880a-0db19f4f74bb.png'
+			this.shareInfo.path = `/pages/personnel/join/join?userid=${this.Info.userInfo &&this.Info.userInfo.id}&&userName=${this.Info.userInfo &&this.Info.userInfo.name}&&groupId=${this.Info.groupInfo && this.Info.groupInfo.id}&&groupName=${this.Info.groupInfo && this.Info.groupInfo.groupName}`
+			console.log(this.shareInfo.path)
+			if (this.Info.userInfo) this.initInfo();
+		},
 		methods: {
-			initInfo (data) {
-				Object.assign(this.Info, data);
+			initInfo () {
 				this.userList = this.Info.groupInfo.groupUserList;
 				if (this.userList && this.userList.length > 5) {
 					this.showIcon = true;
@@ -59,9 +67,11 @@
 					this.showIcon = false;
 					this.newList = this.userList
 				}
-				this.shareInfo.title = `${this.Info.userInfo.nickName} 邀请您加入'${this.Info.groupInfo.groupName}'，赶快点击加入吧！`
-				this.shareInfo.imgurl = 'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-scheduling/7341daa0-2eeb-11eb-880a-0db19f4f74bb.png'
-				this.shareInfo.path = `/pages/tabbar/home/home?userid=${this.Info.userInfo.id}&&userName=${this.Info.userInfo.name}&&groupId=${this.Info.groupInfo.id}&&groupName=${this.Info.groupInfo.groupName}`
+			},
+			toPersonnel () {
+				uni.navigateTo({
+					url: "/pages/departments/department-personnel/department-personnel"
+				})
 			}
 		}
 	}
@@ -72,6 +82,7 @@ page {
 	.detatl {
 		padding: 5px;
 		&-content {
+			position: relative;
 			box-shadow: 0 2rpx 10rpx 0 rgba(0,0,0,0.12);
 			// padding: 10rpx 10rpx;
 			background-color: #fff;
@@ -126,9 +137,10 @@ page {
 				}
 				.user-content {
 					display: flex;
+					height: 54px;
 					justify-content: space-between;
 					align-items: center;
-					padding: 20rpx 0 0;
+					padding: 10px 0 0;
 					color: $text-color;
 					.avatar-list {
 						margin-top: 10rpx;
@@ -150,14 +162,17 @@ page {
 							border-radius: 50%;
 						}
 					}
-					.inviteBtn {
-						border: 1px solid $base-color;
-						color: $base-color;
-						border-radius: 30rpx;
-						margin: 0;
-						padding: 0 14rpx;
-					}
 				}
+			}
+			.inviteBtn {
+				position: absolute;
+				right: 50rpx;
+				bottom: 45rpx;
+				border: 1px solid $base-color;
+				color: $base-color;
+				border-radius: 30rpx;
+				margin: 0;
+				padding: 0 14rpx;
 			}
 		}
 	}
