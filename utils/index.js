@@ -111,7 +111,12 @@ export function getUserInfo() {
 					data: data
 				});
 				store.commit('updateUserInfo', data)
-				if (data.groupId) getNotice();
+				if (data.groupId) {
+					getNotice();
+				} else {
+					store.commit('updateGroupInfo', null)
+					uni.removeStorageSync('groupInfo');
+				}
 				resolve(data)
 			} else {
 				uni.showToast({
@@ -126,6 +131,7 @@ export function getUserInfo() {
 }
 
 function getNotice() {
+	console.log('getNotice')
 	requestGet('/schedul/getNoticeList', res => {
 		const {
 			code,

@@ -31,9 +31,9 @@
 		    }
 		},
 		methods: {
-			goInfo () {
+			goInfo () { // currentUserPage = 2 为当前操作人进入个人信息 允许修改
 				uni.navigateTo({
-					url: `/pages/personnel/personnel-info/personnel-info?info=${encodeURIComponent(JSON.stringify(this.Info))}&type=2`
+					url: `/pages/personnel/personnel-info/personnel-info?currentUserPage=2`
 				});
 			}
 		}

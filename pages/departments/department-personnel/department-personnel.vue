@@ -48,6 +48,7 @@
 		        path: dataset.path  
 		    }  
 		},
+		
 		onShow() {
 			uni.showLoading({
 			    title: '加载中',
@@ -60,20 +61,22 @@
 			if (this.userList.length > 0) {
 				this.userList.forEach((item, i) => {
 					this.getUserInfo(item.userId, i)
+					if (item.userId === this.Info.userInfo.id) {
+						this.currentStatus = item.status;
+					}
 				})
 			}
 		},
 		methods: {
 			goInfo (item) {
-				uni.navigateTo({
-				    url: `/pages/personnel/personnel-info/personnel-info?info=${encodeURIComponent(JSON.stringify(item))}&type=1`
+				uni.navigateTo({ // currentUserPage = 1 为其他操作人进入个人信息 只有管理员允许修改
+				    url: `/pages/personnel/personnel-info/personnel-info?info=${encodeURIComponent(JSON.stringify(item))}&currentUserPage=1&currentStatus=${this.currentStatus}`
 				});
 			},
 			getUserInfo (Id, i) {
 				requestGet(`/user/detail/${Id}`,res => {
 					const {code, msg, data} = res.data;
 					if (code === 'success') {
-						console.log(data)
 						this.userList[i].info = data;
 						this.$forceUpdate();
 						setTimeout(() => {
@@ -81,10 +84,9 @@
 						}, 1000)
 					} else {
 						uni.showToast({
-							title: '系统错误',
-							content: msg,
+							title: '系统错误 /user/detail/${Id}',
 							icon: 'none',
-							duration: 1000
+							duration: 2000
 						})
 					}
 				})

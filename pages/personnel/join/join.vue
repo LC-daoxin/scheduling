@@ -2,10 +2,10 @@
 	<view class="join">
 		<view v-if="hasUser" class="title">您已经是{{ inviteInfo.groupName }}的成员</view>
 		<view v-else class="title">{{ inviteInfo.userName }}邀请您加入{{ inviteInfo.groupName }}</view>
-		<view  v-if="!hasUser" class="input-box"><input class="input" v-model="userName" :maxlength="10" placeholder="请输入姓名(不超过10个字)"/></view>
+		<!-- <view  v-if="!hasUser" class="input-box"><input class="input" v-model="userName" :maxlength="10" placeholder="请输入姓名(不超过10个字)"/></view> -->
 		<button v-if="hasUser" class="joinBtn" @click="enterGroup">直接进入</button>
 		<button v-if="!hasUser && !hasAuthorize" class="joinBtn" open-type="getUserInfo" @getuserinfo="getuserinfo">直接加入</button>
-		<button v-if="!hasUser && hasAuthorize" class="joinBtn" @click="joinGroup">直接加入1</button>
+		<button v-if="!hasUser && hasAuthorize" class="joinBtn" @click="joinGroup">直接加入</button>
 	</view>
 </template>
 
@@ -22,7 +22,7 @@
 					userid: ''
 				},
 				userName: '',
-				hasUser: false, // 当前组存在此用户
+				hasUser: false, // 当前组是否存在此用户
 				hasAuthorize: false // 当前用户是否授权用户信息
 			};
 		},
@@ -31,16 +31,16 @@
 		        return this.$store.state.Info
 		    }
 		},
-		watch: {
-		    '$store.state.Info.userInfo': function (newVal, oldVal) {
-				if (newVal) this.joinGroup();
-		    }
-		},
 		onLoad(option) {
-			console.log(option)
+			console.log('join onLoad')
 			let that = this;
+			uni.$on('joinGroup',function(){
+				uni.setStorageSync('joinGroup', false);
+			    that.joinGroup();
+			})
 			uni.getSetting({
 				success: res => {
+					console.log('getSetting', res)
 					if (res.authSetting['scope.userInfo']) { // 已经授权用户信息
 						that.hasAuthorize = true;
 					} else { // 未授权用户信息
@@ -79,6 +79,7 @@
 			},
 			getuserinfo (res) {
 				if (res.detail.userInfo) {
+					uni.setStorageSync('joinGroup', true);
 					uni.$emit('getAppUserInfo', true);
 				}
 			},
@@ -89,38 +90,28 @@
 					'groupId': groupId,
 					'groupName': groupName,
 					'userId': 	this.Info.userInfo.id,
-					'userName': 	this.userName || this.Info.userInfo.nickName
+					// 'userName': this.userName || this.Info.userInfo.nickName
+					'userName': this.Info.userInfo.nickName
 				}]
-				console.log(postData)
+				console.log('joinGroup',postData)
 				requestPost('/group/batchGroupUser', postData, res => {
 					const {code, msg, data} = res.data;
-					console.log(res)
-					if (code === 'success') {
-						selectGroup(groupId, groupName, 0);
-						uni.showToast({
-							title: '成功加入',
-							duration: 1000
-						})
-						setTimeout(() => {
-							uni.switchTab({
-							    url: '/pages/tabbar/home/home'
-							});
-							uni.$emit('getHomeInfo');
-						}, 1000)
-					} else {
-						uni.showToast({
-							title: '系统错误 /group/batchGroupUser ' + msg,
-							icon: 'none',
-							duration: 1000
-						})
-					}
+					selectGroup(groupId, groupName, 0);
+					uni.showToast({
+						title: '成功加入',
+						duration: 1000
+					})
+					setTimeout(() => {
+						uni.switchTab({
+						    url: '/pages/tabbar/home/home'
+						});
+					}, 1000)
 				})
 			},
 			enterGroup () {
 				uni.switchTab({
 				    url: '/pages/tabbar/home/home'
 				});
-				uni.$emit('getHomeInfo');
 			}
 		}
 	}

@@ -1,8 +1,8 @@
 // 局域网
-const api = 'http://192.168.1.207:8088'
+// const api = 'http://192.168.1.207:8088'
 // 公网
 // const api = 'http://49.235.137.137:8088'
-// const api = 'http://scheduling.lcdaoxin.com:8088'
+const api = 'http://scheduling.lcdaoxin.com:8088'
 
 export const request = (url, method, data, success) => {
 	return uni.request({

@@ -3,14 +3,14 @@
 		<view class="info">
 			<u-alert-tips type="warning" :show-icon="true" :description="description"></u-alert-tips>
 			<uni-list>
-			    <uni-list-item title="所属医院" link to="/pages/departments/hospitalList/hospitalList?type=2"  :rightText="groupInfo.hospitalName"></uni-list-item>
-			    <uni-list-item title="所属科室" link to="/pages/departments/department-select/department-select?type=2"  :rightText="groupInfo.officeName"></uni-list-item>
+			    <uni-list-item title="所属医院" link @click="toHospital"  :rightText="groupInfo.hospitalName"></uni-list-item>
+			    <uni-list-item title="所属科室" link @click="toDepartmentSelect" :rightText="groupInfo.officeName"></uni-list-item>
 			    <uni-list-item title="科室名称" link :rightText="groupInfo.groupName" @click="editName('科室名称', 'name', groupInfo.groupName)" ></uni-list-item>
 			    <uni-list-item title="创建者" :rightText="groupInfo.createUser"></uni-list-item>
 			    <uni-list-item title="编号" :rightText="groupInfo.groupCode"></uni-list-item>
 			</uni-list>
 			<!-- <button class="transferBtn" @click="transfer">转让科室</button> -->
-			<button v-if="Info.userInfo.groupRole === 2" class="closeBtn" @click="dissolve" type="default">解散科室</button>
+			<button v-if="currentStatus === 2" class="closeBtn" @click="dissolve" type="warn">解散科室</button>
 			<button class="bottomBtn" @click="goDepartment">切换科室</button>
 		</view>
 		<popup :title="editInfoTitle" ref="popup">
@@ -34,7 +34,8 @@
 				inputValue: '', // 输入的value
 				editInfo: {
 				  name: ''
-				}
+				},
+				currentStatus: 0
 			};
 		},
 		computed: {
@@ -44,6 +45,12 @@
 		},
 		onShow() {
 			this.refreshInfo()
+			let groupUserList = this.Info.groupInfo.groupUserList;
+			groupUserList.forEach((item, i) => {
+				if (item.userId === this.Info.userInfo.id) {
+					this.currentStatus = item.status;
+				}
+			})
 		},
 		methods: {
 			// 刷新信息
@@ -108,11 +115,27 @@
 				    url: '/pages/departments/departments-list/departments-list'
 				});
 			},
+			toDepartmentSelect () {
+				if (this.currentStatus !== 0) {
+					uni.navigateTo({
+					    url: '/pages/departments/department-select/department-select?type=2'
+					});
+				}
+			},
+			toHospital () {
+				if (this.currentStatus !== 0) {
+					uni.navigateTo({
+					    url: '/pages/departments/hospitalList/hospitalList?type=2'
+					});
+				}
+			},
 			editName(title, key, value) {
 			  this.editInfoTitle = title;
 			  this.inputTarget = key;
 			  this.inputValue = value;
-			  this.$refs.popup.open();
+			  if (this.currentStatus !== 0) {
+				  this.$refs.popup.open();
+			  }
 			},
 			save() {
 			    this.editInfo[this.inputTarget] = this.inputValue;
@@ -154,8 +177,7 @@
 			.closeBtn {
 				width: 90%;
 				margin-top: 30rpx;
-				background-color: #fff;
-				color: #666;
+				color: #fff;
 			}
 			.bottomBtn {
 				padding-bottom: constant(safe-area-inset-bottom);/* 兼容 iOS < 11.2 */

@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view :style="{'height':statusBarHeight}"></view>
-		<button v-if="!show" class="loginBtn" open-type="getUserInfo" @getuserinfo="getUserInfo">请登录<text class="iconfont icon-xiangyou"></text></button>
+		<button v-if="!show" class="loginBtn" open-type="getUserInfo" @getuserinfo="getUser">请登录<text class="iconfont icon-xiangyou"></text></button>
 		<view v-else class="header" :style="{'height':titleBarHeight}">
 			<u-button class="switchBtn" shape="circle" :custom-style="switchBtn" size="mini" @click="toList">切换</u-button>
 			<view class="departments" @click="toDepartment">
@@ -13,6 +13,7 @@
 </template>
 
 <script>
+	import { getUserInfo } from '@/utils/index.js';
 	export default {
 		props:["show"],
 		data() {
@@ -38,7 +39,7 @@
 			this.titleBarHeight = (menuButtonInfo.bottom - Info.statusBarHeight) + (menuButtonInfo.top - Info.statusBarHeight)  + 'px';
 		},
 		methods: {
-			getUserInfo (res) {
+			getUser (res) {
 				if (res.detail.errMsg === 'getUserInfo:ok') {
 					uni.$emit('getAppUserInfo');
 				}
@@ -49,15 +50,17 @@
 				});
 			},
 			toDepartment () {
-				if (this.Info.userInfo.groupId) {
-					uni.navigateTo({
-						url: '/pages/departments/department-info/department-info'
-					});
-				} else {
-					uni.reLaunch({
-					    url: '/pages/departments/department-list/department-list'
-					});
-				}
+				getUserInfo().then(() => {
+					if (this.Info.userInfo.groupId) {
+						uni.navigateTo({
+							url: '/pages/departments/department-info/department-info'
+						});
+					} else {
+						uni.reLaunch({
+						    url: '/pages/departments/department-list/department-list'
+						});
+					}
+				})
 			}
 		}
 	}

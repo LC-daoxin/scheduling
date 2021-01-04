@@ -6,9 +6,8 @@
 		onLaunch: function() {
 			console.log('App Launch')
 			let that = this;
-			uni.$on('getAppUserInfo',function(val){
-				console.log(val)
-				console.log('getAppUserInfo')
+			uni.$on('getAppUserInfo',function(){
+				console.log('App getUserInfo')
 				that.authorize();
 			})
 		},
@@ -25,7 +24,7 @@
 				// 获取用户的当前设置
 				uni.getSetting({
 					success: res => {
-						console.log('获取用户的当前设置', res)
+						console.log('authorize', res.authSetting)
 						if (res.authSetting['scope.userInfo']) { // 已经授权用户信息
 							that.authSettingUser(true);
 							that.login();
@@ -50,7 +49,6 @@
 					key: 'userInfo',
 					success(res){
 						// 首页数据获取
-						uni.$emit('getHomeInfo');
 						store.commit('updateUserInfo', res.data)
 						uni.hideLoading();
 					}
@@ -91,16 +89,23 @@
 												})
 												getUserInfo().then(()=>{
 													uni.getStorage({
+														key: 'joinGroup',
+														success: res => {
+															if (res.data) {
+																uni.$emit('joinGroup', true)
+															}
+														}
+													});
+													uni.getStorage({
 														key: 'userInfo',
 														success: res => {
 															let data = res.data;
-															uni.hideLoading();
 															if (data.groupId) {
 																getGroupInfo(data.groupId).then(() => {
-																	uni.$emit('getHomeInfo')
+																	uni.hideLoading();
 																})
 															} else {
-																uni.removeStorageSync('groupInfo');
+																uni.hideLoading();
 															}
 														}
 													})

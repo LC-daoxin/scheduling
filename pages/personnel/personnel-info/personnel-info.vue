@@ -47,7 +47,7 @@
 				</template>
 			</uni-list-item>
 		</uni-list>
-		<uni-list class="uni-list switch-list" v-if="info.status !== 2 && info.groupRole !== 0">
+		<uni-list class="uni-list switch-list" v-if="info.currentUserPage === false && (currentStatus === '1' || currentStatus === '2') && info.status !== 2">
 		    <uni-list-item>
 				<template class="header" slot="header">
 					<view class="text">是否管理员</view>
@@ -57,8 +57,8 @@
 				</template>
 			</uni-list-item>
 		</uni-list>
-		<view class="remind" v-if="info.status !== 2 && info.groupRole !== 0">开启后，该成员可以帮助您管理科室。</view>
-		<button class="deleteBtn" @click="deleteUser" v-if="info.status !== 2 && info.groupRole !== 0">删除成员</button>
+		<view class="remind" v-if="info.currentUserPage === false && (currentStatus === '1' || currentStatus === '2') && info.status !== 2">开启后，该成员可以帮助您管理科室。</view>
+		<button class="deleteBtn" @click="deleteUser" v-if="info.currentUserPage === false && (currentStatus === '1' || currentStatus === '2') && info.status !== 2">删除成员</button>
 		<popup :title="editInfoTitle" ref="popup">
 			<input type="text" v-model="inputValue"/>
 			<button class="button button--primary" @click="save">保存</button>
@@ -84,25 +84,29 @@
 				seniorityArray: [],
 				editInfoTitle: '', // 弹窗标题名
 				inputTarget: '', // 输入的key
-				inputValue: '' // 输入的value
+				inputValue: '', // 输入的value
+				currentStatus: 0 // 当前操作人在当前组 status 默认0
 			};
 		},
 		onLoad(option) {
+			this.currentStatus = option.currentStatus; // 当前操作人在当前组 status
 			for (let i = 0; i <= 60; i++) {
 				this.seniorityArray.push(i)
 			}
-			const Info = JSON.parse(decodeURIComponent(option.info));
-			if (option.type === '1') {
-				this.info = Info.info;
-				this.info.status = Info.status;
-				this.info.groupRole = this.Info.userInfo.groupRole
-			} else {
-				this.info = Info.userInfo
-			}
-			if (Info.status === 1 || Info.status === 2) {
-				this.switchChecked = true
-			} else {
-				this.switchChecked = false
+			if (option.currentUserPage === '1') {
+				const optionInfo = JSON.parse(decodeURIComponent(option.info));
+				this.info = optionInfo.info;
+				this.info.status = optionInfo.status;
+				this.info.currentUserPage = false; // 是否为当前用户的个人信息页 不是
+				if (optionInfo.status === 1 || optionInfo.status === 2) {
+					this.switchChecked = true
+				} else {
+					this.switchChecked = false
+				}
+			} else if (option.currentUserPage === '2') {
+				this.info = this.Info.userInfo;
+				this.info.status = this.Info.userInfo.groupRole;
+				this.info.currentUserPage = true
 			}
 			this.transformIndex();
 		},
@@ -154,7 +158,7 @@
 				this.editInfoTitle = title;
 				this.inputTarget = key;
 				this.inputValue = value;
-				if (this.info.groupRole !== 0) {
+				if (this.info.currentUserPage === true || this.Info.userInfo.groupRole !== 0) {
 					this.$refs.popup.open();
 				}
 			},
@@ -209,7 +213,8 @@
 				})
 			},
 			updateUser (Info) {
-				if (this.info.groupRole !== 0) {
+				// 当为管理员或者创建者或者当前操作人操作自己页面时 允许更新
+				if (this.info.currentUserPage === true || this.Info.userInfo.groupRole !== 0) {
 					requestPost('/user/update', Info, res => {
 						const {code, msg, data} = res.data;
 						console.log(res)

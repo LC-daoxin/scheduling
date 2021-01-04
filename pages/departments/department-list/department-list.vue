@@ -1,6 +1,6 @@
 <template>
 	<view class="content">
-		<uni-list class="list">
+		<uni-list class="list" v-if="list.length > 0">
 		    <uni-list-item v-for="(item,index) in list" :key="index" :clickable="true" @click="listItemSeleted(item)">
 				<template slot="header">
 					<text>{{ item.groupName }}（{{ item.groupId }}）</text>
@@ -10,6 +10,7 @@
 				</template>
 			</uni-list-item>
 		</uni-list>
+		<view class="text">暂无数据</view>
 		<button class="bottomBtn" @click="createDepartment">创建科室</button>
 	</view>
 </template>
@@ -28,7 +29,8 @@
 		        return this.$store.state.Info
 		    }
 		},
-		onLoad: function (option) { //option为object类型，会序列化上个页面传递的参数
+		onShow: function () {
+			console.log('department-list onShow')
 			uni.showLoading({
 			    title: '加载中',
 				mask: true
@@ -93,6 +95,12 @@ page {
 				font-size: 36rpx;
 				color: $base-color;
 			}
+		}
+		.text {
+			margin-top: 20px;
+			width: 100%;
+			text-align: center;
+			color: $light-color;
 		}
 		.bottomBtn {
 			padding-bottom: constant(safe-area-inset-bottom);/* 兼容 iOS < 11.2 */

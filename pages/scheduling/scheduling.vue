@@ -299,6 +299,9 @@
 			font-size: 26rpx;
 			.text {
 				flex: 1;
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
 			}
 			.text-right {
 				width: 20px;

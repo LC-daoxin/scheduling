@@ -17,7 +17,7 @@
 		/>
 		<personal-stats v-if="Info.userInfo"></personal-stats>
 		<activity></activity>
-		<!-- <navigator url="/pages/personnel/join/join?userid=1&&userName=林策&&groupId=31&&groupName=性病科"><button>to</button></navigator> -->
+		<navigator url="/pages/personnel/join/join?userid=1&&userName=林策&&groupId=31&&groupName=消化内科1组"><button>to</button></navigator>
 	</view>
 </template>
 
@@ -48,13 +48,11 @@ export default {
 			classlist: [] // 班种列表
 		};
 	},
-	onUnload() {
-	    // 移除监听事件  
-	    uni.$off('getAppUserInfo');
-	},
 	onShow() {
+		console.log('home onShow')
 		getWorkList(this.getWorkListSucc, 1);
 		this.showPageInfo();
+		this.getUserSchedulList();
 	},
 	computed: {
 	    Info () {
@@ -67,11 +65,6 @@ export default {
 		uni.$on('UserSchedulList',function(months){
 			that.getUserSchedulList(months);
 		})
-		uni.$on('getHomeInfo',function(){
-			console.log('getHomeInfo')
-			that.getUserSchedulList();
-			that.showPageInfo();
-		})
 	},
 	methods: {
 		// 页面数据显示
@@ -82,7 +75,6 @@ export default {
 				key: 'userInfo',
 				success: function (res){
 					if (res.data) {
-						console.log(res)
 						that.hasInfo = true;
 					}
 				}
@@ -100,7 +92,6 @@ export default {
 			wx.getStorage({
 				key: 'notice',
 				success: function (res){
-					console.log('notice', res)
 					if (res.data.hospList.length > 0) {
 						that.noticeShow = true;
 						that.noticeList = res.data.hospList;
