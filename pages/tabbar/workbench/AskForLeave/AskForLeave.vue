@@ -38,7 +38,7 @@ export default {
 			});
 		}
 	},
-	mounted() {
+	onShow() {
 		this.getList()
 	},
 	components: {

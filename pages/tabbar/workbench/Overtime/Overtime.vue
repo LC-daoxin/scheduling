@@ -35,7 +35,7 @@
 				})
 			}
 		},
-		mounted() {
+		onShow() {
 			this.getList()
 		},
 		components: {

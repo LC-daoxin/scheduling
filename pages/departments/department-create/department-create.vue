@@ -1,5 +1,6 @@
 <template>
 	<view>
+		<u-top-tips ref="uTips"></u-top-tips>
 		<uni-list>
 		    <uni-list-item link to="/pages/departments/hospitalList/hospitalList?type=1"  :rightText="info.hospitalName">
 				<template slot="header">
@@ -39,11 +40,11 @@
 		data() {
 			return {
 				info: {
-					groupName: null,
+					groupName: '',
 					hospitalId: null,
-					hospitalName: null,
+					hospitalName: '',
 					officeId: null,
-					officeName: null
+					officeName: ''
 					// createUser: null
 				}
 			};
@@ -66,35 +67,43 @@
 		},
 		methods: {
 			create () {
-				const postData = {
-					'groupName' : this.info.groupName,
-					'hospitalName' : this.info.hospitalName,
-					'hospitalId' : this.info.hospitalId,
-					'officeName' : this.info.officeName,
-					'officeId' : this.info.officeId
-				}
-				requestPost('/group/addGroup', postData, res => {
-					const { code, msg, data } = res.data;
-					if (code === 'success') {
-						selectGroup(data.id, data.groupName, 2);
-						uni.showToast({
-							title: '排班组创建成功！',
-							content: msg,
-							duration: 1000
-						})
-						setTimeout(() => {
-							uni.switchTab({
-							    url: '/pages/tabbar/home/home'
-							});
-						}, 900)
-					} else {
-						uni.showToast({
-							title: '系统错误 /group/addGroup ' + msg,
-							icon: 'none',
-							duration: 2000
-						})
+				if (this.info.groupName.trim() !== '' && this.info.hospitalName.trim() !== '' && this.info.officeName !== '') {
+					const postData = {
+						'groupName' : this.info.groupName,
+						'hospitalName' : this.info.hospitalName,
+						'hospitalId' : this.info.hospitalId,
+						'officeName' : this.info.officeName,
+						'officeId' : this.info.officeId
 					}
-				})
+					requestPost('/group/addGroup', postData, res => {
+						const { code, msg, data } = res.data;
+						if (code === 'success') {
+							selectGroup(data.id, data.groupName, 2);
+							uni.showToast({
+								title: '排班组创建成功！',
+								content: msg,
+								duration: 1000
+							})
+							setTimeout(() => {
+								uni.switchTab({
+								    url: '/pages/tabbar/home/home'
+								});
+							}, 900)
+						} else {
+							uni.showToast({
+								title: '系统错误 /group/addGroup ' + msg,
+								icon: 'none',
+								duration: 2000
+							})
+						}
+					})
+				} else {
+					this.$refs.uTips.show({
+						title: '必填项不能为空！',
+						type: 'error',
+						duration: '1500'
+					})
+				}
 			}
 		}
 	}

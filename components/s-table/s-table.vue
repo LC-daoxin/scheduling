@@ -21,7 +21,7 @@
 			<!-- 固定列（除表头） -->
 			<scroll-view class="table__fixed-others" scroll-y :throttle="false" :debounce="false" :scroll-top="scrollTop"
 				:style="{
-					minHeight: tableHeight - (minHeight[1] || minHeight[0]) + 'rpx'
+					height: tableHeight - (minHeight[1] || minHeight[0]) + 'rpx'
 				}"
 			>
 				<view class="table__fixed-item" v-for="(content, cindex) in contentsSort" :key="cindex"
@@ -36,7 +36,7 @@
 						borderBottom: showBorder ? '1px solid' + borderColor : 'none'
 					}"
 				>
-					{{ content.userName }}
+					<text class="userName" :style="{ width: '100%'}">{{ content.userName }}</text>
 				</view>
 			</scroll-view>
 			<!-- 固定列（除表头） -->
@@ -414,6 +414,7 @@
 				})
 			},
 			scroll (e) {
+				console.log(e)
 				const scrollLeft = e.detail.scrollLeft;
 				const scrollTop = e.detail.scrollTop;
 				this.scrollLeft = scrollLeft;
@@ -604,6 +605,11 @@
 			}
 			.table__fixed-others {
 				.table__fixed-item {
+					.userName {
+						overflow: hidden;
+						white-space: nowrap;
+						text-overflow: ellipsis;
+					}
 					box-sizing: border-box;
 				}
 			}
