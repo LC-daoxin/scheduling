@@ -414,7 +414,6 @@
 				})
 			},
 			scroll (e) {
-				console.log(e)
 				const scrollLeft = e.detail.scrollLeft;
 				const scrollTop = e.detail.scrollTop;
 				this.scrollLeft = scrollLeft;

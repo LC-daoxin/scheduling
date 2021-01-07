@@ -68,7 +68,7 @@
 											status = item.status
 										}
 									})
-									selectGroup(listItem.groupId, listItem.groupName, status);
+									selectGroup(listItem.groupId, listItem.groupName, status, that.Info.userInfo.id);
 								})
 					        }
 					    }

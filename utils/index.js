@@ -226,19 +226,22 @@ export function CompareTime(t1,t2) {
 }
 
 // 选择默认的组
-export function selectGroup(groupId, groupName, groupRole) {  
+export function selectGroup(groupId, groupName, groupRole, userId, refresh = true) {  
     let postData = {
     	'groupId': groupId,
     	'groupName': groupName,
-    	'groupRole': groupRole
+    	'groupRole': groupRole,
+		'id': userId
     }
     requestPost('/group/recordGroup', postData, res => {
     	const {code, msg, data} = res.data;
     	if (code === 'success') {
-    		uni.switchTab({
-    		    url: `/pages/tabbar/home/home`
-    		});
-    		uni.$emit('getAppUserInfo');
+			if (refresh) {
+				uni.switchTab({
+				    url: `/pages/tabbar/home/home`
+				});
+				uni.$emit('getAppUserInfo');
+			}
     	} else {
     		uni.showToast({
     			title: '系统错误 /group/recordGroup',

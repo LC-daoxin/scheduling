@@ -49,6 +49,11 @@
 				}
 			};
 		},
+		computed: {
+		    Info () {
+		        return this.$store.state.Info
+		    }
+		},
 		onLoad() {
 			let that = this
 			uni.$on('getHospital',function(item){
@@ -78,7 +83,7 @@
 					requestPost('/group/addGroup', postData, res => {
 						const { code, msg, data } = res.data;
 						if (code === 'success') {
-							selectGroup(data.id, data.groupName, 2);
+							selectGroup(data.id, data.groupName, 2, this.Info.userInfo.id);
 							uni.showToast({
 								title: '排班组创建成功！',
 								content: msg,

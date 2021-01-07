@@ -96,7 +96,7 @@
 				console.log('joinGroup',postData)
 				requestPost('/group/batchGroupUser', postData, res => {
 					const {code, msg, data} = res.data;
-					selectGroup(groupId, groupName, 0);
+					selectGroup(groupId, groupName, 0, this.Info.userInfo.id);
 					uni.showToast({
 						title: '成功加入',
 						duration: 1000

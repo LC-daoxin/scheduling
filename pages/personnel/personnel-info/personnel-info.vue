@@ -68,7 +68,7 @@
 
 <script>
 	import { requestPost, request } from '@/utils/request';
-	import { getUserInfo, getGroupInfo } from '@/utils/index.js';
+	import { getUserInfo, getGroupInfo, selectGroup } from '@/utils/index.js';
 	export default {
 		data() {
 			return {
@@ -203,6 +203,7 @@
 					const {code, msg, data} = res.data;
 					if (code === 'success') {
 						getGroupInfo(this.Info.groupInfo.id);
+						selectGroup(this.Info.groupInfo.id, this.Info.groupInfo.groupName, status, this.info.id, false);
 					} else {
 						uni.showToast({
 							title: '系统错误 /group/setManager ' + msg,

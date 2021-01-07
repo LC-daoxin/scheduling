@@ -156,7 +156,7 @@
 						this.multiIndexC[0] = 1;
 					}
 					let time6 = timeTwo[0].split(':')[1];// 第二段时间 开始 分
-					if (timeTwo[0].indexOf('次日') === -1) {
+					if (timeTwo[1].indexOf('次日') === -1) {
 						time7 = timeTwo[1].split(':')[0];
 					} else {
 						time7 = timeTwo[1].split(':')[0].slice(2);
@@ -299,8 +299,9 @@
 				this.$forceUpdate()
 			},
 			bindMultiPickerColumnChangeB (e) {
-				console.log(e)
+				console.log(e.detail)
 				this.multiIndexB[e.detail.column] = e.detail.value;
+				console.log(this.multiIndexB)
 				this.startOrEnd = false;
 				this.$forceUpdate()
 			},

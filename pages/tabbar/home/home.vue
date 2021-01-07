@@ -70,6 +70,7 @@ export default {
 		// 页面数据显示
 		showPageInfo () {
 			console.log('showPageInfo页面数据显示')
+			getUserInfo()
 			let that = this;
 			wx.getStorage({
 				key: 'userInfo',
